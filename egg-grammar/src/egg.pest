@@ -28,7 +28,18 @@ PrimitiveTypeName = _{
 NumTypeName = _{ IntTypeName | FloatTypeName }
 
 // Name of an integer type.
-IntTypeName = ${("u" | "i") ~ ("8" | "16" | "32" | "64" | "128")}
+IntTypeName = _{
+    | "u8"
+    | "u16"
+    | "u32"
+    | "u64"
+    | "u128"
+    | "i8"
+    | "i16"
+    | "i32"
+    | "i64"
+    | "i128"
+}
 
 // Name of a floating-point number type.
 FloatTypeName = _{ "f32" | "f64" }
