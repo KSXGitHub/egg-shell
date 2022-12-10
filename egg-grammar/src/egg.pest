@@ -9,7 +9,6 @@ Keyword = _{
     | "fn"
     | "if"
     | "let"
-    | "null"
     | "pub"
     | "return"
     | PrimitiveTypeName
