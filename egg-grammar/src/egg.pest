@@ -1,5 +1,46 @@
 // Identifier without special characters.
-Identifier = @{ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
+Identifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
+
+// Keyword to exclude from Identifier.
+Keyword = _{
+    | "const"
+    | "exec"
+    | "exit"
+    | "fn"
+    | "if"
+    | "let"
+    | "null"
+    | "pub"
+    | "return"
+    | PrimitiveTypeName
+    | NamedLiteral
+}
+
+// Name of a primitive type.
+PrimitiveTypeName = _{
+    | "any"
+    | "never"
+    | "void"
+    | NumericTypeName
+}
+
+// Name of a numeric type.
+NumTypeName = _{ IntTypeName | FloatTypeName }
+
+// Name of an integer type.
+IntTypeName = ${("u" | "i") ~ ("8" | "16" | "32" | "64" | "128")}
+
+// Name of a floating-point number type.
+FloatTypeName = _{ "f32" | "f64" }
+
+// Literal keyword to exclude from Identifier.
+NamedLiteral = _{
+    | "true"
+    | "false"
+    | "null"
+    | "inf"
+    | "nan"
+}
 
 // String literal with escape sequences.
 BareStringLiteral = ${
