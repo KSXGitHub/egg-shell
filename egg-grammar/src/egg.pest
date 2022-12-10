@@ -11,23 +11,23 @@ Keyword = _{
     | "let"
     | "pub"
     | "return"
-    | PrimitiveTypeName
-    | NamedLiteral
+    | TypeKeyword
+    | LiteralKeyword
 }
 
 // Name of a primitive type.
-PrimitiveTypeName = _{
+TypeKeyword = _{
     | "any"
     | "never"
     | "void"
-    | NumericTypeName
+    | NumTypeKeyword
 }
 
 // Name of a numeric type.
-NumTypeName = _{ IntTypeName | FloatTypeName }
+NumTypeKeyword = _{ IntTypeKeyword | FloatTypeKeyword }
 
 // Name of an integer type.
-IntTypeName = _{
+IntTypeKeyword = _{
     | "u8"
     | "u16"
     | "u32"
@@ -41,10 +41,10 @@ IntTypeName = _{
 }
 
 // Name of a floating-point number type.
-FloatTypeName = _{ "f32" | "f64" }
+FloatTypeKeyword = _{ "f32" | "f64" }
 
 // Literal keyword to exclude from Identifier.
-NamedLiteral = _{
+LiteralKeyword = _{
     | "true"
     | "false"
     | "null"
