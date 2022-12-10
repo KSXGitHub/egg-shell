@@ -42,12 +42,12 @@ LiteralKeyword = @{
 }
 
 // String literal with escape sequences.
-BareStringLiteral = ${
+RegularStringLiteral = ${
     | ("\"" ~ RegularCharacter* ~ "\"")
     | ("'" ~ RegularCharacter* ~ "'")
 }
 
-// Characters to used in `BareStringLiteral`.
+// Characters to used in `RegularStringLiteral`.
 RegularCharacter = @{
     | !("\"" | "\\") ~ ANY
     | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
