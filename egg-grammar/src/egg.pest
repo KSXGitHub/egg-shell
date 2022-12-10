@@ -2,7 +2,7 @@
 Identifier = @{ RegularIdentifier | StringIdentifier }
 
 // Identifier without special characters.
-RegularIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
+RegularIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~ !RegularStringLiteral }
 
 // Identifier that can contain any character.
 StringIdentifier = @{ "id" ~ RegularStringLiteral }
