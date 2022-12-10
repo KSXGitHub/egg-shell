@@ -43,14 +43,14 @@ LiteralKeyword = @{
 
 // String literal with escape sequences.
 RegularStringLiteral = ${
-    | ("\"" ~ RegularCharacter* ~ "\"")
-    | ("'" ~ RegularCharacter* ~ "'")
+    | ("\"" ~ (!"\"" ~ RegularCharacter)* ~ "\"")
+    | ("'" ~ (!"'" ~ RegularCharacter)* ~ "'")
 }
 
 // Characters to used in `RegularStringLiteral`.
 RegularCharacter = @{
-    | !("\"" | "\\") ~ ANY
-    | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+    | !"\\" ~ ANY
+    | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
     | "\\" ~ "x" ~ ASCII_HEX_DIGIT{2}
     | "\\" ~ "u" ~ ASCII_HEX_DIGIT{4}
     | "\\" ~ "u" ~ "{" ~ ASCII_HEX_DIGIT+ ~ "}"
