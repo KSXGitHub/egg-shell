@@ -1,6 +1,9 @@
 // Identifier without special characters.
 Identifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
+// Identifier that can contain any character.
+StringIdentifier = @{ "id" ~ RegularStringLiteral }
+
 // Keyword to exclude from Identifier.
 Keyword = @{
     | "const"
