@@ -1,3 +1,16 @@
 Identifier = @{ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
+BareStringLiteral = ${
+    | ("\"" ~ RegularCharacter* ~ "\"")
+    | ("'" ~ RegularCharacter* ~ "'")
+}
+
+RegularCharacter = @{
+    | !("\"" | "\\") ~ ANY
+    | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+    | "\\" ~ "x" ~ ASCII_HEX_DIGIT{2}
+    | "\\" ~ "u" ~ ASCII_HEX_DIGIT{4}
+    | "\\" ~ "u" ~ "{" ~ ASCII_HEX_DIGIT+ ~ "}"
+}
+
 Indentation = _{ (" " | "\t")* }
