@@ -1,0 +1,3 @@
+Identifier = @{ ASCII_ALPHA ~ ASCII_ALPHANUMERIC* }
+
+Indentation = _{ (" " | "\t")* }

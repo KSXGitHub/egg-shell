@@ -1,0 +1,9 @@
+[package]
+name = "egg-grammar"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.65"
+
+[dependencies]
+pest = "2.4.1"
+pest_derive = "2.5.1"
