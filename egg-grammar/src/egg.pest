@@ -1,10 +1,13 @@
+// Identifier without special characters.
 Identifier = @{ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
+// String literal with escape sequences.
 BareStringLiteral = ${
     | ("\"" ~ RegularCharacter* ~ "\"")
     | ("'" ~ RegularCharacter* ~ "'")
 }
 
+// Characters to used in `BareStringLiteral`.
 RegularCharacter = @{
     | !("\"" | "\\") ~ ANY
     | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
@@ -13,4 +16,5 @@ RegularCharacter = @{
     | "\\" ~ "u" ~ "{" ~ ASCII_HEX_DIGIT+ ~ "}"
 }
 
+// Ident at the start of a line to define a block.
 Indentation = _{ (" " | "\t")* }
