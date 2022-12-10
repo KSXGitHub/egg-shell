@@ -1,3 +1,6 @@
+// Identifier to name types, variables, functions, etc.
+Identifier = @{ RegularIdentifier | StringIdentifier }
+
 // Identifier without special characters.
 RegularIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
