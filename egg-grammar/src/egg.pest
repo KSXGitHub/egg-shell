@@ -1,10 +1,10 @@
 // Identifier without special characters.
-Identifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
+RegularIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
 // Identifier that can contain any character.
 StringIdentifier = @{ "id" ~ RegularStringLiteral }
 
-// Keyword to exclude from Identifier.
+// Keyword to exclude from RegularIdentifier.
 Keyword = @{
     | "const"
     | "exec"
@@ -35,7 +35,7 @@ IntTypeKeyword = @{ ("u" | "i") ~ ("8" | "16" | "32" | "64" | "128") }
 // Name of a floating-point number type.
 FloatTypeKeyword = @{ "f32" | "f64" }
 
-// Literal keyword to exclude from Identifier.
+// Literal keyword to exclude from RegularIdentifier.
 LiteralKeyword = @{
     | "true"
     | "false"
