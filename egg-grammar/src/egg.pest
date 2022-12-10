@@ -2,7 +2,7 @@
 Identifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* }
 
 // Keyword to exclude from Identifier.
-Keyword = _{
+Keyword = @{
     | "const"
     | "exec"
     | "exit"
@@ -16,7 +16,7 @@ Keyword = _{
 }
 
 // Name of a primitive type.
-TypeKeyword = _{
+TypeKeyword = @{
     | "any"
     | "never"
     | "void"
@@ -24,10 +24,10 @@ TypeKeyword = _{
 }
 
 // Name of a numeric type.
-NumTypeKeyword = _{ IntTypeKeyword | FloatTypeKeyword }
+NumTypeKeyword = @{ IntTypeKeyword | FloatTypeKeyword }
 
 // Name of an integer type.
-IntTypeKeyword = _{
+IntTypeKeyword = @{
     | "u8"
     | "u16"
     | "u32"
@@ -41,10 +41,10 @@ IntTypeKeyword = _{
 }
 
 // Name of a floating-point number type.
-FloatTypeKeyword = _{ "f32" | "f64" }
+FloatTypeKeyword = @{ "f32" | "f64" }
 
 // Literal keyword to exclude from Identifier.
-LiteralKeyword = _{
+LiteralKeyword = @{
     | "true"
     | "false"
     | "null"
