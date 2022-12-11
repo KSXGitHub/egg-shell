@@ -14,20 +14,25 @@ Keyword = @{
     | "exec"
     | "exit"
     | "fn"
-    | "for"
-    | "if"
     | "impl"
     | "let"
-    | "loop"
     | "pub"
     | "return"
     | "struct"
     | "trait"
     | "type"
     | "union"
-    | "while"
+    | ImperativeKeyword
     | TypeKeyword
     | LiteralKeyword
+}
+
+// Keyword to define imperative structure.
+ImperativeKeyword = @{
+    | "if"
+    | "for"
+    | "loop"
+    | "while"
 }
 
 // Name of a primitive type.
