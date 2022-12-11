@@ -9,14 +9,19 @@ StringIdentifier = @{ "id" ~ RegularStringLiteral }
 
 // Keyword to exclude from RegularIdentifier.
 Keyword = @{
-    | "exec"
-    | "exit"
     | "pub"
-    | "return"
     | DeclarationKeyword
+    | EscapeKeyword
     | LiteralKeyword
     | ImperativeKeyword
     | TypeKeyword
+}
+
+// Keyword to escape a block, a scope, a function, or a program.
+EscapeKeyword = @{
+    | "exec"
+    | "exit"
+    | "return"
 }
 
 // Keyword to declare a binding.
