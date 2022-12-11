@@ -22,9 +22,9 @@ Keyword = @{
     | "trait"
     | "type"
     | "union"
+    | LiteralKeyword
     | ImperativeKeyword
     | TypeKeyword
-    | LiteralKeyword
 }
 
 // Keyword to define imperative structure.
