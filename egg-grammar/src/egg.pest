@@ -1,6 +1,9 @@
 // First line to define the block, always has 1 indent level less than the rest of the block.
 BlockFirstLine = _{ PUSH(Indentation)* ~ "(todo: ItemFirstLine)" }
 
+// Line of the boby of the block, always has 1 indent level more than the first line of the block.
+BlockBodyLine = _{ PEEK_ALL ~ "(todo: ItemFirstLine)" }
+
 // Identifier to name types, variables, functions, etc.
 Identifier = @{ RegularIdentifier | StringIdentifier }
 
