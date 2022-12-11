@@ -8,15 +8,15 @@ BlockBodyLine = _{ PEEK_ALL ~ ItemHead }
 ItemHead = _{ "(todo)" }
 
 // Identifier to name types, variables, functions, etc.
-Identifier = @{ RegularIdentifier | StringIdentifier }
+Identifier = @{ NormalIdentifier | StringIdentifier }
 
 // Identifier without special characters.
-RegularIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~ !RegularStringLiteral }
+NormalIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~ !NormalStringLiteral }
 
 // Identifier that can contain any character.
-StringIdentifier = @{ "id" ~ RegularStringLiteral }
+StringIdentifier = @{ "id" ~ NormalStringLiteral }
 
-// Keyword to exclude from RegularIdentifier.
+// Keyword to exclude from NormalIdentifier.
 Keyword = @{
     | VisibilityKeyword
     | DeclarationKeyword
@@ -79,7 +79,7 @@ IntTypeKeyword = @{ ("u" | "i") ~ ("8" | "16" | "32" | "64" | "128") }
 // Name of a floating-point number type.
 FloatTypeKeyword = @{ "f32" | "f64" }
 
-// Literal keyword to exclude from RegularIdentifier.
+// Literal keyword to exclude from NormalIdentifier.
 LiteralKeyword = @{
     | "true"
     | "false"
@@ -89,16 +89,16 @@ LiteralKeyword = @{
 }
 
 // String literal.
-StringLiteral = @{ RegularStringLiteral | RawStringLiteral }
+StringLiteral = @{ NormalStringLiteral | RawStringLiteral }
 
 // String literal with escape sequences.
-RegularStringLiteral = ${
-    | ("\"" ~ (!"\"" ~ RegularCharacter)* ~ "\"")
-    | ("'" ~ (!"'" ~ RegularCharacter)* ~ "'")
+NormalStringLiteral = ${
+    | ("\"" ~ (!"\"" ~ NormalCharacter)* ~ "\"")
+    | ("'" ~ (!"'" ~ NormalCharacter)* ~ "'")
 }
 
-// Characters to used in `RegularStringLiteral`.
-RegularCharacter = @{
+// Characters to used in `NormalStringLiteral`.
+NormalCharacter = @{
     | !"\\" ~ ANY
     | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
     | "\\" ~ "x" ~ ASCII_HEX_DIGIT{2}
