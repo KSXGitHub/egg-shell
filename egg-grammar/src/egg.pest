@@ -1,20 +1,20 @@
-// Body of a program.
-ProgramBody = { Block* }
+// // Body of a program.
+// ProgramBody = { Block* }
 
-// Code block that is started with a first line.
-Block = {
-    | BlockFirstLine ~ NEWLINE ~ Block+
-    | BlockFirstLine
-}
+// // Code block that is started with a first line.
+// Block = {
+//     | BlockFirstLine ~ NEWLINE ~ Block+
+//     | BlockFirstLine
+// }
 
-// First line to define the block, always has 1 indent level less than the rest of the block.
-BlockFirstLine = _{ PUSH(Indentation)* ~ ItemHead }
+// // First line to define the block, always has 1 indent level less than the rest of the block.
+// BlockFirstLine = _{ PUSH(Indentation)* ~ ItemHead }
 
-// Line of the boby of the block, always has 1 indent level more than the first line of the block.
-BlockBodyLine = _{ PEEK_ALL ~ ItemHead }
+// // Line of the boby of the block, always has 1 indent level more than the first line of the block.
+// BlockBodyLine = _{ PEEK_ALL ~ ItemHead }
 
-// Head of an item.
-ItemHead = _{ "(todo)" }
+// // Head of an item.
+// ItemHead = _{ "(todo)" }
 
 // Identifier to name types, variables, functions, etc.
 Identifier = @{ NormalIdentifier | StringIdentifier }
