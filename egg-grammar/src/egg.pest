@@ -1,3 +1,6 @@
+// First line to define the block, always has 1 indent level less than the rest of the block.
+BlockFirstLine = _{ PUSH(Indentation)* ~ "(todo: ItemFirstLine)" }
+
 // Identifier to name types, variables, functions, etc.
 Identifier = @{ RegularIdentifier | StringIdentifier }
 
@@ -107,7 +110,7 @@ RawStringLiteralBody = @{
 }
 
 // Ident at the start of a line to define a block.
-Indentation = _{ (" " | "\t")* }
+Indentation = _{ (" " | "\t") }
 
 // Implicit whitespace
 WHITESPACE = _{ (" " | "\t")+ }
