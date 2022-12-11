@@ -19,6 +19,8 @@ Keyword = @{
 
 // Keyword to escape a block, a scope, a function, or a program.
 EscapeKeyword = @{
+    | "break"
+    | "continue"
     | "exec"
     | "exit"
     | "return"
