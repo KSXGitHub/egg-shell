@@ -11,11 +11,8 @@ StringIdentifier = @{ "id" ~ RegularStringLiteral }
 Keyword = @{
     | "exec"
     | "exit"
-    | "impl"
     | "pub"
     | "return"
-    | "struct"
-    | "trait"
     | DeclarationKeyword
     | LiteralKeyword
     | ImperativeKeyword
@@ -27,7 +24,10 @@ DeclarationKeyword = @{
     | "const"
     | "enum"
     | "fn"
+    | "impl"
     | "let"
+    | "struct"
+    | "trait"
     | "type"
     | "union"
 }
