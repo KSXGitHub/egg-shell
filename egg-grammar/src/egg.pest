@@ -55,6 +55,7 @@ DeclarationKeyword = @{
 
 // Keyword to define imperative structure.
 ImperativeKeyword = @{
+    | "do"
     | "else"
     | "for"
     | "if"
