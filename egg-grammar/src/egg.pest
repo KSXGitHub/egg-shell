@@ -9,12 +9,17 @@ StringIdentifier = @{ "id" ~ RegularStringLiteral }
 
 // Keyword to exclude from RegularIdentifier.
 Keyword = @{
-    | "pub"
+    | VisibilityKeyword
     | DeclarationKeyword
     | EscapeKeyword
     | LiteralKeyword
     | ImperativeKeyword
     | TypeKeyword
+}
+
+// Keyword to define items' visibility.
+VisibilityKeyword = @{
+    | "pub"
 }
 
 // Keyword to escape a block, a scope, a function, or a program.
