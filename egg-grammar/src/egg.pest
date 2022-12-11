@@ -10,13 +10,22 @@ StringIdentifier = @{ "id" ~ RegularStringLiteral }
 // Keyword to exclude from RegularIdentifier.
 Keyword = @{
     | "const"
+    | "enum"
     | "exec"
     | "exit"
     | "fn"
+    | "for"
     | "if"
+    | "impl"
     | "let"
+    | "loop"
     | "pub"
     | "return"
+    | "struct"
+    | "trait"
+    | "type"
+    | "union"
+    | "while"
     | TypeKeyword
     | LiteralKeyword
 }
