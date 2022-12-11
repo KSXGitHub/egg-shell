@@ -9,22 +9,26 @@ StringIdentifier = @{ "id" ~ RegularStringLiteral }
 
 // Keyword to exclude from RegularIdentifier.
 Keyword = @{
-    | "const"
-    | "enum"
     | "exec"
     | "exit"
-    | "fn"
     | "impl"
-    | "let"
     | "pub"
     | "return"
     | "struct"
     | "trait"
-    | "type"
-    | "union"
     | LiteralKeyword
     | ImperativeKeyword
     | TypeKeyword
+}
+
+// Keyword to declare a binding.
+DeclarationKeyword = @{
+    | "const"
+    | "enum"
+    | "fn"
+    | "let"
+    | "type"
+    | "union"
 }
 
 // Keyword to define imperative structure.
