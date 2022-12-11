@@ -1,3 +1,12 @@
+// Body of a program.
+ProgramBody = { Block* }
+
+// Code block that is started with a first line.
+Block = {
+    | BlockFirstLine ~ NEWLINE ~ Block+
+    | BlockFirstLine
+}
+
 // First line to define the block, always has 1 indent level less than the rest of the block.
 BlockFirstLine = _{ PUSH(Indentation)* ~ ItemHead }
 
