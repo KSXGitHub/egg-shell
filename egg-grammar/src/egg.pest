@@ -16,6 +16,7 @@ Keyword = @{
     | "return"
     | "struct"
     | "trait"
+    | DeclarationKeyword
     | LiteralKeyword
     | ImperativeKeyword
     | TypeKeyword
