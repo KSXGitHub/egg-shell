@@ -1,4 +1,4 @@
-trait MyTypeDictClass(type_dict, infer type1, infer type2)
+trait MyTypeDictClass(TypeDict, infer Type1, infer Type2)
 
 struct MyTypeDict
 
