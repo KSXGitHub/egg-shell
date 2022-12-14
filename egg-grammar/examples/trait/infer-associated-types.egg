@@ -9,3 +9,8 @@ pub mod id'long syntax':
     pub type MyType2 = infer x where MyTypeDictClass(MyTypeDict, _, y)                          # MyType2 is u16
     pub type MyTypeTuple = infer (x, y) where MyTypeDictClass(MyTypeDict, x, y)                 # MyTypeTuple is (u8, u16)
     pub type id'infer with pipe syntax' = MyTypeDict | infer x where MyTypeDictClass(?, x, _)   # returns u8
+
+pub mod id'short syntax':
+    pub type MyType1 = MyTypeDictClass(MyTypeDict, infer, _)                                    # MyType1 is u8
+    pub type MyType2 = MyTypeDictClass(MyTypeDict, _, infer)                                    # MyType2 is u16
+    pub type id'infer with pipe syntax' = MyTypeDict | MyTypeDictClass(?, infer, _)             # returns u8
