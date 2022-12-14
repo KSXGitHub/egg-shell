@@ -1,6 +1,6 @@
 #! /usr/bin/env egg
 
 pub const fn fibonacci(n: u16) -> u32:
-    match n:
+    return match n:
         0 | 1 => n
         _ => fibonacci(n - 2) + fibonacci(n - 1)
