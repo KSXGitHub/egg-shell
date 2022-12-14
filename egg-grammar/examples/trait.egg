@@ -3,7 +3,7 @@ pub trait Combine(left_type, right_type, infer output_type):
 
 impl Combine(u8, u8, u16):
     pub fn combine(left: u8, right: u8) -> u16:
-        left as u16 | bit-shl(_, size of u8) | bit-or(_, right as u16)
+        left as u16 | bit-shl(?, size of u8) | bit-or(?, right as u16)
 
 pub fn id'how to call the trait'() -> void:
     print 'Enter two integers separated by a whitespace: '
