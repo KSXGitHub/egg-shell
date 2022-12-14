@@ -1,0 +1,13 @@
+pub trait Combine(left_type, right_type, infer output_type):
+    pub fn combine(left: left_type, right: right_type) -> output_type
+
+impl Combine(u8, u8, u16):
+    pub fn combine(left: u8, right: u8) -> u16
+        left | bit-shl(_, size of u8) | bit-or(_, right)
+
+pub fn id'how to call the trait'():
+    print 'Enter two integers separated by a whitespace'
+    let left: u8 = read --word
+    let right: u8 = read --word
+    let output = Combine::combine(left, right)
+    print f'Output: $output'
