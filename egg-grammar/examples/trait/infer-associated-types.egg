@@ -6,7 +6,7 @@ impl MyTypeDictClass(MyTypeDict, u8, u16)
 
 pub mod id'long syntax':
     pub type MyType1 = infer x where MyTypeDictClass(MyTypeDict, x, _)                          # MyType1 is u8
-    pub type MyType2 = infer x where MyTypeDictClass(MyTypeDict, _, y)                          # MyType2 is u16
+    pub type MyType2 = infer x where MyTypeDictClass(MyTypeDict, _, x)                          # MyType2 is u16
     pub type MyTypeTuple = infer (x, y) where MyTypeDictClass(MyTypeDict, x, y)                 # MyTypeTuple is (u8, u16)
     pub type id'infer with pipe syntax' = MyTypeDict | infer x where MyTypeDictClass(?, x, _)   # returns u8
 
