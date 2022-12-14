@@ -7,7 +7,7 @@ impl Combine(u8, u8, u16):
 
 pub fn id'invoking the trait function'() -> void:
     print 'Enter two integers separated by a whitespace: '
-    let left: u8 = read --word
-    let right: u8 = read --word
+    let left: u8 = read()
+    let right: u8 = read()
     let output = Combine::combine(left, right)
     println f'Output: $output'
