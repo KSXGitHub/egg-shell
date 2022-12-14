@@ -1,7 +1,9 @@
-pub trait Combine(left_type, right_type, infer output_type):
+pub trait Combine(left_type, right_type):
+    pub type output_type
     pub fn combine(left: left_type, right: right_type) -> output_type
 
 impl Combine(u8, u8, u16):
+    pub type output_type = u16
     pub fn combine(left: u8, right: u8) -> u16:
         left as u16 | bit_shl(?, size of u8) | bit_or(?, right as _)
 
@@ -12,4 +14,4 @@ pub fn id'invoking the trait function'() -> void:
     let output = Combine::combine(left, right)
     println f'Output: $output'
 
-type id'associated type of Combine(u8, u8)' = infer output_type where Combine(u8, u8, output_type)
+type id'associated type of Combine(u8, u8)' = Combine(u8, u8)::output_type
