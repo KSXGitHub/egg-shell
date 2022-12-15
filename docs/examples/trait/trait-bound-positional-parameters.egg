@@ -7,7 +7,10 @@ with
     pub length: Length
     pub height: Height
 
-impl(Length, Height) Area(Rectangle(Length, Height), Mul(Length, Height)::Output)
+impl(Length, Height) Area(
+    Rectangle(Length, Height),
+    Mul(Length, Height)::Output,
+)
 where Mul(Length, Height)
 with
     pub fn area(shape: Shape) -> Mul(Length, Height)::Output
