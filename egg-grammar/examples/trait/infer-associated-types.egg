@@ -4,13 +4,13 @@ struct MyTypeDict
 
 impl MyTypeDictClass(MyTypeDict, u8, u16)
 
-pub mod id'long syntax':
+pub mod id'long syntax'
     pub type MyType1 = infer X where MyTypeDictClass(MyTypeDict, X, _)                          # MyType1 is u8
     pub type MyType2 = infer X where MyTypeDictClass(MyTypeDict, _, X)                          # MyType2 is u16
     pub type MyTypeTuple = infer (, X, Y) where MyTypeDictClass(MyTypeDict, X, Y)               # MyTypeTuple is (, u8, u16)
     pub type id'infer with pipe syntax' = MyTypeDict | infer X where MyTypeDictClass(?, X, _)   # returns u8
 
-pub mod id'short syntax':
+pub mod id'short syntax'
     pub type MyType1 = MyTypeDictClass(MyTypeDict, infer, _)                                    # MyType1 is u8
     pub type MyType2 = MyTypeDictClass(MyTypeDict, _, infer)                                    # MyType2 is u16
     pub type id'infer with pipe syntax' = MyTypeDict | MyTypeDictClass(?, infer, _)             # returns u8

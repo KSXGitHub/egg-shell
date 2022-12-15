@@ -1,11 +1,11 @@
-pub trait Combine(Left, Right, infer Output):
+pub trait Combine(Left, Right, infer Output)
     pub fn combine(left: Left, right: Right) -> Output
 
 impl Combine(u8, u8, u16):
-    pub fn combine(left: u8, right: u8) -> u16:
+    pub fn combine(left: u8, right: u8) -> u16
         left as u16 | bit_shl(?, size of u8) | bit_or(?, right as _)
 
-pub fn id'invoking the trait function'() -> void:
+pub fn id'invoking the trait function'() -> void
     print 'Enter two integers separated by a whitespace: '
     let left: u8 = read()
     let right: u8 = read()
