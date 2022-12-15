@@ -1,0 +1,14 @@
+pub trait Area(Shape, infer Output):
+    pub fn area(shape: Shape) -> Output
+
+pub struct Rectangle(Length, Height)
+where Mul(Length, Height)
+with
+    pub length: Length
+    pub height: Height
+
+impl(Length, Height) Area(Rectangle(Length, Height), Mul(Length, Height)::Output):
+where Mul(Length, Height)
+with
+    pub fn area(shape: Shape) -> Mul(Length, Height)::Output
+        return shape.length * shape.height
