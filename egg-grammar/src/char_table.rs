@@ -1,8 +1,10 @@
 use crate::{CharCoord, Ordinal};
+use derive_more::Display;
 use getset::CopyGetters;
 
 /// Information of a single character.
-#[derive(Clone, Copy, CopyGetters)]
+#[derive(Display, Clone, Copy, CopyGetters)]
+#[display(fmt = "{value}")]
 #[getset(get_copy = "pub")]
 pub struct CharCell {
     /// Content of the character.
@@ -12,7 +14,8 @@ pub struct CharCell {
 }
 
 /// Information of a single line.
-#[derive(Clone, CopyGetters)]
+#[derive(Display, Clone, CopyGetters)]
+#[display(fmt = "{src_text}")]
 #[getset(get_copy = "pub")]
 pub struct CharLine<'a> {
     /// Position of the line.
@@ -53,7 +56,8 @@ impl<'a> CharLine<'a> {
 }
 
 /// Table of characters.
-#[derive(Clone, CopyGetters)]
+#[derive(Display, Clone, CopyGetters)]
+#[display(fmt = "{src_text}")]
 #[getset(get_copy = "pub")]
 pub struct CharTable<'a> {
     /// Total number of characters.
