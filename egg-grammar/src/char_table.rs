@@ -10,13 +10,15 @@ use std::fmt::{self, Debug, Formatter};
 pub struct CharCell {
     /// Character coordinate.
     coord: CharCoord,
+    /// Byte offset from the start of the line.
+    ln_offset: usize,
     /// Content of the character.
     value: char,
 }
 
 impl Debug for CharCell {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let CharCell { value, coord } = self;
+        let CharCell { value, coord, .. } = self;
         write!(f, "CharCell at {coord} of {value:?}")
     }
 }
@@ -45,7 +47,16 @@ impl<'a> CharLine<'a> {
             .chars()
             .enumerate()
             .map(|(col_pred, value)| (CharCoord::from_pred_counts(ln_pred, col_pred), value))
-            .map(|(coord, value)| CharCell { coord, value })
+            .scan(0, |offset, (col_pred, value)| {
+                let current_offset = *offset;
+                *offset += value.len_utf8();
+                Some((col_pred, current_offset, value))
+            })
+            .map(|(coord, ln_offset, value)| CharCell {
+                coord,
+                ln_offset,
+                value,
+            })
             .collect();
         CharLine {
             pos,
