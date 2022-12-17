@@ -1,6 +1,7 @@
 use crate::{CharCoord, Ordinal};
 use derive_more::Display;
 use getset::CopyGetters;
+use std::fmt::{self, Debug, Formatter};
 
 /// Information of a single character.
 #[derive(Display, Clone, Copy, CopyGetters)]
@@ -11,6 +12,13 @@ pub struct CharCell {
     value: char,
     /// Character coordinate.
     coord: CharCoord,
+}
+
+impl Debug for CharCell {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let CharCell { value, coord } = self;
+        write!(f, "CharCell at {coord} of {value:?}")
+    }
 }
 
 /// Information of a single line.
@@ -52,6 +60,13 @@ impl<'a> CharLine<'a> {
     /// Iterate over all character cells in the line.
     pub fn char_cells(&self) -> impl Iterator<Item = &CharCell> {
         self.char_list.iter()
+    }
+}
+
+impl<'a> Debug for CharLine<'a> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let CharLine { pos, src_text, .. } = self;
+        write!(f, "CharLine at {pos} of {src_text:?}")
     }
 }
 
@@ -97,5 +112,13 @@ impl<'a> CharTable<'a> {
     /// Iterate over all character cells in the table.
     pub fn char_cells(&self) -> impl Iterator<Item = &CharCell> {
         self.char_lines().flat_map(CharLine::char_cells)
+    }
+}
+
+impl<'a> Debug for CharTable<'a> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let char_count = self.char_count();
+        let line_count = self.line_list.len();
+        write!(f, "CharTable of {line_count} lines {char_count} chars")
     }
 }
