@@ -3,3 +3,6 @@ name = "egg-grammar"
 version = "0.0.0"
 edition = "2021"
 rust-version = "1.66"
+
+[dependencies]
+derive_more = "0.99.17"
