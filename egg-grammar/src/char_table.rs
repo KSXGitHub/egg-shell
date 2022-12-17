@@ -28,6 +28,8 @@ impl Debug for CharCell {
 pub struct CharLine<'a> {
     /// Position of the line.
     pos: Ordinal,
+    /// Total sizes of lines before this line.
+    offset: usize,
     /// Source text of the line.
     src_text: &'a str,
     /// List of characters.
@@ -37,7 +39,7 @@ pub struct CharLine<'a> {
 
 impl<'a> CharLine<'a> {
     /// Scan a line of text.
-    fn scan_text(src_text: &'a str, ln_pred: usize) -> Self {
+    fn scan_text(src_text: &'a str, ln_pred: usize, offset: usize) -> Self {
         let pos = Ordinal::from_pred_count(ln_pred);
         let char_list = src_text
             .chars()
@@ -47,6 +49,7 @@ impl<'a> CharLine<'a> {
             .collect();
         CharLine {
             pos,
+            offset,
             src_text,
             char_list,
         }
@@ -87,13 +90,12 @@ pub struct CharTable<'a> {
 impl<'a> CharTable<'a> {
     /// Create character table from scanning a document.
     pub fn scan_text(src_text: &'a str) -> Self {
-        let line_iter = src_text
-            .lines()
-            .enumerate()
-            .map(|(ln_pred, ln_text)| CharLine::scan_text(ln_text, ln_pred));
+        let mut offset = 0;
         let mut char_count = 0;
         let mut line_list = Vec::new();
-        for char_line in line_iter {
+        for (ln_pred, ln_text) in src_text.lines().enumerate() {
+            let char_line = CharLine::scan_text(ln_text, ln_pred, offset);
+            offset += ln_text.len();
             char_count += char_line.char_count();
             line_list.push(char_line);
         }
