@@ -113,12 +113,17 @@ impl<'a> CharTable<'a> {
     pub fn char_cells(&self) -> impl Iterator<Item = &CharCell> {
         self.char_lines().flat_map(CharLine::char_cells)
     }
+
+    /// Number of lines.
+    pub fn line_count(&self) -> usize {
+        self.line_list.len()
+    }
 }
 
 impl<'a> Debug for CharTable<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let char_count = self.char_count();
-        let line_count = self.line_list.len();
+        let line_count = self.line_count();
         write!(f, "CharTable of {line_count} lines {char_count} chars")
     }
 }
