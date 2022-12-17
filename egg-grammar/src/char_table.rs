@@ -12,6 +12,8 @@ pub struct CharCell {
     coord: CharCoord,
     /// Byte offset from the start of the line.
     offset_from_ln_start: usize,
+    /// Byte offset from the start of the document.
+    offset_from_doc_start: usize,
     /// Content of the character.
     value: char,
 }
@@ -55,6 +57,7 @@ impl<'a> CharLine<'a> {
             .map(|(coord, offset_from_ln_start, value)| CharCell {
                 coord,
                 offset_from_ln_start,
+                offset_from_doc_start: offset + offset_from_ln_start,
                 value,
             })
             .collect();
