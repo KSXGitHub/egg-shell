@@ -1,4 +1,4 @@
-use crate::ordinal::Ordinal;
+use crate::Ordinal;
 use derive_more::Display;
 
 /// Coordinate of a character.
