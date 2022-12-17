@@ -1,2 +1,5 @@
-pub mod char_coord;
-pub mod ordinal;
+mod char_coord;
+mod ordinal;
+
+pub use char_coord::CharCoord;
+pub use ordinal::Ordinal;
