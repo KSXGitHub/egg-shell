@@ -3,6 +3,9 @@ use derive_more::Display;
 use getset::CopyGetters;
 use std::fmt::{self, Debug, Formatter};
 
+#[cfg(test)]
+use pretty_assertions::assert_eq;
+
 /// Information of a single line.
 #[derive(Display, Clone, CopyGetters)]
 #[display(fmt = "{src_text}")]
@@ -58,4 +61,42 @@ impl<'a> Debug for CharLine<'a> {
         let CharLine { pos, src_text, .. } = self;
         write!(f, "CharLine at {pos} of {src_text:?}")
     }
+}
+
+#[test]
+fn test_char_offset() {
+    let src_text = "I Love ❤️ Rust 🦀!";
+    let char_line = CharLine::scan_text(src_text, 0, 0);
+    let mut received = Vec::new();
+    for char_cell in char_line.char_cells().copied() {
+        dbg!(char_cell);
+        let offset = char_cell.offset_from_ln_start();
+        dbg!(offset);
+        let before = &src_text[..offset];
+        dbg!(before);
+        let after = &src_text[offset..];
+        dbg!(after);
+        received.push((before, after));
+    }
+    dbg!(&received);
+    let expected = [
+        ("", "I Love ❤️ Rust 🦀!"),
+        ("I", " Love ❤️ Rust 🦀!"),
+        ("I ", "Love ❤️ Rust 🦀!"),
+        ("I L", "ove ❤️ Rust 🦀!"),
+        ("I Lo", "ve ❤️ Rust 🦀!"),
+        ("I Lov", "e ❤️ Rust 🦀!"),
+        ("I Love", " ❤️ Rust 🦀!"),
+        ("I Love ", "❤️ Rust 🦀!"),
+        ("I Love ❤", "\u{fe0f} Rust 🦀!"),
+        ("I Love ❤️", " Rust 🦀!"),
+        ("I Love ❤️ ", "Rust 🦀!"),
+        ("I Love ❤️ R", "ust 🦀!"),
+        ("I Love ❤️ Ru", "st 🦀!"),
+        ("I Love ❤️ Rus", "t 🦀!"),
+        ("I Love ❤️ Rust", " 🦀!"),
+        ("I Love ❤️ Rust ", "🦀!"),
+        ("I Love ❤️ Rust 🦀", "!"),
+    ];
+    assert_eq!(received, expected);
 }
