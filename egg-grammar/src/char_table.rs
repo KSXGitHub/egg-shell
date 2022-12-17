@@ -8,10 +8,10 @@ use std::fmt::{self, Debug, Formatter};
 #[display(fmt = "{value}")]
 #[getset(get_copy = "pub")]
 pub struct CharCell {
-    /// Content of the character.
-    value: char,
     /// Character coordinate.
     coord: CharCoord,
+    /// Content of the character.
+    value: char,
 }
 
 impl Debug for CharCell {
@@ -45,7 +45,7 @@ impl<'a> CharLine<'a> {
             .chars()
             .enumerate()
             .map(|(col_pred, value)| (CharCoord::from_pred_counts(ln_pred, col_pred), value))
-            .map(|(coord, value)| CharCell { value, coord })
+            .map(|(coord, value)| CharCell { coord, value })
             .collect();
         CharLine {
             pos,
