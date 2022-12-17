@@ -28,7 +28,7 @@ impl Debug for CharCell {
 pub struct CharLine<'a> {
     /// Position of the line.
     pos: Ordinal,
-    /// Total sizes of lines before this line.
+    /// Total sizes of all lines before this line.
     offset: usize,
     /// Source text of the line.
     src_text: &'a str,
