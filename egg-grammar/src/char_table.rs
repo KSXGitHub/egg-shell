@@ -45,22 +45,17 @@ impl<'a> CharLine<'a> {
     /// Scan a line of text.
     fn scan_text(src_text: &'a str, ln_pred: usize, offset: usize) -> Self {
         let pos = Ordinal::from_pred_count(ln_pred);
-        let char_list = src_text
-            .chars()
-            .enumerate()
-            .map(|(col_pred, value)| (CharCoord::from_pred_counts(ln_pred, col_pred), value))
-            .scan(0, |offset, (col_pred, value)| {
-                let current_offset = *offset;
-                *offset += value.len_utf8();
-                Some((col_pred, current_offset, value))
-            })
-            .map(|(coord, offset_from_ln_start, value)| CharCell {
-                coord,
-                offset_from_ln_start,
+        let mut offset_from_ln_start = 0;
+        let mut char_list = Vec::new();
+        for (col_pred, value) in src_text.chars().enumerate() {
+            char_list.push(CharCell {
+                coord: CharCoord::from_pred_counts(ln_pred, col_pred),
                 offset_from_doc_start: offset + offset_from_ln_start,
+                offset_from_ln_start,
                 value,
-            })
-            .collect();
+            });
+            offset_from_ln_start += value.len_utf8();
+        }
         CharLine {
             pos,
             offset,
