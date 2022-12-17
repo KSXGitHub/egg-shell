@@ -37,12 +37,12 @@ pub struct CharLine<'a> {
 
 impl<'a> CharLine<'a> {
     /// Scan a line of text.
-    fn scan_text(src_text: &'a str, ln_offset: usize) -> Self {
-        let pos = Ordinal::from_offset(ln_offset);
+    fn scan_text(src_text: &'a str, ln_pred: usize) -> Self {
+        let pos = Ordinal::from_pred_count(ln_pred);
         let char_list = src_text
             .chars()
             .enumerate()
-            .map(|(col_offset, value)| (CharCoord::from_offsets(ln_offset, col_offset), value))
+            .map(|(col_pred, value)| (CharCoord::from_pred_counts(ln_pred, col_pred), value))
             .map(|(coord, value)| CharCell { value, coord })
             .collect();
         CharLine {
@@ -90,7 +90,7 @@ impl<'a> CharTable<'a> {
         let line_iter = src_text
             .lines()
             .enumerate()
-            .map(|(ln_offset, ln_text)| CharLine::scan_text(ln_text, ln_offset));
+            .map(|(ln_pred, ln_text)| CharLine::scan_text(ln_text, ln_pred));
         let mut char_count = 0;
         let mut line_list = Vec::new();
         for char_line in line_iter {

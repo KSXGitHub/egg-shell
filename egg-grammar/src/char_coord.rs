@@ -17,11 +17,11 @@ impl CharCoord {
         CharCoord { line, column }
     }
 
-    /// Create a character coordinate from line and column offsets.
-    pub const fn from_offsets(ln_offset: usize, col_offset: usize) -> Self {
+    /// Create a character coordinate from line and column predecessor counts.
+    pub const fn from_pred_counts(ln_pred: usize, col_pred: usize) -> Self {
         Self::new(
-            Ordinal::from_offset(ln_offset),
-            Ordinal::from_offset(col_offset),
+            Ordinal::from_pred_count(ln_pred),
+            Ordinal::from_pred_count(col_pred),
         )
     }
 }
