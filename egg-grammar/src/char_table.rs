@@ -59,7 +59,7 @@ impl<CharIter> CharTable<CharIter> {
     }
 }
 
-/// Result of [`CharTable::scan_next_char`].
+/// Result of [`CharTable::load_char`].
 #[derive(Debug, Clone, Copy)]
 pub enum ScanNextCharResult<'a> {
     /// The table is completed.
@@ -72,7 +72,7 @@ pub enum ScanNextCharResult<'a> {
 
 impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     /// Add another character to the table.
-    pub fn scan_next_char(&mut self) -> ScanNextCharResult<'_> {
+    pub fn load_char(&mut self) -> ScanNextCharResult<'_> {
         let CharTable {
             src_char_iter,
             loaded_last_line_offset,
