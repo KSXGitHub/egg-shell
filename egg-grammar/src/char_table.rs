@@ -98,9 +98,10 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         if char == '\n' {
             // TODO: refactor
             let current_byte_offset = loaded_text.len();
-            let last_byte_offset = current_byte_offset - 1;
-            let (eol_offset, eol) = if loaded_text.get(last_byte_offset..) == Some("\r") {
-                (last_byte_offset, EndOfLine::CRLF)
+            let last_byte_offset = current_byte_offset.checked_sub(1);
+            let last_char = last_byte_offset.map(|offset| (offset, loaded_text.get(offset..)));
+            let (eol_offset, eol) = if let Some((offset, Some("\r"))) = last_char {
+                (offset, EndOfLine::CRLF)
             } else {
                 (current_byte_offset, EndOfLine::LF)
             };
@@ -114,8 +115,13 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         } else if char == '\r' {
             // TODO: refactor
             let current_byte_offset = loaded_text.len();
-            let last_byte_offset = current_byte_offset - 1;
-            if loaded_text.get(last_byte_offset..) != Some("\n") {
+            let last_byte_offset = current_byte_offset.checked_sub(1);
+            let last_char = last_byte_offset.map(|offset| (offset, loaded_text.get(offset..)));
+            let Some((last_byte_offset, last_char)) = last_char else {
+                *loaded_char_count += 1;
+                return ScanNextCharResult::Char(char);
+            };
+            if last_char != Some("\n") {
                 *loaded_char_count += 1;
                 return ScanNextCharResult::Char(char);
             }
