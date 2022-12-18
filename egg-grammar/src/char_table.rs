@@ -1,4 +1,4 @@
-use crate::{CharCell, CharLine};
+use crate::{CharCell, TextSegment};
 use derive_more::Display;
 use getset::CopyGetters;
 use std::fmt::{self, Debug, Formatter};
@@ -14,7 +14,7 @@ pub struct CharTable<'a> {
     src_text: &'a str,
     /// List of lines.
     #[getset(skip)]
-    line_list: Vec<CharLine<'a>>,
+    line_list: Vec<TextSegment<'a>>,
 }
 
 impl<'a> CharTable<'a> {
@@ -24,7 +24,7 @@ impl<'a> CharTable<'a> {
         let mut char_count = 0;
         let mut line_list = Vec::new();
         for (ln_pred, ln_text) in src_text.lines().enumerate() {
-            let char_line = CharLine::scan_text(ln_text, ln_pred, offset);
+            let char_line = TextSegment::scan_text(ln_text, ln_pred, offset);
             offset += ln_text.len();
             char_count += char_line.char_count();
             line_list.push(char_line);
@@ -37,13 +37,13 @@ impl<'a> CharTable<'a> {
     }
 
     /// Iterate over all lines in the table.
-    pub fn char_lines(&self) -> impl Iterator<Item = &CharLine<'a>> {
+    pub fn char_lines(&self) -> impl Iterator<Item = &TextSegment<'a>> {
         self.line_list.iter()
     }
 
     /// Iterate over all character cells in the table.
     pub fn char_cells(&self) -> impl Iterator<Item = &CharCell> {
-        self.char_lines().flat_map(CharLine::char_cells)
+        self.char_lines().flat_map(TextSegment::char_cells)
     }
 
     /// Number of lines.

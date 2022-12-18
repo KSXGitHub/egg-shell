@@ -10,7 +10,7 @@ use pretty_assertions::assert_eq;
 #[derive(Display, Clone, CopyGetters)]
 #[display(fmt = "{src_text}")]
 #[getset(get_copy = "pub")]
-pub struct CharLine<'a> {
+pub struct TextSegment<'a> {
     /// Position of the line.
     pos: Ordinal,
     /// Total sizes of all lines before this line.
@@ -22,7 +22,7 @@ pub struct CharLine<'a> {
     char_list: Vec<CharCell>,
 }
 
-impl<'a> CharLine<'a> {
+impl<'a> TextSegment<'a> {
     /// Scan a line of text.
     pub(crate) fn scan_text(src_text: &'a str, ln_pred: usize, offset: usize) -> Self {
         let pos = Ordinal::from_pred_count(ln_pred);
@@ -37,7 +37,7 @@ impl<'a> CharLine<'a> {
             });
             offset_from_ln_start += value.len_utf8();
         }
-        CharLine {
+        TextSegment {
             pos,
             offset,
             src_text,
@@ -56,9 +56,9 @@ impl<'a> CharLine<'a> {
     }
 }
 
-impl<'a> Debug for CharLine<'a> {
+impl<'a> Debug for TextSegment<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let CharLine { pos, src_text, .. } = self;
+        let TextSegment { pos, src_text, .. } = self;
         write!(f, "CharLine at {pos} of {src_text:?}")
     }
 }
@@ -66,7 +66,7 @@ impl<'a> Debug for CharLine<'a> {
 #[test]
 fn test_char_offset() {
     let src_text = "I Love ❤️ Rust 🦀!";
-    let char_line = CharLine::scan_text(src_text, 0, 0);
+    let char_line = TextSegment::scan_text(src_text, 0, 0);
     let mut received = Vec::new();
     for char_cell in char_line.char_cells().copied() {
         dbg!(char_cell);
