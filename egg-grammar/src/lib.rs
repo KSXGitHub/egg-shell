@@ -1,6 +1,6 @@
 mod char_cell;
 mod char_coord;
-mod char_table;
+pub mod char_table;
 mod ordinal;
 mod text_segment;
 
