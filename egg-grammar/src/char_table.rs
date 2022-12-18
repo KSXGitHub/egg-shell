@@ -124,6 +124,13 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             ScanNextCharResult::Char(char)
         }
     }
+
+    /// Load the whole text.
+    pub fn load_all(&mut self) {
+        while !self.completed() {
+            self.load_char();
+        }
+    }
 }
 
 impl<CharIter> Debug for CharTable<CharIter> {
