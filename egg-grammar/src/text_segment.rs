@@ -1,30 +1,26 @@
 use crate::{CharCell, CharCoord, Ordinal};
-use derive_more::Display;
 use getset::CopyGetters;
-use std::fmt::{self, Debug, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 
 #[cfg(test)]
 use pretty_assertions::assert_eq;
 
 /// Information of a single line.
-#[derive(Display, Clone, CopyGetters)]
-#[display(fmt = "{src_text}")]
+#[derive(Clone, CopyGetters)]
 #[getset(get_copy = "pub")]
-pub struct TextSegment<'a> {
+pub struct TextSegment {
     /// Position of the line.
     pos: Ordinal,
     /// Total sizes of all lines before this line.
     offset: usize,
-    /// Source text of the line.
-    src_text: &'a str,
     /// List of characters.
     #[getset(skip)]
     char_list: Vec<CharCell>,
 }
 
-impl<'a> TextSegment<'a> {
+impl TextSegment {
     /// Scan a line of text.
-    pub(crate) fn scan_text(src_text: &'a str, ln_pred: usize, offset: usize) -> Self {
+    pub(crate) fn scan_text(src_text: &str, ln_pred: usize, offset: usize) -> Self {
         let pos = Ordinal::from_pred_count(ln_pred);
         let mut offset_from_ln_start = 0;
         let mut char_list = Vec::new();
@@ -40,7 +36,6 @@ impl<'a> TextSegment<'a> {
         TextSegment {
             pos,
             offset,
-            src_text,
             char_list,
         }
     }
@@ -56,10 +51,20 @@ impl<'a> TextSegment<'a> {
     }
 }
 
-impl<'a> Debug for TextSegment<'a> {
+impl Display for TextSegment {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let TextSegment { pos, src_text, .. } = self;
-        write!(f, "CharLine at {pos} of {src_text:?}")
+        for char_cell in self.char_cells() {
+            write!(f, "{char_cell}")?;
+        }
+        Ok(())
+    }
+}
+
+impl Debug for TextSegment {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let pos = self.pos;
+        let text = self.to_string();
+        write!(f, "CharLine at {pos} of {text:?}")
     }
 }
 
