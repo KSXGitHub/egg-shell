@@ -53,6 +53,14 @@ impl<CharIter> CharTable<CharIter> {
         }
     }
 
+    /// Start loading characters into a new character table.
+    pub fn from_char_list<CharList>(src_char_list: CharList) -> Self
+    where
+        CharList: IntoIterator<IntoIter = CharIter>,
+    {
+        CharTable::from_char_iter(src_char_list.into_iter())
+    }
+
     /// Number of lines.
     pub fn loaded_line_count(&self) -> usize {
         self.loaded_line_list().len()
