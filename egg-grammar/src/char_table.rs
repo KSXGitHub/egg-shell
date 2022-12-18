@@ -156,3 +156,10 @@ impl<CharIter> Debug for CharTable<CharIter> {
         )
     }
 }
+
+impl CharTable<std::str::Chars<'static>> {
+    /// Start load characters from a static string.
+    pub fn from_static_str(src_text: &'static str) -> Self {
+        CharTable::from_char_iter(src_text.chars())
+    }
+}
