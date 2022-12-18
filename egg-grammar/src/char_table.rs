@@ -42,7 +42,7 @@ pub struct CharTable<CharIter> {
 
 impl<CharIter> CharTable<CharIter> {
     /// Start loading characters into a new character table.
-    pub const fn new(src_char_iter: CharIter) -> Self {
+    pub const fn from_char_iter(src_char_iter: CharIter) -> Self {
         CharTable {
             src_char_iter,
             loaded_last_line_offset: 0,
