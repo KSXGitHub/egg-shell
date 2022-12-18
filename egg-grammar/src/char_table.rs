@@ -139,6 +139,12 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             self.load_char();
         }
     }
+
+    /// Return a table with completed text.
+    pub fn into_completed(mut self) -> Self {
+        self.load_all();
+        self
+    }
 }
 
 impl<CharIter> Debug for CharTable<CharIter> {
