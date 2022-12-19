@@ -35,11 +35,11 @@ struct CharTableLoadingProgress<CharIter> {
 /// `Some` means that the table is incomplete.
 ///
 /// `None` means that the table is completed.
-type CharTableState<CharIter> = Option<CharTableLoadingProgress<CharIter>>;
+type CharTableCompletion<CharIter> = Option<CharTableLoadingProgress<CharIter>>;
 
 /// Whether the [`CharTable`] is completed.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
-pub enum Completion {
+pub enum CompletionStatus {
     /// Not all characters are loaded.
     Incomplete,
     /// All characters are loaded.
@@ -63,7 +63,7 @@ pub struct CharTable<CharIter> {
     /// `Some` means that the table is incomplete.
     ///
     /// `None` means that the table is completed.
-    state: CharTableState<CharIter>,
+    completion_progress: CharTableCompletion<CharIter>,
 }
 
 impl<CharIter> CharTable<CharIter> {
@@ -78,7 +78,7 @@ impl<CharIter> CharTable<CharIter> {
             loaded_char_count: 0,
             loaded_text: String::new(),
             loaded_line_list: Vec::new(),
-            state,
+            completion_progress: state,
         }
     }
 
@@ -96,10 +96,10 @@ impl<CharIter> CharTable<CharIter> {
     }
 
     /// Whether the table is completed.
-    pub const fn completion(&self) -> Completion {
-        match self.state {
-            Some(_) => Completion::Incomplete,
-            None => Completion::Complete,
+    pub const fn completion(&self) -> CompletionStatus {
+        match self.completion_progress {
+            Some(_) => CompletionStatus::Incomplete,
+            None => CompletionStatus::Complete,
         }
     }
 }
@@ -129,14 +129,14 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             loaded_char_count,
             loaded_text,
             loaded_line_list,
-            state,
+            completion_progress,
         } = self;
 
         let Some(CharTableLoadingProgress {
             src_char_iter,
             prev_non_lf,
             prev_line_offset,
-        }) = state else {
+        }) = completion_progress else {
             return Ok(LoadCharReport::Document);
         };
 
@@ -145,7 +145,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             let line_src_text = &loaded_text[line_offset..];
             let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
-            *state = None;
+            *completion_progress = None;
             return Ok(LoadCharReport::Document);
         };
 
@@ -184,7 +184,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
     /// Load the whole text.
     pub fn load_all(&mut self) -> Result<(), LoadCharError> {
-        while self.completion() == Completion::Incomplete {
+        while self.completion() == CompletionStatus::Incomplete {
             self.load_char()?;
         }
         Ok(())
