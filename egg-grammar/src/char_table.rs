@@ -20,7 +20,6 @@ pub enum EndOfLine {
 #[derive(Clone, CopyGetters, Getters)]
 pub struct CharTable<CharIter> {
     /// Source of characters to scan.
-    #[getset(get = "pub")]
     src_char_iter: CharIter,
     /// Track the last non-newline character loaded.
     loaded_last_inline_char: Option<char>,
