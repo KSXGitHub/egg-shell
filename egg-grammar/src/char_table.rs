@@ -11,8 +11,6 @@ pub enum EndOfLine {
     LF,
     #[strum(serialize = "\r\n")]
     CRLF,
-    #[strum(serialize = "\n\r")]
-    LFCR,
     #[strum(serialize = "")]
     EOF,
 }
@@ -120,27 +118,6 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             *loaded_char_count += 1;
             *loaded_last_line_offset = loaded_text.len();
             ScanNextCharResult::Line(line_src_text, eol)
-        } else if char == '\r' {
-            // TODO: refactor
-            let last_byte_offset = current_byte_offset.checked_sub(1);
-            let last_char = last_byte_offset
-                .map(|offset| (offset, loaded_text.get(offset..current_byte_offset)));
-            let Some((_last_byte_offset, last_char)) = last_char else {
-                *loaded_char_count += 1;
-                return ScanNextCharResult::Char(char);
-            };
-            if last_char != Some("\n") {
-                *loaded_char_count += 1;
-                return ScanNextCharResult::Char(char);
-            }
-            let line_offset = *loaded_last_line_offset;
-            let line_src_text = &loaded_text[line_offset..current_byte_offset];
-            let line_segment =
-                TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
-            loaded_line_list.push((line_segment, EndOfLine::LFCR));
-            *loaded_char_count += 1;
-            *loaded_last_line_offset = loaded_text.len();
-            ScanNextCharResult::Line(line_src_text, EndOfLine::LFCR)
         } else {
             // TODO: refactor
             *loaded_char_count += 1;
