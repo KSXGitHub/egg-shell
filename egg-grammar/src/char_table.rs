@@ -102,6 +102,36 @@ impl<CharIter> CharTable<CharIter> {
             None => CompletionStatus::Complete,
         }
     }
+
+    /// Return the total number of characters if the table is fully loaded.
+    /// * `Some(n)` means that the table is fully loaded with `n` characters.
+    /// * `None` means that the table isn't yet completed.
+    pub const fn total_char_count(&self) -> Option<usize> {
+        match self.completion() {
+            CompletionStatus::Complete => Some(self.loaded_char_count),
+            CompletionStatus::Incomplete => None,
+        }
+    }
+
+    /// Return reference to the full string if the table is fully loaded.
+    /// * `Some(text)` means that the table is fully loaded with `text` being the content.
+    /// * `None` means that the table isn't yet completed.
+    pub const fn full_text(&self) -> Option<&String> {
+        match self.completion() {
+            CompletionStatus::Complete => Some(&self.loaded_text),
+            CompletionStatus::Incomplete => None,
+        }
+    }
+
+    /// Return reference to the complete list of lines if the table is fully loaded.
+    /// * `Some(list)` means that the table is fully loaded with `list` being the complete list of lines.
+    /// * `None` means that the table isn't yet completed.
+    pub const fn all_lines(&self) -> Option<&Vec<(TextSegment, EndOfLine)>> {
+        match self.completion() {
+            CompletionStatus::Complete => Some(&self.loaded_line_list),
+            CompletionStatus::Incomplete => None,
+        }
+    }
 }
 
 /// Success value of [`CharTable::load_char`].

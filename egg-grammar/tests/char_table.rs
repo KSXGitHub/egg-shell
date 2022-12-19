@@ -20,7 +20,8 @@ fn table() -> CharTable<impl Iterator<Item = char>> {
 fn line_correctness() {
     let table = table();
     let received: Vec<_> = table
-        .loaded_line_list()
+        .all_lines()
+        .expect("get the complete list of lines")
         .iter()
         .map(|(segment, eol)| (segment.to_string(), eol))
         .collect();
@@ -36,4 +37,21 @@ fn line_correctness() {
         ("The language is called 'egg-shell' 🥚", EndOfLine::EOF),
     ];
     assert_eq!(received, expected);
+}
+
+#[test]
+fn text_correctness() {
+    let table = table();
+    let char_count = table
+        .total_char_count()
+        .expect("get total number of characters");
+    dbg!(char_count);
+    let text = table.full_text().expect("get full text");
+    eprintln!("FULL TEXT:\n{text}\nEND FULL TEXT");
+    eprintln!("TEST: full == loaded");
+    assert_eq!(text, table.loaded_text());
+    assert_eq!(char_count, table.loaded_char_count());
+    eprintln!("TEST: full == source");
+    assert_eq!(text, SRC_TEXT);
+    assert_eq!(char_count, SRC_TEXT.chars().count());
 }
