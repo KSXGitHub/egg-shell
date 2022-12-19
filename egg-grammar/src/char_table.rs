@@ -208,6 +208,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             let line_src_text = &loaded_text[line_offset..];
             let line_segment = TextLineCoord::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
+            loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
             return Ok(LoadCharReport::Document);
         };
