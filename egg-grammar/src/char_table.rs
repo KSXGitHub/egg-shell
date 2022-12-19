@@ -71,7 +71,7 @@ impl<CharIter> CharTable<CharIter> {
 
 /// Success value of [`CharTable::load_char`].
 #[derive(Debug, Clone, Copy)]
-pub enum ScanNextCharReport<'a> {
+pub enum LoadCharReport<'a> {
     /// The table is completed.
     Document,
     /// Complete a line.
@@ -82,14 +82,14 @@ pub enum ScanNextCharReport<'a> {
 
 /// Failure value of [`CharTable::load_char`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ScanNextCharError {
+pub enum LoadCharError {
     /// Encounter an invalid character.
     IllPlacedCarriageReturn { followed_by: char },
 }
 
 impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     /// Add another character to the table.
-    pub fn load_char(&mut self) -> Result<ScanNextCharReport<'_>, ScanNextCharError> {
+    pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError> {
         let CharTable {
             src_char_iter,
             loaded_last_inline_char,
@@ -106,7 +106,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             let line_src_text = &loaded_text[line_offset..];
             let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
-            return Ok(ScanNextCharReport::Document);
+            return Ok(LoadCharReport::Document);
         };
 
         let current_byte_offset = loaded_text.len();
@@ -130,21 +130,21 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             *loaded_char_count += 1;
             *loaded_last_inline_char = None;
             *loaded_last_line_offset = loaded_text.len();
-            ScanNextCharReport::Line(line_src_text, eol).pipe(Ok)
+            LoadCharReport::Line(line_src_text, eol).pipe(Ok)
         } else {
             // TODO: refactor
             if *loaded_last_inline_char == Some('\r') {
                 dbg!(loaded_text);
-                return Err(ScanNextCharError::IllPlacedCarriageReturn { followed_by: char });
+                return Err(LoadCharError::IllPlacedCarriageReturn { followed_by: char });
             }
             *loaded_char_count += 1;
             *loaded_last_inline_char = Some(char);
-            char.pipe(ScanNextCharReport::Char).pipe(Ok)
+            char.pipe(LoadCharReport::Char).pipe(Ok)
         }
     }
 
     /// Load the whole text.
-    pub fn load_all(&mut self) -> Result<(), ScanNextCharError> {
+    pub fn load_all(&mut self) -> Result<(), LoadCharError> {
         while !self.completed() {
             self.load_char()?;
         }
@@ -152,7 +152,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     }
 
     /// Return a table with completed text.
-    pub fn into_completed(mut self) -> Result<Self, ScanNextCharError> {
+    pub fn into_completed(mut self) -> Result<Self, LoadCharError> {
         self.load_all()?;
         Ok(self)
     }
