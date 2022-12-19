@@ -5,7 +5,7 @@ use pretty_assertions::assert_eq;
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
     "I ❤️ Rust 🦀,\r\n",
-    "So I use to create a programming language,\n",
+    "So I use it to create a programming language,\n",
     "The language is called 'egg-shell' 🥚",
 };
 
@@ -33,7 +33,10 @@ fn line_correctness() {
     let expected = [
         ("Hello,", EndOfLine::LF),
         ("I ❤️ Rust 🦀,", EndOfLine::CRLF),
-        ("So I use to create a programming language,", EndOfLine::LF),
+        (
+            "So I use it to create a programming language,",
+            EndOfLine::LF,
+        ),
         ("The language is called 'egg-shell' 🥚", EndOfLine::EOF),
     ];
     assert_eq!(received, expected);
