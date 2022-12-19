@@ -25,7 +25,6 @@ pub struct CharTable<CharIter> {
     /// Track the last non-newline character loaded.
     loaded_last_inline_char: Option<char>,
     /// Byte offset of the last loaded line.
-    #[getset(get_copy = "pub")]
     loaded_last_line_offset: usize,
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
