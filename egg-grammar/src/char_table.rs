@@ -92,14 +92,21 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
         let Some(char) = src_char_iter.next() else {
             *completed = true;
+            let line_offset = *loaded_last_line_offset;
+            let line_src_text = &loaded_text[line_offset..];
+            let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
+            loaded_line_list.push((line_segment, EndOfLine::EOF));
             return ScanNextCharResult::Document;
         };
 
+        let current_byte_offset = loaded_text.len();
+        loaded_text.push(char);
+
         if char == '\n' {
             // TODO: refactor
-            let current_byte_offset = loaded_text.len();
             let last_byte_offset = current_byte_offset.checked_sub(1);
-            let last_char = last_byte_offset.map(|offset| (offset, loaded_text.get(offset..)));
+            let last_char = last_byte_offset
+                .map(|offset| (offset, loaded_text.get(offset..current_byte_offset)));
             let (eol_offset, eol) = if let Some((offset, Some("\r"))) = last_char {
                 (offset, EndOfLine::CRLF)
             } else {
@@ -111,12 +118,13 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
                 TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, eol));
             *loaded_char_count += 1;
+            *loaded_last_line_offset = eol_offset;
             ScanNextCharResult::Line(line_src_text, eol)
         } else if char == '\r' {
             // TODO: refactor
-            let current_byte_offset = loaded_text.len();
             let last_byte_offset = current_byte_offset.checked_sub(1);
-            let last_char = last_byte_offset.map(|offset| (offset, loaded_text.get(offset..)));
+            let last_char = last_byte_offset
+                .map(|offset| (offset, loaded_text.get(offset..current_byte_offset)));
             let Some((last_byte_offset, last_char)) = last_char else {
                 *loaded_char_count += 1;
                 return ScanNextCharResult::Char(char);
@@ -131,6 +139,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
                 TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::LFCR));
             *loaded_char_count += 1;
+            *loaded_last_line_offset = current_byte_offset;
             ScanNextCharResult::Line(line_src_text, EndOfLine::LFCR)
         } else {
             // TODO: refactor
