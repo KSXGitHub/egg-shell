@@ -1,4 +1,5 @@
 use crate::TextSegment;
+use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
 use std::fmt::{self, Debug, Formatter};
@@ -149,7 +150,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             // TODO: refactor
             let last_char = *last_inline_char;
             let (eol_offset, eol) = if last_char == Some('\r') {
-                debug_assert!(current_byte_offset > 0);
+                debug_assert_op!(current_byte_offset > 0);
                 (current_byte_offset - 1, EndOfLine::CRLF)
             } else {
                 (current_byte_offset, EndOfLine::LF)
