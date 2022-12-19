@@ -6,7 +6,8 @@ const SRC_TEXT: &str = concat! {
     "I ❤️ Rust 🦀,\r\n",
     "So I use to create a programming language,\n\r",
     "The language is called 'egg-shell' 🥚\n",
-    "And it's going to be awesome!"
+    "It's inspired by Rust 🦀\r",
+    "It's going to be awesome!",
 };
 
 fn table() -> CharTable<impl Iterator<Item = char>> {
