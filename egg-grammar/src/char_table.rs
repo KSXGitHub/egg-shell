@@ -205,7 +205,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         let Some(char) = src_char_iter.next() else {
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
-            let line_segment = TextSliceDef::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), line_offset);
+            let line_segment = TextSliceDef::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), 0, line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
@@ -229,6 +229,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
                 loaded_char_list,
                 line_src_text,
                 loaded_line_list.len(),
+                0,
                 line_offset,
             );
             loaded_line_list.push((line_segment, eol));

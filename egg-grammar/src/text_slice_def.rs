@@ -20,12 +20,13 @@ impl TextSliceDef {
         char_list: &mut Vec<CharCell>,
         src_text: &str,
         ln_pred: usize,
+        col_pred: usize,
         offset: usize,
     ) -> Self {
         let mut offset_from_ln_start = 0;
-        for (col_pred, value) in src_text.chars().enumerate() {
+        for (col_add, value) in src_text.chars().enumerate() {
             char_list.push(CharCell {
-                coord: CharCoord::from_pred_counts(ln_pred, col_pred),
+                coord: CharCoord::from_pred_counts(ln_pred, col_pred + col_add),
                 offset_from_doc_start: offset + offset_from_ln_start,
                 offset_from_ln_start,
                 value,
@@ -43,7 +44,7 @@ impl TextSliceDef {
 fn test_char_offset() {
     let src_text = "I Love ❤️ Rust 🦀!";
     let mut char_list = Vec::new();
-    TextSliceDef::scan_text(&mut char_list, src_text, 0, 0);
+    TextSliceDef::scan_text(&mut char_list, src_text, 0, 0, 0);
     let mut received = Vec::new();
     for char_cell in char_list.iter().copied() {
         dbg!(char_cell);
