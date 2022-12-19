@@ -217,7 +217,6 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         loaded_text.push(char);
 
         if char == '\n' {
-            // TODO: refactor
             let last_char = *prev_non_lf;
             let (eol_offset, eol) = if last_char == Some('\r') {
                 debug_assert_op!(current_byte_offset > 0);
@@ -239,7 +238,6 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             *prev_line_offset = loaded_text.len();
             LoadCharReport::Line(line_src_text, eol).pipe(Ok)
         } else {
-            // TODO: refactor
             if *prev_non_lf == Some('\r') {
                 dbg!(loaded_text);
                 return Err(LoadCharError::IllPlacedCarriageReturn { followed_by: char });
