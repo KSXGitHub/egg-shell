@@ -16,15 +16,36 @@ pub enum EndOfLine {
     EOF,
 }
 
-/// Table of characters.
-#[derive(Clone, CopyGetters, Getters)]
-pub struct CharTable<CharIter> {
+/// Loading progress of [`CharTable`].
+#[derive(Clone)]
+struct CharTableLoadingProgress<CharIter> {
     /// Source of characters to scan.
     src_char_iter: CharIter,
     /// Track the last non-newline character loaded.
     loaded_last_inline_char: Option<char>,
     /// Byte offset of the last loaded line.
     loaded_last_line_offset: usize,
+}
+
+/// State of [`CharTable`].
+///
+/// `Some` means that the table is incomplete.
+///
+/// `None` means that the table is completed.
+type CharTableState<CharIter> = Option<CharTableLoadingProgress<CharIter>>;
+
+/// Whether the [`CharTable`] is completed.
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
+pub enum Completion {
+    /// Not all characters are loaded.
+    Incomplete,
+    /// All characters are loaded.
+    Complete,
+}
+
+/// Table of characters.
+#[derive(Clone, CopyGetters, Getters)]
+pub struct CharTable<CharIter> {
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
     loaded_char_count: usize,
@@ -34,22 +55,27 @@ pub struct CharTable<CharIter> {
     /// List of loaded lines.
     #[getset(get = "pub")]
     loaded_line_list: Vec<(TextSegment, EndOfLine)>,
-    /// Whether the loading process is completed.
-    #[getset(get_copy = "pub")]
-    completed: bool,
+    /// State of the table.
+    ///
+    /// `Some` means that the table is incomplete.
+    ///
+    /// `None` means that the table is completed.
+    state: CharTableState<CharIter>,
 }
 
 impl<CharIter> CharTable<CharIter> {
     /// Start loading characters into a new character table.
     pub const fn from_char_iter(src_char_iter: CharIter) -> Self {
-        CharTable {
+        let state = Some(CharTableLoadingProgress {
             src_char_iter,
             loaded_last_inline_char: None,
             loaded_last_line_offset: 0,
+        });
+        CharTable {
             loaded_char_count: 0,
             loaded_text: String::new(),
             loaded_line_list: Vec::new(),
-            completed: false,
+            state,
         }
     }
 
@@ -64,6 +90,14 @@ impl<CharIter> CharTable<CharIter> {
     /// Number of lines.
     pub fn loaded_line_count(&self) -> usize {
         self.loaded_line_list().len()
+    }
+
+    /// Whether the table is completed.
+    pub const fn completion(&self) -> Completion {
+        match self.state {
+            Some(_) => Completion::Incomplete,
+            None => Completion::Complete,
+        }
     }
 }
 
@@ -89,21 +123,22 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     /// Add another character to the table.
     pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError> {
         let CharTable {
-            src_char_iter,
-            loaded_last_inline_char,
-            loaded_last_line_offset,
             loaded_char_count,
             loaded_text,
             loaded_line_list,
-            completed,
+            state,
         } = self;
 
+        let Some(CharTableLoadingProgress { src_char_iter, loaded_last_inline_char, loaded_last_line_offset }) = state else {
+            return Ok(LoadCharReport::Document);
+        };
+
         let Some(char) = src_char_iter.next() else {
-            *completed = true;
             let line_offset = *loaded_last_line_offset;
             let line_src_text = &loaded_text[line_offset..];
             let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
+            *state = None;
             return Ok(LoadCharReport::Document);
         };
 
@@ -143,7 +178,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
     /// Load the whole text.
     pub fn load_all(&mut self) -> Result<(), LoadCharError> {
-        while !self.completed() {
+        while self.completion() == Completion::Incomplete {
             self.load_char()?;
         }
         Ok(())
@@ -160,11 +195,7 @@ impl<CharIter> Debug for CharTable<CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let char_count = self.loaded_char_count();
         let line_count = self.loaded_line_count();
-        let completion = if self.completed() {
-            "complete"
-        } else {
-            "incomplete"
-        };
+        let completion = self.completion();
         write!(
             f,
             "CharTable of {line_count} lines {char_count} chars ({completion})",
