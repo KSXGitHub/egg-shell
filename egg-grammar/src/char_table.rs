@@ -22,10 +22,12 @@ pub enum EndOfLine {
 struct CharTableLoadingProgress<CharIter> {
     /// Source of characters to scan.
     src_char_iter: CharIter,
-    /// Track the last non-newline character loaded.
-    last_inline_char: Option<char>,
-    /// Byte offset of the last loaded line.
-    last_line_offset: usize,
+    /// Track the previously loaded character that isn't "\n".
+    /// * `Some(char)` means that `char` is the previous character and `char` isn't "\n".
+    /// * `None` means that the previous character is "\n".
+    prev_non_lf: Option<char>,
+    /// Byte offset of the previously loaded line.
+    prev_line_offset: usize,
 }
 
 /// State of [`CharTable`].
@@ -69,8 +71,8 @@ impl<CharIter> CharTable<CharIter> {
     pub const fn from_char_iter(src_char_iter: CharIter) -> Self {
         let state = Some(CharTableLoadingProgress {
             src_char_iter,
-            last_inline_char: None,
-            last_line_offset: 0,
+            prev_non_lf: None,
+            prev_line_offset: 0,
         });
         CharTable {
             loaded_char_count: 0,
@@ -132,14 +134,14 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
         let Some(CharTableLoadingProgress {
             src_char_iter,
-            last_inline_char,
-            last_line_offset
+            prev_non_lf,
+            prev_line_offset,
         }) = state else {
             return Ok(LoadCharReport::Document);
         };
 
         let Some(char) = src_char_iter.next() else {
-            let line_offset = *last_line_offset;
+            let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
             let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
@@ -152,30 +154,30 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
         if char == '\n' {
             // TODO: refactor
-            let last_char = *last_inline_char;
+            let last_char = *prev_non_lf;
             let (eol_offset, eol) = if last_char == Some('\r') {
                 debug_assert_op!(current_byte_offset > 0);
                 (current_byte_offset - 1, EndOfLine::CRLF)
             } else {
                 (current_byte_offset, EndOfLine::LF)
             };
-            let line_offset = *last_line_offset;
+            let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..eol_offset];
             let line_segment =
                 TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, eol));
             *loaded_char_count += 1;
-            *last_inline_char = None;
-            *last_line_offset = loaded_text.len();
+            *prev_non_lf = None;
+            *prev_line_offset = loaded_text.len();
             LoadCharReport::Line(line_src_text, eol).pipe(Ok)
         } else {
             // TODO: refactor
-            if *last_inline_char == Some('\r') {
+            if *prev_non_lf == Some('\r') {
                 dbg!(loaded_text);
                 return Err(LoadCharError::IllPlacedCarriageReturn { followed_by: char });
             }
             *loaded_char_count += 1;
-            *last_inline_char = Some(char);
+            *prev_non_lf = Some(char);
             char.pipe(LoadCharReport::Char).pipe(Ok)
         }
     }
