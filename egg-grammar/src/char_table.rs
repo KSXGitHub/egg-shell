@@ -130,7 +130,11 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             state,
         } = self;
 
-        let Some(CharTableLoadingProgress { src_char_iter, last_inline_char, last_line_offset }) = state else {
+        let Some(CharTableLoadingProgress {
+            src_char_iter,
+            last_inline_char,
+            last_line_offset
+        }) = state else {
             return Ok(LoadCharReport::Document);
         };
 
