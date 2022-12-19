@@ -14,19 +14,33 @@ pub struct TextSliceDef {
     size: usize,
 }
 
-impl TextSliceDef {
+/// Prepare a text scanner.
+#[must_use = "call the `run` method to scan the text"]
+pub struct ScanText<'a> {
+    /// Character list to append to.
+    pub char_list: &'a mut Vec<CharCell>,
+    /// Source text for reference.
+    pub src_text: &'a str,
+    /// Coordinate of the first character of the slice.
+    pub first_char_coord: CharCoord,
+    /// Byte offset from the beginning of the source text
+    /// to the first character of the slice.
+    pub offset: usize,
+}
+
+impl<'a> ScanText<'a> {
     /// Scan a line of text and append characters into a `Vec`.
-    pub(crate) fn scan_text(
-        char_list: &mut Vec<CharCell>,
-        src_text: &str,
-        ln_pred: usize,
-        col_pred: usize,
-        offset: usize,
-    ) -> Self {
+    pub fn run(self) -> TextSliceDef {
+        let ScanText {
+            char_list,
+            src_text,
+            first_char_coord,
+            offset,
+        } = self;
         let mut offset_from_ln_start = 0;
         for (col_add, value) in src_text.chars().enumerate() {
             char_list.push(CharCell {
-                coord: CharCoord::from_pred_counts(ln_pred, col_pred + col_add),
+                coord: first_char_coord.advance_column(col_add),
                 offset_from_doc_start: offset + offset_from_ln_start,
                 offset_from_ln_start,
                 value,
@@ -44,7 +58,12 @@ impl TextSliceDef {
 fn test_char_offset() {
     let src_text = "I Love ❤️ Rust 🦀!";
     let mut char_list = Vec::new();
-    TextSliceDef::scan_text(&mut char_list, src_text, 0, 0, 0);
+    ScanText::run(ScanText {
+        char_list: &mut char_list,
+        src_text,
+        first_char_coord: CharCoord::from_pred_counts(0, 0),
+        offset: 0,
+    });
     let mut received = Vec::new();
     for char_cell in char_list.iter().copied() {
         dbg!(char_cell);

@@ -1,4 +1,4 @@
-use crate::{CharCell, EndOfLine, TextSliceDef};
+use crate::{text_slice_def::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -205,7 +205,12 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         let Some(char) = src_char_iter.next() else {
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
-            let line_slice_def = TextSliceDef::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), 0, line_offset);
+            let line_slice_def = ScanText::run(ScanText {
+                char_list: loaded_char_list,
+                src_text: line_src_text,
+                first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
+                offset: line_offset
+            });
             loaded_line_list.push((line_slice_def, EndOfLine::EOF));
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
@@ -225,13 +230,12 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             };
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..eol_offset];
-            let line_slice_def = TextSliceDef::scan_text(
-                loaded_char_list,
-                line_src_text,
-                loaded_line_list.len(),
-                0,
-                line_offset,
-            );
+            let line_slice_def = ScanText::run(ScanText {
+                char_list: loaded_char_list,
+                src_text: line_src_text,
+                first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
+                offset: line_offset,
+            });
             loaded_line_list.push((line_slice_def, eol));
             *loaded_char_count += 1;
             *prev_non_lf = None;

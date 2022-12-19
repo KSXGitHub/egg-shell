@@ -24,4 +24,16 @@ impl CharCoord {
             Ordinal::from_pred_count(col_pred),
         )
     }
+
+    /// Advance by a number of lines.
+    pub const fn advance_line(mut self, steps: usize) -> Self {
+        self.line = self.line.advance_by(steps);
+        self
+    }
+
+    /// Advance by a number of columns.
+    pub const fn advance_column(mut self, steps: usize) -> Self {
+        self.column = self.column.advance_by(steps);
+        self
+    }
 }

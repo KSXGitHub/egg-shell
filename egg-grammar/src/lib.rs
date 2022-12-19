@@ -3,7 +3,7 @@ mod char_coord;
 pub mod char_table;
 mod eol;
 mod ordinal;
-mod text_slice_def;
+pub mod text_slice_def;
 
 pub use char_cell::CharCell;
 pub use char_coord::CharCoord;

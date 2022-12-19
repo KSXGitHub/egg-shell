@@ -33,6 +33,12 @@ impl Ordinal {
     pub const fn value(self) -> NonZeroUsize {
         unsafe { NonZeroUsize::new_unchecked(self.pred_count + 1) }
     }
+
+    /// Advance the cardinal by a number of steps.
+    pub const fn advance_by(mut self, steps: usize) -> Self {
+        self.pred_count += steps;
+        self
+    }
 }
 
 /// Display the value of the ordinal as a string.
