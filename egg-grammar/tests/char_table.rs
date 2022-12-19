@@ -1,4 +1,4 @@
-use egg_grammar::char_table::{CharTable, EndOfLine};
+use egg_grammar::char_table::{CharTable, EndOfLine::*};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
@@ -31,13 +31,10 @@ fn line_correctness() {
         .collect();
     dbg!(&received);
     let expected = [
-        ("Hello,", EndOfLine::LF),
-        ("I ❤️ Rust 🦀,", EndOfLine::CRLF),
-        (
-            "So I use it to create a programming language,",
-            EndOfLine::LF,
-        ),
-        ("The language is called 'egg-shell' 🥚", EndOfLine::EOF),
+        ("Hello,", LF),
+        ("I ❤️ Rust 🦀,", CRLF),
+        ("So I use it to create a programming language,", LF),
+        ("The language is called 'egg-shell' 🥚", EOF),
     ];
     assert_eq!(received, expected);
 }
