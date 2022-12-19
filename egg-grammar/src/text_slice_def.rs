@@ -4,17 +4,17 @@ use getset::CopyGetters;
 #[cfg(test)]
 use pretty_assertions::assert_eq;
 
-/// Information of a single line.
+/// Information of a text segment.
 #[derive(Debug, Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
-pub struct TextLineCoord {
+pub struct TextSliceDef {
     /// Total sizes of all lines before this line.
     offset: usize,
     /// Size of the text in the line.
     size: usize,
 }
 
-impl TextLineCoord {
+impl TextSliceDef {
     /// Scan a line of text and append characters into a `Vec`.
     pub(crate) fn scan_text(
         char_list: &mut Vec<CharCell>,
@@ -32,7 +32,7 @@ impl TextLineCoord {
             });
             offset_from_ln_start += value.len_utf8();
         }
-        TextLineCoord {
+        TextSliceDef {
             offset,
             size: src_text.len(),
         }
@@ -43,7 +43,7 @@ impl TextLineCoord {
 fn test_char_offset() {
     let src_text = "I Love ❤️ Rust 🦀!";
     let mut char_list = Vec::new();
-    TextLineCoord::scan_text(&mut char_list, src_text, 0, 0);
+    TextSliceDef::scan_text(&mut char_list, src_text, 0, 0);
     let mut received = Vec::new();
     for char_cell in char_list.iter().copied() {
         dbg!(char_cell);

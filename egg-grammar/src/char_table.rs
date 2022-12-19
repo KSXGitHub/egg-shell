@@ -1,4 +1,4 @@
-use crate::{CharCell, EndOfLine, TextLineCoord};
+use crate::{CharCell, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -10,7 +10,7 @@ use strum::{AsRefStr, Display, IntoStaticStr};
 #[getset(get_copy = "pub")]
 pub struct CharTableLine<'a, CharIter> {
     /// Coordinate of the line
-    coord: TextLineCoord,
+    coord: TextSliceDef,
     /// Type of EOL string.
     eol: EndOfLine,
     /// Reference table.
@@ -19,7 +19,7 @@ pub struct CharTableLine<'a, CharIter> {
 
 impl<'a, CharIter> CharTableLine<'a, CharIter> {
     /// Create a [`CharTableLine`].
-    const fn new(coord: TextLineCoord, eol: EndOfLine, table: &'a CharTable<CharIter>) -> Self {
+    const fn new(coord: TextSliceDef, eol: EndOfLine, table: &'a CharTable<CharIter>) -> Self {
         CharTableLine { coord, eol, table }
     }
 
@@ -89,7 +89,7 @@ pub struct CharTable<CharIter> {
     #[getset(get = "pub")]
     loaded_char_list: Vec<CharCell>,
     /// List of loaded line coordinates.
-    loaded_line_list: Vec<(TextLineCoord, EndOfLine)>,
+    loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
     /// State of the table.
     ///
     /// `Some` means that the table is incomplete.
@@ -205,7 +205,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         let Some(char) = src_char_iter.next() else {
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
-            let line_segment = TextLineCoord::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), line_offset);
+            let line_segment = TextSliceDef::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
@@ -225,7 +225,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             };
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..eol_offset];
-            let line_segment = TextLineCoord::scan_text(
+            let line_segment = TextSliceDef::scan_text(
                 loaded_char_list,
                 line_src_text,
                 loaded_line_list.len(),
