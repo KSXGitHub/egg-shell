@@ -1,4 +1,4 @@
-use egg_grammar::char_table::{CharTable, EndOfLine::*};
+use egg_grammar::{CharTable, EndOfLine::*};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
@@ -22,12 +22,7 @@ fn line_correctness() {
     let received: Vec<_> = table
         .all_lines()
         .expect("get the complete list of lines")
-        .iter()
-        .map(|(segment, eol)| (segment.to_string(), eol))
-        .collect();
-    let received: Vec<_> = received
-        .iter()
-        .map(|(line, eol)| (line.as_str(), **eol))
+        .map(|line| (line.text_without_eol(), line.eol()))
         .collect();
     dbg!(&received);
     let expected = [

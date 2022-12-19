@@ -1,20 +1,51 @@
-use crate::TextSegment;
+use crate::{CharCell, EndOfLine, TextLineCoord};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
-use std::fmt::{self, Debug, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 use strum::{AsRefStr, Display, IntoStaticStr};
 
-/// String that ends a line.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, AsRefStr, Display, IntoStaticStr)]
-#[allow(clippy::upper_case_acronyms)]
-pub enum EndOfLine {
-    #[strum(serialize = "\n")]
-    LF,
-    #[strum(serialize = "\r\n")]
-    CRLF,
-    #[strum(serialize = "")]
-    EOF,
+/// Represent a line in the [`CharTable`].
+#[derive(Clone, Copy, CopyGetters)]
+#[getset(get_copy = "pub")]
+pub struct CharTableLine<'a, CharIter> {
+    /// Coordinate of the line
+    coord: TextLineCoord,
+    /// Type of EOL string.
+    eol: EndOfLine,
+    /// Reference table.
+    table: &'a CharTable<CharIter>,
+}
+
+impl<'a, CharIter> CharTableLine<'a, CharIter> {
+    /// Create a [`CharTableLine`].
+    const fn new(coord: TextLineCoord, eol: EndOfLine, table: &'a CharTable<CharIter>) -> Self {
+        CharTableLine { coord, eol, table }
+    }
+
+    /// Get text content of the slice without EOL.
+    pub fn text_without_eol(&self) -> &'a str {
+        let start = self.coord.offset();
+        let end = start + self.coord.size();
+        &self.table.loaded_text[start..end]
+    }
+}
+
+impl<'a, CharIter> Display for CharTableLine<'a, CharIter> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let content = self.text_without_eol();
+        let eol = self.eol;
+        write!(f, "{content}{eol}")
+    }
+}
+
+impl<'a, CharIter> Debug for CharTableLine<'a, CharIter> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let pos = self.coord.pos();
+        let content = self.text_without_eol();
+        let eol = self.eol;
+        write!(f, "CharTableLine {pos} {content:?} {eol:?}")
+    }
 }
 
 /// Loading progress of [`CharTable`].
@@ -55,9 +86,11 @@ pub struct CharTable<CharIter> {
     /// Loaded text so far.
     #[getset(get = "pub")]
     loaded_text: String,
-    /// List of loaded lines.
+    /// List of loaded character cells.
     #[getset(get = "pub")]
-    loaded_line_list: Vec<(TextSegment, EndOfLine)>,
+    loaded_char_list: Vec<CharCell>,
+    /// List of loaded line coordinates.
+    loaded_line_list: Vec<(TextLineCoord, EndOfLine)>,
     /// State of the table.
     ///
     /// `Some` means that the table is incomplete.
@@ -77,6 +110,7 @@ impl<CharIter> CharTable<CharIter> {
         CharTable {
             loaded_char_count: 0,
             loaded_text: String::new(),
+            loaded_char_list: Vec::new(),
             loaded_line_list: Vec::new(),
             completion_progress: state,
         }
@@ -90,9 +124,15 @@ impl<CharIter> CharTable<CharIter> {
         CharTable::from_char_iter(src_char_list.into_iter())
     }
 
+    /// List all loaded lines.
+    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharTableLine<'_, CharIter>> {
+        let create = |(coord, eol)| CharTableLine::new(coord, eol, self);
+        self.loaded_line_list.iter().copied().map(create)
+    }
+
     /// Number of lines.
     pub fn loaded_line_count(&self) -> usize {
-        self.loaded_line_list().len()
+        self.loaded_line_list.len()
     }
 
     /// Whether the table is completed.
@@ -126,9 +166,9 @@ impl<CharIter> CharTable<CharIter> {
     /// Return reference to the complete list of lines if the table is fully loaded.
     /// * `Some(list)` means that the table is fully loaded with `list` being the complete list of lines.
     /// * `None` means that the table isn't yet completed.
-    pub const fn all_lines(&self) -> Option<&Vec<(TextSegment, EndOfLine)>> {
+    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharTableLine<'_, CharIter>>> {
         match self.completion() {
-            CompletionStatus::Complete => Some(&self.loaded_line_list),
+            CompletionStatus::Complete => Some(self.loaded_line_list()),
             CompletionStatus::Incomplete => None,
         }
     }
@@ -158,6 +198,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         let CharTable {
             loaded_char_count,
             loaded_text,
+            loaded_char_list,
             loaded_line_list,
             completion_progress,
         } = self;
@@ -173,7 +214,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
         let Some(char) = src_char_iter.next() else {
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
-            let line_segment = TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
+            let line_segment = TextLineCoord::scan_text(loaded_char_list, line_src_text, loaded_line_list.len(), line_offset);
             loaded_line_list.push((line_segment, EndOfLine::EOF));
             *completion_progress = None;
             return Ok(LoadCharReport::Document);
@@ -193,8 +234,12 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             };
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..eol_offset];
-            let line_segment =
-                TextSegment::scan_text(line_src_text, loaded_line_list.len(), line_offset);
+            let line_segment = TextLineCoord::scan_text(
+                loaded_char_list,
+                line_src_text,
+                loaded_line_list.len(),
+                line_offset,
+            );
             loaded_line_list.push((line_segment, eol));
             *loaded_char_count += 1;
             *prev_non_lf = None;
