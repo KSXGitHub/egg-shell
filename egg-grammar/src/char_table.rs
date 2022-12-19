@@ -100,8 +100,8 @@ pub struct CharTable<CharIter> {
 }
 
 impl<CharIter> CharTable<CharIter> {
-    /// Start loading characters into a new character table.
-    pub const fn from_char_iter(src_char_iter: CharIter) -> Self {
+    /// Allocating a character table and assign a stream to load from.
+    pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
         let state = Some(LoadingProgress {
             src_char_iter,
             prev_non_lf: None,
@@ -109,19 +109,11 @@ impl<CharIter> CharTable<CharIter> {
         });
         CharTable {
             loaded_char_count: 0,
-            loaded_text: String::new(),
-            loaded_char_list: Vec::new(),
+            loaded_text: String::with_capacity(capacity),
+            loaded_char_list: Vec::with_capacity(capacity * std::mem::size_of::<char>()),
             loaded_line_list: Vec::new(),
             completion_progress: state,
         }
-    }
-
-    /// Start loading characters into a new character table.
-    pub fn from_char_list<CharList>(src_char_list: CharList) -> Self
-    where
-        CharList: IntoIterator<IntoIter = CharIter>,
-    {
-        CharTable::from_char_iter(src_char_list.into_iter())
     }
 
     /// List all loaded lines.
@@ -287,6 +279,6 @@ impl<CharIter> Debug for CharTable<CharIter> {
 impl CharTable<std::str::Chars<'static>> {
     /// Start load characters from a static string.
     pub fn from_static_str(src_text: &'static str) -> Self {
-        src_text.chars().pipe(CharTable::from_char_iter)
+        CharTable::new(src_text.chars(), src_text.len())
     }
 }

@@ -50,3 +50,16 @@ fn text_correctness() {
     assert_eq!(text, SRC_TEXT);
     assert_eq!(char_count, SRC_TEXT.chars().count());
 }
+
+#[test]
+fn capacity() {
+    let text = "ABC\nDEF\r\nGHI";
+    let table = CharTable::from_static_str(text);
+    let received = (
+        table.loaded_text().capacity(),
+        table.loaded_char_list().capacity(),
+    );
+    dbg!(received);
+    let expected = (text.len(), text.len() * std::mem::size_of::<char>());
+    assert_eq!(received, expected);
+}
