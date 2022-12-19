@@ -19,7 +19,7 @@ pub enum EndOfLine {
 
 /// Loading progress of [`CharTable`].
 #[derive(Clone)]
-struct CharTableLoadingProgress<CharIter> {
+struct LoadingProgress<CharIter> {
     /// Source of characters to scan.
     src_char_iter: CharIter,
     /// Track the previously loaded character that isn't "\n".
@@ -35,7 +35,7 @@ struct CharTableLoadingProgress<CharIter> {
 /// `Some` means that the table is incomplete.
 ///
 /// `None` means that the table is completed.
-type CharTableCompletion<CharIter> = Option<CharTableLoadingProgress<CharIter>>;
+type CompletionProgress<CharIter> = Option<LoadingProgress<CharIter>>;
 
 /// Whether the [`CharTable`] is completed.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
@@ -63,13 +63,13 @@ pub struct CharTable<CharIter> {
     /// `Some` means that the table is incomplete.
     ///
     /// `None` means that the table is completed.
-    completion_progress: CharTableCompletion<CharIter>,
+    completion_progress: CompletionProgress<CharIter>,
 }
 
 impl<CharIter> CharTable<CharIter> {
     /// Start loading characters into a new character table.
     pub const fn from_char_iter(src_char_iter: CharIter) -> Self {
-        let state = Some(CharTableLoadingProgress {
+        let state = Some(LoadingProgress {
             src_char_iter,
             prev_non_lf: None,
             prev_line_offset: 0,
@@ -132,7 +132,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             completion_progress,
         } = self;
 
-        let Some(CharTableLoadingProgress {
+        let Some(LoadingProgress {
             src_char_iter,
             prev_non_lf,
             prev_line_offset,
