@@ -4,7 +4,8 @@ use pretty_assertions::assert_eq;
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
     "I ❤️ Rust 🦀,\r\n",
-    "So I use to create a programming language,\n\r",
+    "So I use to create a programming language,\n",
+    "\r", // VS Code recognizes '\r' (not followed by '\n') as a eol
     "The language is called 'egg-shell' 🥚\n",
     "It's inspired by Rust 🦀\r",
     "It's going to be awesome!",
