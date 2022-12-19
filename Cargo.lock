@@ -43,6 +43,7 @@ version = "0.0.0"
 dependencies = [
  "derive_more",
  "getset",
+ "pipe-trait",
  "pretty_assertions",
  "strum",
 ]
@@ -73,6 +74,12 @@ checksum = "628223faebab4e3e40667ee0b2336d34a5b960ff60ea743ddfdbcf7770bcfb66"
 dependencies = [
  "winapi",
 ]
+
+[[package]]
+name = "pipe-trait"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1be1ec9e59f0360aefe84efa6f699198b685ab0d5718081e9f72aa2344289e2"
 
 [[package]]
 name = "pretty_assertions"

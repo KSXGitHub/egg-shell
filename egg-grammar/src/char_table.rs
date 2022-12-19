@@ -1,5 +1,6 @@
 use crate::TextSegment;
 use getset::{CopyGetters, Getters};
+use pipe_trait::Pipe;
 use std::fmt::{self, Debug, Formatter};
 use strum::{AsRefStr, Display, IntoStaticStr};
 
@@ -129,7 +130,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             *loaded_char_count += 1;
             *loaded_last_inline_char = None;
             *loaded_last_line_offset = loaded_text.len();
-            Ok(ScanNextCharReport::Line(line_src_text, eol))
+            ScanNextCharReport::Line(line_src_text, eol).pipe(Ok)
         } else {
             // TODO: refactor
             if *loaded_last_inline_char == Some('\r') {
@@ -138,7 +139,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             }
             *loaded_char_count += 1;
             *loaded_last_inline_char = Some(char);
-            Ok(ScanNextCharReport::Char(char))
+            char.pipe(ScanNextCharReport::Char).pipe(Ok)
         }
     }
 
@@ -176,6 +177,6 @@ impl<CharIter> Debug for CharTable<CharIter> {
 impl CharTable<std::str::Chars<'static>> {
     /// Start load characters from a static string.
     pub fn from_static_str(src_text: &'static str) -> Self {
-        CharTable::from_char_iter(src_text.chars())
+        src_text.chars().pipe(CharTable::from_char_iter)
     }
 }

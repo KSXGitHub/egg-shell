@@ -1,4 +1,5 @@
 use egg_grammar::char_table::{CharTable, EndOfLine};
+use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
 const SRC_TEXT: &str = concat! {
@@ -9,7 +10,8 @@ const SRC_TEXT: &str = concat! {
 };
 
 fn table() -> CharTable<impl Iterator<Item = char>> {
-    CharTable::from_static_str(SRC_TEXT)
+    SRC_TEXT
+        .pipe(CharTable::from_static_str)
         .into_completed()
         .expect("load table")
 }
