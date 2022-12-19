@@ -1,13 +1,11 @@
-use egg_grammar::CharTable;
+use egg_grammar::char_table::{CharTable, EndOfLine};
 use pretty_assertions::assert_eq;
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
     "I ❤️ Rust 🦀,\r\n",
     "So I use to create a programming language,\n",
-    "The language is called 'egg-shell' 🥚\n",
-    "It's inspired by Rust 🦀",
-    "It's going to be awesome!",
+    "The language is called 'egg-shell' 🥚",
 };
 
 fn table() -> CharTable<impl Iterator<Item = char>> {
@@ -24,7 +22,16 @@ fn line_correctness() {
         .iter()
         .map(|(segment, eol)| (segment.to_string(), eol))
         .collect();
+    let received: Vec<_> = received
+        .iter()
+        .map(|(line, eol)| (line.as_str(), **eol))
+        .collect();
     dbg!(&received);
-    let expected = [];
+    let expected = [
+        ("Hello,", EndOfLine::LF),
+        ("I ❤️ Rust 🦀,", EndOfLine::CRLF),
+        ("So I use to create a programming language,", EndOfLine::LF),
+        ("The language is called 'egg-shell' 🥚", EndOfLine::EOF),
+    ];
     assert_eq!(received, expected);
 }
