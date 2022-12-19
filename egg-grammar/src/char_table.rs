@@ -147,11 +147,10 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
 
         if char == '\n' {
             // TODO: refactor
-            let last_byte_offset = current_byte_offset.checked_sub(1);
-            let last_char = last_byte_offset
-                .map(|offset| (offset, loaded_text.get(offset..current_byte_offset)));
-            let (eol_offset, eol) = if let Some((offset, Some("\r"))) = last_char {
-                (offset, EndOfLine::CRLF)
+            let last_char = *last_inline_char;
+            let (eol_offset, eol) = if last_char == Some('\r') {
+                debug_assert!(current_byte_offset > 0);
+                (current_byte_offset - 1, EndOfLine::CRLF)
             } else {
                 (current_byte_offset, EndOfLine::LF)
             };
