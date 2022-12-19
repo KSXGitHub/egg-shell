@@ -4,7 +4,7 @@ use getset::CopyGetters;
 #[cfg(test)]
 use pretty_assertions::assert_eq;
 
-/// Information of a text segment.
+/// Information of a text slice.
 #[derive(Debug, Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct TextSliceDef {
