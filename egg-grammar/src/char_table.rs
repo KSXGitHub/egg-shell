@@ -1,4 +1,4 @@
-use crate::{text_slice_def::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
+use crate::{text_slice::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
