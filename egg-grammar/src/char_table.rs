@@ -41,10 +41,9 @@ impl<'a, CharIter> Display for CharTableLine<'a, CharIter> {
 
 impl<'a, CharIter> Debug for CharTableLine<'a, CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        let pos = self.coord.pos();
         let content = self.text_without_eol();
         let eol = self.eol;
-        write!(f, "CharTableLine {pos} {content:?} {eol:?}")
+        write!(f, "CharTableLine {content:?} {eol:?}")
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::{CharCell, CharCoord, Ordinal};
+use crate::{CharCell, CharCoord};
 use getset::CopyGetters;
 
 #[cfg(test)]
@@ -8,8 +8,6 @@ use pretty_assertions::assert_eq;
 #[derive(Debug, Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct TextLineCoord {
-    /// Position of the line.
-    pos: Ordinal,
     /// Total sizes of all lines before this line.
     offset: usize,
     /// Size of the text in the line.
@@ -24,7 +22,6 @@ impl TextLineCoord {
         ln_pred: usize,
         offset: usize,
     ) -> Self {
-        let pos = Ordinal::from_pred_count(ln_pred);
         let mut offset_from_ln_start = 0;
         for (col_pred, value) in src_text.chars().enumerate() {
             char_list.push(CharCell {
@@ -36,7 +33,6 @@ impl TextLineCoord {
             offset_from_ln_start += value.len_utf8();
         }
         TextLineCoord {
-            pos,
             offset,
             size: src_text.len(),
         }
