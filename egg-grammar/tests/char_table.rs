@@ -12,7 +12,7 @@ const SRC_TEXT: &str = concat! {
 
 fn table() -> CharTable<impl Iterator<Item = Result<char, Infallible>>> {
     SRC_TEXT
-        .pipe(CharTable::from_static_str)
+        .pipe(CharTable::from_str)
         .into_completed()
         .expect("load table")
 }
@@ -55,7 +55,7 @@ fn text_correctness() {
 #[test]
 fn capacity() {
     let text = "ABC\nDEF\r\nGHI";
-    let table = CharTable::from_static_str(text);
+    let table = CharTable::from_str(text);
     let received = (
         table.loaded_text().capacity(),
         table.loaded_char_list().capacity(),

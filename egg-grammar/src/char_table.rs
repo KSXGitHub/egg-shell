@@ -309,10 +309,11 @@ impl CharTable<Infallible> {
         CharTable::new(char_iter, capacity)
     }
 
-    /// Start load characters from a static string.
-    pub fn from_static_str(
-        src_text: &'static str,
-    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>>> {
+    /// Start load characters from a string slice.
+    #[allow(clippy::should_implement_trait)]
+    pub fn from_str(
+        src_text: &str,
+    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>> + '_> {
         CharTable::new_infallible(src_text.chars(), src_text.len())
     }
 }
