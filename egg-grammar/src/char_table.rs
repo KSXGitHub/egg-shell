@@ -2,7 +2,10 @@ use crate::{text_slice::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
-use std::fmt::{self, Debug, Display, Formatter};
+use std::{
+    convert::Infallible,
+    fmt::{self, Debug, Display, Formatter},
+};
 use strum::{AsRefStr, Display, IntoStaticStr};
 
 /// Represent a line in the [`CharTable`].
@@ -102,7 +105,7 @@ impl<CharIter> CharTable<CharIter> {
     /// Allocating a character table and assign a stream to load from.
     ///
     /// **Parameters:**
-    /// * `src_char_iter` is an iterator that emits UTF-8 characters.
+    /// * `src_char_iter` is an iterator that emits [results](Result) of UTF-8 characters.
     /// * `capacity` is the capacity of the final text (e.g. file size of the source code).
     pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
         let state = Some(LoadingProgress {
@@ -182,14 +185,16 @@ pub enum LoadCharReport<'a> {
 
 /// Failure value of [`CharTable::load_char`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum LoadCharError {
+pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.
     IllPlacedCarriageReturn { followed_by: char },
+    /// Error emitted by character iterator.
+    IterError(IterError),
 }
 
-impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
+impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharTable<CharIter> {
     /// Add another character to the table.
-    pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError> {
+    pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError<IterError>> {
         let CharTable {
             loaded_char_count,
             loaded_text,
@@ -220,6 +225,8 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
             *completion_progress = None;
             return Ok(LoadCharReport::Document);
         };
+
+        let char = char.map_err(LoadCharError::IterError)?;
 
         let current_byte_offset = loaded_text.len();
         loaded_text.push(char);
@@ -257,7 +264,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     }
 
     /// Load the whole text.
-    pub fn load_all(&mut self) -> Result<(), LoadCharError> {
+    pub fn load_all(&mut self) -> Result<(), LoadCharError<IterError>> {
         while self.completion() == CompletionStatus::Incomplete {
             self.load_char()?;
         }
@@ -265,7 +272,7 @@ impl<CharIter: Iterator<Item = char>> CharTable<CharIter> {
     }
 
     /// Return a table with completed text.
-    pub fn into_completed(mut self) -> Result<Self, LoadCharError> {
+    pub fn into_completed(mut self) -> Result<Self, LoadCharError<IterError>> {
         self.load_all()?;
         Ok(self)
     }
@@ -283,9 +290,29 @@ impl<CharIter> Debug for CharTable<CharIter> {
     }
 }
 
-impl CharTable<std::str::Chars<'static>> {
+impl CharTable<Infallible> {
+    /// Allocating a character table and assign a stream to load from.
+    ///
+    /// Unlike [`new()`](CharTable::new), this constructor takes an infallible iterator.
+    ///
+    /// **Parameters:**
+    /// * `src_char_iter` is an iterator that emits UTF-8 characters.
+    /// * `capacity` is the capacity of the final text (e.g. file size of the source code).
+    pub fn new_infallible<InfallibleCharIter>(
+        src_char_iter: InfallibleCharIter,
+        capacity: usize,
+    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>>>
+    where
+        InfallibleCharIter: IntoIterator<Item = char>,
+    {
+        let char_iter = src_char_iter.into_iter().map(Result::Ok);
+        CharTable::new(char_iter, capacity)
+    }
+
     /// Start load characters from a static string.
-    pub fn from_static_str(src_text: &'static str) -> Self {
-        CharTable::new(src_text.chars(), src_text.len())
+    pub fn from_static_str(
+        src_text: &'static str,
+    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>>> {
+        CharTable::new_infallible(src_text.chars(), src_text.len())
     }
 }

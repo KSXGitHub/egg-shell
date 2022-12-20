@@ -1,6 +1,7 @@
 use egg_grammar::{CharTable, EndOfLine::*};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
+use std::convert::Infallible;
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
@@ -9,7 +10,7 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn table() -> CharTable<impl Iterator<Item = char>> {
+fn table() -> CharTable<impl Iterator<Item = Result<char, Infallible>>> {
     SRC_TEXT
         .pipe(CharTable::from_static_str)
         .into_completed()
