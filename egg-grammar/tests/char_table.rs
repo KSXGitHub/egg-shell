@@ -10,17 +10,17 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn table() -> CharGrid<impl Iterator<Item = Result<char, Infallible>>> {
+fn grid() -> CharGrid<impl Iterator<Item = Result<char, Infallible>>> {
     SRC_TEXT
         .pipe(CharGrid::from_str)
         .into_completed()
-        .expect("load table")
+        .expect("load grid")
 }
 
 #[test]
 fn line_correctness() {
-    let table = table();
-    let received: Vec<_> = table
+    let grid = grid();
+    let received: Vec<_> = grid
         .all_lines()
         .expect("get the complete list of lines")
         .map(|line| (line.text_without_eol(), line.eol()))
@@ -37,16 +37,16 @@ fn line_correctness() {
 
 #[test]
 fn text_correctness() {
-    let table = table();
-    let char_count = table
+    let grid = grid();
+    let char_count = grid
         .total_char_count()
         .expect("get total number of characters");
     dbg!(char_count);
-    let text = table.full_text().expect("get full text");
+    let text = grid.full_text().expect("get full text");
     eprintln!("FULL TEXT:\n{text}\nEND FULL TEXT");
     eprintln!("TEST: full == loaded");
-    assert_eq!(text, table.loaded_text());
-    assert_eq!(char_count, table.loaded_char_count());
+    assert_eq!(text, grid.loaded_text());
+    assert_eq!(char_count, grid.loaded_char_count());
     eprintln!("TEST: full == source");
     assert_eq!(text, SRC_TEXT);
     assert_eq!(char_count, SRC_TEXT.chars().count());
@@ -55,10 +55,10 @@ fn text_correctness() {
 #[test]
 fn capacity() {
     let text = "ABC\nDEF\r\nGHI";
-    let table = CharGrid::from_str(text);
+    let grid = CharGrid::from_str(text);
     let received = (
-        table.loaded_text().capacity(),
-        table.loaded_char_list().capacity(),
+        grid.loaded_text().capacity(),
+        grid.loaded_char_list().capacity(),
     );
     dbg!(received);
     let expected = (text.len(), text.len() * std::mem::size_of::<char>());
