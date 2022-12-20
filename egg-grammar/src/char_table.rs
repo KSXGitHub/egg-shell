@@ -100,6 +100,10 @@ pub struct CharTable<CharIter> {
 
 impl<CharIter> CharTable<CharIter> {
     /// Allocating a character table and assign a stream to load from.
+    ///
+    /// **Parameters:**
+    /// * `src_char_iter` is an iterator that emits UTF-8 characters.
+    /// * `capacity` is the capacity of the final text (e.g. file size of the source code).
     pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
         let state = Some(LoadingProgress {
             src_char_iter,
