@@ -8,7 +8,7 @@ pub mod text_slice;
 
 pub use char_cell::CharCell;
 pub use char_coord::CharCoord;
-pub use char_grid::CharGrid;
+pub use char_grid::LazyCharGrid;
 pub use char_grid_access::*;
 pub use eol::EndOfLine;
 pub use ordinal::Ordinal;

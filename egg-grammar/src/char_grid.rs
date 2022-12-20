@@ -8,7 +8,7 @@ use std::{
 };
 use strum::{AsRefStr, Display, IntoStaticStr};
 
-/// Represent a line in the [`CharGrid`].
+/// Represent a line in the [`LazyCharGrid`].
 #[derive(Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct CharGridLine<'a, CharIter> {
@@ -17,12 +17,12 @@ pub struct CharGridLine<'a, CharIter> {
     /// Type of EOL string.
     eol: EndOfLine,
     /// Reference grid.
-    grid: &'a CharGrid<CharIter>,
+    grid: &'a LazyCharGrid<CharIter>,
 }
 
 impl<'a, CharIter> CharGridLine<'a, CharIter> {
     /// Create a [`CharGridLine`].
-    const fn new(coord: TextSliceDef, eol: EndOfLine, grid: &'a CharGrid<CharIter>) -> Self {
+    const fn new(coord: TextSliceDef, eol: EndOfLine, grid: &'a LazyCharGrid<CharIter>) -> Self {
         CharGridLine { coord, eol, grid }
     }
 
@@ -50,7 +50,7 @@ impl<'a, CharIter> Debug for CharGridLine<'a, CharIter> {
     }
 }
 
-/// Loading progress of [`CharGrid`].
+/// Loading progress of [`LazyCharGrid`].
 #[derive(Clone)]
 struct LoadingProgress<CharIter> {
     /// Source of characters to scan.
@@ -63,14 +63,14 @@ struct LoadingProgress<CharIter> {
     prev_line_offset: usize,
 }
 
-/// State of [`CharGrid`].
+/// State of [`LazyCharGrid`].
 ///
 /// `Some` means that the grid is incomplete.
 ///
 /// `None` means that the grid is completed.
 type CompletionProgress<CharIter> = Option<LoadingProgress<CharIter>>;
 
-/// Whether the [`CharGrid`] is completed.
+/// Whether the [`LazyCharGrid`] is completed.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
 pub enum CompletionStatus {
     /// Not all characters are loaded.
@@ -81,7 +81,7 @@ pub enum CompletionStatus {
 
 /// Grid of characters.
 #[derive(Clone, CopyGetters, Getters)]
-pub struct CharGrid<CharIter> {
+pub struct LazyCharGrid<CharIter> {
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
     loaded_char_count: usize,
@@ -101,7 +101,7 @@ pub struct CharGrid<CharIter> {
     completion_progress: CompletionProgress<CharIter>,
 }
 
-impl<CharIter> CharGrid<CharIter> {
+impl<CharIter> LazyCharGrid<CharIter> {
     /// Allocating a character grid and assign a stream to load from.
     ///
     /// **Parameters:**
@@ -111,7 +111,7 @@ impl<CharIter> CharGrid<CharIter> {
     /// **Example:** Load from file
     ///
     /// ```rust,no_run
-    /// use egg_grammar::CharGrid;
+    /// use egg_grammar::LazyCharGrid;
     /// use std::{
     ///     fs::{metadata, File},
     ///     io::BufReader,
@@ -127,7 +127,7 @@ impl<CharIter> CharGrid<CharIter> {
     /// });
     /// let mut buf = BufReader::new(file);
     /// let char_iter = buf.chars_raw();
-    /// let grid = CharGrid::new(char_iter, size);
+    /// let grid = LazyCharGrid::new(char_iter, size);
     /// // ... do stuffs with grid ...
     /// ```
     pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
@@ -136,7 +136,7 @@ impl<CharIter> CharGrid<CharIter> {
             prev_non_lf: None,
             prev_line_offset: 0,
         });
-        CharGrid {
+        LazyCharGrid {
             loaded_char_count: 0,
             loaded_text: String::with_capacity(capacity),
             loaded_char_list: Vec::with_capacity(capacity * std::mem::size_of::<char>()),
@@ -195,7 +195,7 @@ impl<CharIter> CharGrid<CharIter> {
     }
 }
 
-/// Success value of [`CharGrid::load_char`].
+/// Success value of [`LazyCharGrid::load_char`].
 #[derive(Debug, Clone, Copy)]
 pub enum LoadCharReport<'a> {
     /// The grid is completed.
@@ -206,7 +206,7 @@ pub enum LoadCharReport<'a> {
     Char(char),
 }
 
-/// Failure value of [`CharGrid::load_char`].
+/// Failure value of [`LazyCharGrid::load_char`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.
@@ -215,10 +215,10 @@ pub enum LoadCharError<IterError> {
     IterError(IterError),
 }
 
-impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharGrid<CharIter> {
+impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid<CharIter> {
     /// Add another character to the grid.
     pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError<IterError>> {
-        let CharGrid {
+        let LazyCharGrid {
             loaded_char_count,
             loaded_text,
             loaded_char_list,
@@ -301,22 +301,22 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharGrid<Cha
     }
 }
 
-impl<CharIter> Debug for CharGrid<CharIter> {
+impl<CharIter> Debug for LazyCharGrid<CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let char_count = self.loaded_char_count();
         let line_count = self.loaded_line_count();
         let completion = self.completion();
         write!(
             f,
-            "CharGrid of {line_count} lines {char_count} chars ({completion})",
+            "LazyCharGrid of {line_count} lines {char_count} chars ({completion})",
         )
     }
 }
 
-impl CharGrid<Infallible> {
+impl LazyCharGrid<Infallible> {
     /// Allocating a character grid and assign a stream to load from.
     ///
-    /// Unlike [`new()`](CharGrid::new), this constructor takes an infallible iterator.
+    /// Unlike [`new()`](LazyCharGrid::new), this constructor takes an infallible iterator.
     ///
     /// **Parameters:**
     /// * `src_char_iter` is an iterator that emits UTF-8 characters.
@@ -326,9 +326,9 @@ impl CharGrid<Infallible> {
     ///
     /// ```rust
     /// # use pretty_assertions::assert_eq;
-    /// use egg_grammar::{CharGrid, EndOfLine};
+    /// use egg_grammar::{LazyCharGrid, EndOfLine};
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
-    /// let mut grid = CharGrid::new_infallible(src_text.chars(), src_text.len());
+    /// let mut grid = LazyCharGrid::new_infallible(src_text.chars(), src_text.len());
     /// grid.load_all().unwrap();
     /// assert_eq!(grid.loaded_text(), src_text);
     /// let lines: Vec<_> = grid
@@ -344,19 +344,19 @@ impl CharGrid<Infallible> {
     pub fn new_infallible<InfallibleCharIter>(
         src_char_iter: InfallibleCharIter,
         capacity: usize,
-    ) -> CharGrid<impl Iterator<Item = Result<char, Infallible>>>
+    ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>>
     where
         InfallibleCharIter: IntoIterator<Item = char>,
     {
         let char_iter = src_char_iter.into_iter().map(Result::Ok);
-        CharGrid::new(char_iter, capacity)
+        LazyCharGrid::new(char_iter, capacity)
     }
 
     /// Start load characters from a string slice.
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(
         src_text: &str,
-    ) -> CharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
-        CharGrid::new_infallible(src_text.chars(), src_text.len())
+    ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
+        LazyCharGrid::new_infallible(src_text.chars(), src_text.len())
     }
 }

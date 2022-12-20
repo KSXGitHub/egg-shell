@@ -1,4 +1,4 @@
-use egg_grammar::{CharGrid, EndOfLine::*};
+use egg_grammar::{EndOfLine::*, LazyCharGrid};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 use std::convert::Infallible;
@@ -10,9 +10,9 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn grid() -> CharGrid<impl Iterator<Item = Result<char, Infallible>>> {
+fn grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>> {
     SRC_TEXT
-        .pipe(CharGrid::from_str)
+        .pipe(LazyCharGrid::from_str)
         .into_completed()
         .expect("load grid")
 }
@@ -55,7 +55,7 @@ fn text_correctness() {
 #[test]
 fn capacity() {
     let text = "ABC\nDEF\r\nGHI";
-    let grid = CharGrid::from_str(text);
+    let grid = LazyCharGrid::from_str(text);
     let received = (
         grid.loaded_text().capacity(),
         grid.loaded_char_list().capacity(),
