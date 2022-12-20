@@ -321,6 +321,26 @@ impl CharTable<Infallible> {
     /// **Parameters:**
     /// * `src_char_iter` is an iterator that emits UTF-8 characters.
     /// * `capacity` is the capacity of the final text (e.g. file size of the source code).
+    ///
+    /// **Example:** Load a stream of characters
+    ///
+    /// ```rust
+    /// # use pretty_assertions::assert_eq;
+    /// use egg_grammar::{CharTable, EndOfLine};
+    /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
+    /// let mut table = CharTable::new_infallible(src_text.chars(), src_text.len());
+    /// table.load_all().unwrap();
+    /// assert_eq!(table.loaded_text(), src_text);
+    /// let lines: Vec<_> = table
+    ///     .loaded_line_list()
+    ///     .map(|line| (line.text_without_eol(), line.eol()))
+    ///     .collect();
+    /// assert_eq!(lines, [
+    ///     ("Hello,", EndOfLine::CRLF),
+    ///     ("I ❤️ Rust 🦀!!", EndOfLine::LF),
+    ///     ("And I program in it.", EndOfLine::EOF),
+    /// ]);
+    /// ```
     pub fn new_infallible<InfallibleCharIter>(
         src_char_iter: InfallibleCharIter,
         capacity: usize,
