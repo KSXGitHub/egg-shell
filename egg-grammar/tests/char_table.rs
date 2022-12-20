@@ -1,4 +1,4 @@
-use egg_grammar::{CharTable, EndOfLine::*};
+use egg_grammar::{CharGrid, EndOfLine::*};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 use std::convert::Infallible;
@@ -10,9 +10,9 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn table() -> CharTable<impl Iterator<Item = Result<char, Infallible>>> {
+fn table() -> CharGrid<impl Iterator<Item = Result<char, Infallible>>> {
     SRC_TEXT
-        .pipe(CharTable::from_str)
+        .pipe(CharGrid::from_str)
         .into_completed()
         .expect("load table")
 }
@@ -55,7 +55,7 @@ fn text_correctness() {
 #[test]
 fn capacity() {
     let text = "ABC\nDEF\r\nGHI";
-    let table = CharTable::from_str(text);
+    let table = CharGrid::from_str(text);
     let received = (
         table.loaded_text().capacity(),
         table.loaded_char_list().capacity(),

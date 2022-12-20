@@ -8,33 +8,33 @@ use std::{
 };
 use strum::{AsRefStr, Display, IntoStaticStr};
 
-/// Represent a line in the [`CharTable`].
+/// Represent a line in the [`CharGrid`].
 #[derive(Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
-pub struct CharTableLine<'a, CharIter> {
+pub struct CharGridLine<'a, CharIter> {
     /// Coordinate of the line
     coord: TextSliceDef,
     /// Type of EOL string.
     eol: EndOfLine,
-    /// Reference table.
-    table: &'a CharTable<CharIter>,
+    /// Reference grid.
+    grid: &'a CharGrid<CharIter>,
 }
 
-impl<'a, CharIter> CharTableLine<'a, CharIter> {
-    /// Create a [`CharTableLine`].
-    const fn new(coord: TextSliceDef, eol: EndOfLine, table: &'a CharTable<CharIter>) -> Self {
-        CharTableLine { coord, eol, table }
+impl<'a, CharIter> CharGridLine<'a, CharIter> {
+    /// Create a [`CharGridLine`].
+    const fn new(coord: TextSliceDef, eol: EndOfLine, grid: &'a CharGrid<CharIter>) -> Self {
+        CharGridLine { coord, eol, grid }
     }
 
     /// Get text content of the slice without EOL.
     pub fn text_without_eol(&self) -> &'a str {
         let start = self.coord.offset();
         let end = start + self.coord.size();
-        &self.table.loaded_text[start..end]
+        &self.grid.loaded_text[start..end]
     }
 }
 
-impl<'a, CharIter> Display for CharTableLine<'a, CharIter> {
+impl<'a, CharIter> Display for CharGridLine<'a, CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let content = self.text_without_eol();
         let eol = self.eol;
@@ -42,15 +42,15 @@ impl<'a, CharIter> Display for CharTableLine<'a, CharIter> {
     }
 }
 
-impl<'a, CharIter> Debug for CharTableLine<'a, CharIter> {
+impl<'a, CharIter> Debug for CharGridLine<'a, CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let content = self.text_without_eol();
         let eol = self.eol;
-        write!(f, "CharTableLine {content:?} {eol:?}")
+        write!(f, "CharGridLine {content:?} {eol:?}")
     }
 }
 
-/// Loading progress of [`CharTable`].
+/// Loading progress of [`CharGrid`].
 #[derive(Clone)]
 struct LoadingProgress<CharIter> {
     /// Source of characters to scan.
@@ -63,14 +63,14 @@ struct LoadingProgress<CharIter> {
     prev_line_offset: usize,
 }
 
-/// State of [`CharTable`].
+/// State of [`CharGrid`].
 ///
-/// `Some` means that the table is incomplete.
+/// `Some` means that the grid is incomplete.
 ///
-/// `None` means that the table is completed.
+/// `None` means that the grid is completed.
 type CompletionProgress<CharIter> = Option<LoadingProgress<CharIter>>;
 
-/// Whether the [`CharTable`] is completed.
+/// Whether the [`CharGrid`] is completed.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
 pub enum CompletionStatus {
     /// Not all characters are loaded.
@@ -79,9 +79,9 @@ pub enum CompletionStatus {
     Complete,
 }
 
-/// Table of characters.
+/// Grid of characters.
 #[derive(Clone, CopyGetters, Getters)]
-pub struct CharTable<CharIter> {
+pub struct CharGrid<CharIter> {
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
     loaded_char_count: usize,
@@ -93,16 +93,16 @@ pub struct CharTable<CharIter> {
     loaded_char_list: Vec<CharCell>,
     /// List of loaded line coordinates.
     loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
-    /// State of the table.
+    /// State of the grid.
     ///
-    /// `Some` means that the table is incomplete.
+    /// `Some` means that the grid is incomplete.
     ///
-    /// `None` means that the table is completed.
+    /// `None` means that the grid is completed.
     completion_progress: CompletionProgress<CharIter>,
 }
 
-impl<CharIter> CharTable<CharIter> {
-    /// Allocating a character table and assign a stream to load from.
+impl<CharIter> CharGrid<CharIter> {
+    /// Allocating a character grid and assign a stream to load from.
     ///
     /// **Parameters:**
     /// * `src_char_iter` is an iterator that emits [results](Result) of UTF-8 characters.
@@ -111,7 +111,7 @@ impl<CharIter> CharTable<CharIter> {
     /// **Example:** Load from file
     ///
     /// ```rust,no_run
-    /// use egg_grammar::CharTable;
+    /// use egg_grammar::CharGrid;
     /// use std::{
     ///     fs::{metadata, File},
     ///     io::BufReader,
@@ -127,8 +127,8 @@ impl<CharIter> CharTable<CharIter> {
     /// });
     /// let mut buf = BufReader::new(file);
     /// let char_iter = buf.chars_raw();
-    /// let table = CharTable::new(char_iter, size);
-    /// // ... do stuffs with table ...
+    /// let grid = CharGrid::new(char_iter, size);
+    /// // ... do stuffs with grid ...
     /// ```
     pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
         let state = Some(LoadingProgress {
@@ -136,7 +136,7 @@ impl<CharIter> CharTable<CharIter> {
             prev_non_lf: None,
             prev_line_offset: 0,
         });
-        CharTable {
+        CharGrid {
             loaded_char_count: 0,
             loaded_text: String::with_capacity(capacity),
             loaded_char_list: Vec::with_capacity(capacity * std::mem::size_of::<char>()),
@@ -146,8 +146,8 @@ impl<CharIter> CharTable<CharIter> {
     }
 
     /// List all loaded lines.
-    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharTableLine<'_, CharIter>> {
-        let create = |(coord, eol)| CharTableLine::new(coord, eol, self);
+    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharGridLine<'_, CharIter>> {
+        let create = |(coord, eol)| CharGridLine::new(coord, eol, self);
         self.loaded_line_list.iter().copied().map(create)
     }
 
@@ -156,7 +156,7 @@ impl<CharIter> CharTable<CharIter> {
         self.loaded_line_list.len()
     }
 
-    /// Whether the table is completed.
+    /// Whether the grid is completed.
     pub const fn completion(&self) -> CompletionStatus {
         match self.completion_progress {
             Some(_) => CompletionStatus::Incomplete,
@@ -164,9 +164,9 @@ impl<CharIter> CharTable<CharIter> {
         }
     }
 
-    /// Return the total number of characters if the table is fully loaded.
-    /// * `Some(n)` means that the table is fully loaded with `n` characters.
-    /// * `None` means that the table isn't yet completed.
+    /// Return the total number of characters if the grid is fully loaded.
+    /// * `Some(n)` means that the grid is fully loaded with `n` characters.
+    /// * `None` means that the grid isn't yet completed.
     pub const fn total_char_count(&self) -> Option<usize> {
         match self.completion() {
             CompletionStatus::Complete => Some(self.loaded_char_count),
@@ -174,9 +174,9 @@ impl<CharIter> CharTable<CharIter> {
         }
     }
 
-    /// Return reference to the full string if the table is fully loaded.
-    /// * `Some(text)` means that the table is fully loaded with `text` being the content.
-    /// * `None` means that the table isn't yet completed.
+    /// Return reference to the full string if the grid is fully loaded.
+    /// * `Some(text)` means that the grid is fully loaded with `text` being the content.
+    /// * `None` means that the grid isn't yet completed.
     pub const fn full_text(&self) -> Option<&String> {
         match self.completion() {
             CompletionStatus::Complete => Some(&self.loaded_text),
@@ -184,10 +184,10 @@ impl<CharIter> CharTable<CharIter> {
         }
     }
 
-    /// Return reference to the complete list of lines if the table is fully loaded.
-    /// * `Some(list)` means that the table is fully loaded with `list` being the complete list of lines.
-    /// * `None` means that the table isn't yet completed.
-    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharTableLine<'_, CharIter>>> {
+    /// Return reference to the complete list of lines if the grid is fully loaded.
+    /// * `Some(list)` means that the grid is fully loaded with `list` being the complete list of lines.
+    /// * `None` means that the grid isn't yet completed.
+    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharGridLine<'_, CharIter>>> {
         match self.completion() {
             CompletionStatus::Complete => Some(self.loaded_line_list()),
             CompletionStatus::Incomplete => None,
@@ -195,10 +195,10 @@ impl<CharIter> CharTable<CharIter> {
     }
 }
 
-/// Success value of [`CharTable::load_char`].
+/// Success value of [`CharGrid::load_char`].
 #[derive(Debug, Clone, Copy)]
 pub enum LoadCharReport<'a> {
-    /// The table is completed.
+    /// The grid is completed.
     Document,
     /// Complete a line.
     Line(&'a str, EndOfLine),
@@ -206,7 +206,7 @@ pub enum LoadCharReport<'a> {
     Char(char),
 }
 
-/// Failure value of [`CharTable::load_char`].
+/// Failure value of [`CharGrid::load_char`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.
@@ -215,10 +215,10 @@ pub enum LoadCharError<IterError> {
     IterError(IterError),
 }
 
-impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharTable<CharIter> {
-    /// Add another character to the table.
+impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharGrid<CharIter> {
+    /// Add another character to the grid.
     pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError<IterError>> {
-        let CharTable {
+        let CharGrid {
             loaded_char_count,
             loaded_text,
             loaded_char_list,
@@ -294,29 +294,29 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> CharTable<Ch
         Ok(())
     }
 
-    /// Return a table with completed text.
+    /// Return a grid with completed text.
     pub fn into_completed(mut self) -> Result<Self, LoadCharError<IterError>> {
         self.load_all()?;
         Ok(self)
     }
 }
 
-impl<CharIter> Debug for CharTable<CharIter> {
+impl<CharIter> Debug for CharGrid<CharIter> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let char_count = self.loaded_char_count();
         let line_count = self.loaded_line_count();
         let completion = self.completion();
         write!(
             f,
-            "CharTable of {line_count} lines {char_count} chars ({completion})",
+            "CharGrid of {line_count} lines {char_count} chars ({completion})",
         )
     }
 }
 
-impl CharTable<Infallible> {
-    /// Allocating a character table and assign a stream to load from.
+impl CharGrid<Infallible> {
+    /// Allocating a character grid and assign a stream to load from.
     ///
-    /// Unlike [`new()`](CharTable::new), this constructor takes an infallible iterator.
+    /// Unlike [`new()`](CharGrid::new), this constructor takes an infallible iterator.
     ///
     /// **Parameters:**
     /// * `src_char_iter` is an iterator that emits UTF-8 characters.
@@ -326,12 +326,12 @@ impl CharTable<Infallible> {
     ///
     /// ```rust
     /// # use pretty_assertions::assert_eq;
-    /// use egg_grammar::{CharTable, EndOfLine};
+    /// use egg_grammar::{CharGrid, EndOfLine};
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
-    /// let mut table = CharTable::new_infallible(src_text.chars(), src_text.len());
-    /// table.load_all().unwrap();
-    /// assert_eq!(table.loaded_text(), src_text);
-    /// let lines: Vec<_> = table
+    /// let mut grid = CharGrid::new_infallible(src_text.chars(), src_text.len());
+    /// grid.load_all().unwrap();
+    /// assert_eq!(grid.loaded_text(), src_text);
+    /// let lines: Vec<_> = grid
     ///     .loaded_line_list()
     ///     .map(|line| (line.text_without_eol(), line.eol()))
     ///     .collect();
@@ -344,19 +344,19 @@ impl CharTable<Infallible> {
     pub fn new_infallible<InfallibleCharIter>(
         src_char_iter: InfallibleCharIter,
         capacity: usize,
-    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>>>
+    ) -> CharGrid<impl Iterator<Item = Result<char, Infallible>>>
     where
         InfallibleCharIter: IntoIterator<Item = char>,
     {
         let char_iter = src_char_iter.into_iter().map(Result::Ok);
-        CharTable::new(char_iter, capacity)
+        CharGrid::new(char_iter, capacity)
     }
 
     /// Start load characters from a string slice.
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(
         src_text: &str,
-    ) -> CharTable<impl Iterator<Item = Result<char, Infallible>> + '_> {
-        CharTable::new_infallible(src_text.chars(), src_text.len())
+    ) -> CharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
+        CharGrid::new_infallible(src_text.chars(), src_text.len())
     }
 }
