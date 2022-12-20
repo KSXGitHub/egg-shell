@@ -107,6 +107,29 @@ impl<CharIter> CharTable<CharIter> {
     /// **Parameters:**
     /// * `src_char_iter` is an iterator that emits [results](Result) of UTF-8 characters.
     /// * `capacity` is the capacity of the final text (e.g. file size of the source code).
+    ///
+    /// **Example:** Load from file
+    ///
+    /// ```rust,no_run
+    /// use egg_grammar::CharTable;
+    /// use std::{
+    ///     fs::{metadata, File},
+    ///     io::BufReader,
+    /// };
+    /// use utf8_chars::BufReadCharsExt;
+    ///
+    /// let file = File::open("my-file.txt").unwrap();
+    /// let size: u64 = metadata("my-file.txt").unwrap().len();
+    /// let size: usize = size.try_into().unwrap_or_else(|_| {
+    ///     eprintln!("warning: {size}bytes is too big to allocate all at once,");
+    ///     eprintln!("         the program can only handle part of the file");
+    ///     0
+    /// });
+    /// let mut buf = BufReader::new(file);
+    /// let char_iter = buf.chars_raw();
+    /// let table = CharTable::new(char_iter, size);
+    /// // ... do stuffs with table ...
+    /// ```
     pub fn new(src_char_iter: CharIter, capacity: usize) -> Self {
         let state = Some(LoadingProgress {
             src_char_iter,
