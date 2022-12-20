@@ -105,7 +105,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     }
 
     /// List all loaded lines.
-    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharGridLine<'_, CharIter>> {
+    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharGridLine<'_, Self>> {
         let create = |(coord, eol)| CharGridLine::new(coord, eol, self);
         self.loaded_line_list.iter().copied().map(create)
     }
@@ -146,7 +146,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// Return reference to the complete list of lines if the grid is fully loaded.
     /// * `Some(list)` means that the grid is fully loaded with `list` being the complete list of lines.
     /// * `None` means that the grid isn't yet completed.
-    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharGridLine<'_, CharIter>>> {
+    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharGridLine<'_, Self>>> {
         match self.completion() {
             CompletionStatus::Complete => Some(self.loaded_line_list()),
             CompletionStatus::Incomplete => None,
