@@ -8,7 +8,7 @@ use std::fmt::{self, Debug, Display, Formatter};
 #[getset(get_copy = "pub")]
 pub struct CharGridLine<'a, CharGrid> {
     /// Coordinate of the line
-    coord: TextSliceDef,
+    slice: TextSliceDef,
     /// Type of EOL string.
     eol: EndOfLine,
     /// Reference grid.
@@ -17,8 +17,8 @@ pub struct CharGridLine<'a, CharGrid> {
 
 impl<'a, CharGrid> CharGridLine<'a, CharGrid> {
     /// Create a [`CharGridLine`].
-    pub(super) const fn new(coord: TextSliceDef, eol: EndOfLine, grid: &'a CharGrid) -> Self {
-        CharGridLine { coord, eol, grid }
+    pub(super) const fn new(slice: TextSliceDef, eol: EndOfLine, grid: &'a CharGrid) -> Self {
+        CharGridLine { slice, eol, grid }
     }
 
     /// Get text content of the slice without EOL.
@@ -26,8 +26,8 @@ impl<'a, CharGrid> CharGridLine<'a, CharGrid> {
     where
         CharGrid: GridCommon,
     {
-        let start = self.coord.offset();
-        let end = start + self.coord.size();
+        let start = self.slice.offset();
+        let end = start + self.slice.size();
         &self.grid.loaded_text()[start..end]
     }
 }
