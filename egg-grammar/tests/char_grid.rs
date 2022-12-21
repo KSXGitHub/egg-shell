@@ -44,16 +44,3 @@ fn text_correctness() {
     assert_eq!(text, SRC_TEXT);
     assert_eq!(char_count, SRC_TEXT.chars().count());
 }
-
-#[test]
-fn capacity() {
-    let text = "ABC\nDEF\r\nGHI";
-    let grid = LazyCharGrid::from_str(text);
-    let received = (
-        grid.loaded_text().capacity(),
-        grid.loaded_char_list().capacity(),
-    );
-    dbg!(received);
-    let expected = (text.len(), text.len());
-    assert_eq!(received, expected);
-}
