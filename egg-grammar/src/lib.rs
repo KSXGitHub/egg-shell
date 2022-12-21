@@ -11,5 +11,5 @@ pub use char_coord::CharCoord;
 pub use char_grid::{CompletedCharGrid, LazyCharGrid};
 pub use char_grid_access::*;
 pub use eol::EndOfLine;
-pub use ordinal::{IntoOrdinalIndexed, Ordinal, OrdinalIndexed};
+pub use ordinal::{AsOrdinalIndexed, Ordinal, OrdinalIndexed};
 pub use text_slice::TextSliceDef;
