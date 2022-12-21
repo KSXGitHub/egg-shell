@@ -1,6 +1,8 @@
+use derive_more::{AsMut, AsRef, Deref, DerefMut, Display, From};
 use std::{
     fmt::{self, Debug, Display, Formatter},
     num::NonZeroUsize,
+    ops::{Index, IndexMut},
 };
 
 /// Ordinal numbers are number that represent position of an items.
@@ -65,3 +67,43 @@ fn test_display() {
     let expected = ["1", "2", "3", "4", "5", "6"];
     assert_eq!(received, expected);
 }
+
+/// Wrapper that allows indexing by [`Ordinal`].
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsMut, AsRef, Deref, DerefMut, From)]
+pub struct OrdinalIndexed<Indexed: Index<usize>>(pub Indexed);
+
+impl<Indexed: Index<usize>> Index<Ordinal> for OrdinalIndexed<Indexed> {
+    type Output = Indexed::Output;
+    fn index(&self, ordinal: Ordinal) -> &Self::Output {
+        self.index(ordinal.pred_count())
+    }
+}
+
+impl<Indexed: IndexMut<usize>> IndexMut<Ordinal> for OrdinalIndexed<Indexed> {
+    fn index_mut(&mut self, ordinal: Ordinal) -> &mut Self::Output {
+        self.index_mut(ordinal.pred_count())
+    }
+}
+
+impl<Indexed: Index<usize>> Index<usize> for OrdinalIndexed<Indexed> {
+    type Output = Indexed::Output;
+    fn index(&self, index: usize) -> &Self::Output {
+        self.as_ref().index(index)
+    }
+}
+
+impl<Indexed: IndexMut<usize>> IndexMut<usize> for OrdinalIndexed<Indexed> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        self.as_mut().index_mut(index)
+    }
+}
+
+/// Wrap a type in [`OrdinalIndexed`].
+pub trait IntoOrdinalIndexed: Index<usize> + Sized {
+    /// Wrap `self` in [`OrdinalIndexed`].
+    fn ordinal_indexed(self) -> OrdinalIndexed<Self> {
+        OrdinalIndexed(self)
+    }
+}
+
+impl<Indexed: Index<usize>> IntoOrdinalIndexed for Indexed {}
