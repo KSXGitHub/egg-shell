@@ -1,7 +1,6 @@
-use egg_grammar::{EndOfLine::*, LazyCharGrid};
+use egg_grammar::{CompletedCharGrid, EndOfLine::*, LazyCharGrid};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
-use std::convert::Infallible;
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
@@ -10,7 +9,7 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>> {
+fn grid() -> CompletedCharGrid {
     SRC_TEXT
         .pipe(LazyCharGrid::from_str)
         .into_completed()
@@ -21,8 +20,7 @@ fn grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>> {
 fn line_correctness() {
     let grid = grid();
     let received: Vec<_> = grid
-        .all_lines()
-        .expect("get the complete list of lines")
+        .line_list()
         .map(|line| (line.text_without_eol(), line.eol()))
         .collect();
     dbg!(&received);
@@ -38,15 +36,10 @@ fn line_correctness() {
 #[test]
 fn text_correctness() {
     let grid = grid();
-    let char_count = grid
-        .total_char_count()
-        .expect("get total number of characters");
+    let char_count = grid.char_count();
     dbg!(char_count);
-    let text = grid.full_text().expect("get full text");
+    let text = grid.text();
     eprintln!("FULL TEXT:\n{text}\nEND FULL TEXT");
-    eprintln!("TEST: full == loaded");
-    assert_eq!(text, grid.loaded_text());
-    assert_eq!(char_count, grid.loaded_char_count());
     eprintln!("TEST: full == source");
     assert_eq!(text, SRC_TEXT);
     assert_eq!(char_count, SRC_TEXT.chars().count());

@@ -1,4 +1,4 @@
-use super::CharGridLine;
+use super::{CharGridLine, CompletedCharGrid};
 use crate::{text_slice::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use getset::{CopyGetters, Getters};
@@ -253,10 +253,15 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
         Ok(())
     }
 
-    /// Return a grid with completed text.
-    pub fn into_completed(mut self) -> Result<Self, LoadCharError<IterError>> {
+    /// Load the whole text and return a [`CompletedCharGrid`].
+    pub fn into_completed(mut self) -> Result<CompletedCharGrid, LoadCharError<IterError>> {
         self.load_all()?;
-        Ok(self)
+        Ok(CompletedCharGrid {
+            char_count: self.loaded_char_count,
+            text: self.loaded_text,
+            char_list: self.loaded_char_list,
+            line_list: self.loaded_line_list,
+        })
     }
 }
 
