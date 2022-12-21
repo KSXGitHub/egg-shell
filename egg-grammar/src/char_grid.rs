@@ -1,7 +1,7 @@
-mod grid_common;
-mod grid_line;
-mod lazy;
+mod char_grid_common;
+mod char_grid_line;
+mod lazy_char_grid;
 
-use grid_common::*;
-pub use grid_line::*;
-pub use lazy::*;
+use char_grid_common::*;
+pub use char_grid_line::*;
+pub use lazy_char_grid::*;
