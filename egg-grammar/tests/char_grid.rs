@@ -17,6 +17,19 @@ fn grid() -> CompletedCharGrid {
 }
 
 #[test]
+fn char_correctness() {
+    let grid = grid();
+    for char_cell in grid.char_list().iter() {
+        eprintln!();
+        dbg!(char_cell);
+        let len_utf8 = dbg!(char_cell.value().len_utf8());
+        let offset = dbg!(char_cell.offset_from_doc_start());
+        let src_char = dbg!(&SRC_TEXT[offset..(offset + len_utf8)]);
+        assert_eq!(char_cell.to_string(), src_char);
+    }
+}
+
+#[test]
 fn line_correctness() {
     let grid = grid();
     let received: Vec<_> = grid
