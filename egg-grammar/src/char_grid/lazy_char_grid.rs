@@ -203,6 +203,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 offset: line_offset
             });
             loaded_line_list.push((line_slice_def, EndOfLine::EOF));
+            loaded_char_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
             return Ok(LoadCharReport::Document);
