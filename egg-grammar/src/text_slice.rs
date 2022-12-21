@@ -9,6 +9,10 @@ pub struct TextSliceDef {
     offset: usize,
     /// Size of the text in the line.
     size: usize,
+    /// Coordinate of the first character.
+    first_char_coord: CharCoord,
+    /// Number of characters in the slice.
+    char_count: usize,
 }
 
 /// Prepare a text scanner.
@@ -34,6 +38,7 @@ impl<'a> ScanText<'a> {
             first_char_coord,
             offset,
         } = self;
+        let initial_char_count = char_list.len();
         let mut offset_from_ln_start = 0;
         for (col_add, value) in src_text.chars().enumerate() {
             char_list.push(CharCell {
@@ -46,7 +51,9 @@ impl<'a> ScanText<'a> {
         }
         TextSliceDef {
             offset,
+            first_char_coord,
             size: src_text.len(),
+            char_count: char_list.len() - initial_char_count,
         }
     }
 }
