@@ -98,7 +98,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
         LazyCharGrid {
             loaded_char_count: 0,
             loaded_text: String::with_capacity(capacity),
-            loaded_char_list: Vec::with_capacity(capacity * std::mem::size_of::<char>()),
+            loaded_char_list: Vec::with_capacity(capacity),
             loaded_line_list: Vec::new(),
             completion_progress: state,
         }

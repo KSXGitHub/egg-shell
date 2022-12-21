@@ -54,6 +54,6 @@ fn capacity() {
         grid.loaded_char_list().capacity(),
     );
     dbg!(received);
-    let expected = (text.len(), text.len() * std::mem::size_of::<char>());
+    let expected = (text.len(), text.len());
     assert_eq!(received, expected);
 }
