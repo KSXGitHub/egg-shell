@@ -1,5 +1,45 @@
 use crate::{CharCell, CharCoord, Ordinal};
 
+/// Iterate over each character.
+pub trait IterChar: IterLoadChar {
+    /// The associate error which is yielded on failure.
+    type Error;
+    /// Type of the resulting iterator.
+    type CharIter: IntoIterator<Item = Result<CharCell, <Self as IterChar>::Error>>;
+    /// Iterate over each character.
+    fn iter_load_char(&self) -> Self::CharIter;
+}
+
+/// Iterate over and load each character.
+pub trait IterLoadChar {
+    /// The associate error which is yielded on failure.
+    type Error;
+    /// Type of the resulting iterator.
+    type CharLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
+    /// Iterate over and load each character.
+    fn iter_load_char(&mut self) -> Self::CharLoadIter;
+}
+
+/// Iterate over each line.
+pub trait IterLine: IterLoadLine {
+    /// The associate error which is yielded on failure.
+    type Error;
+    /// Type of the resulting iterator.
+    type LineIter: IntoIterator<Item = Result<CharCell, <Self as IterLine>::Error>>;
+    /// Iterate over each line.
+    fn iter_load_char(&self) -> Self::LineIter;
+}
+
+/// Iterate over and load each line.
+pub trait IterLoadLine {
+    /// The associate error which is yielded on failure.
+    type Error;
+    /// Type of the resulting iterator.
+    type LineLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
+    /// Iterate over and load each line.
+    fn iter_load_char(&mut self) -> Self::LineLoadIter;
+}
+
 /// Get a character cell by coordinate.
 pub trait CharAt: LoadCharAt {
     /// The associate error which is returned on failure.
