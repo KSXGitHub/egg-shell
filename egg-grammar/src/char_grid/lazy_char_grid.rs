@@ -1,6 +1,7 @@
 use super::{CharGridLine, CompletedCharGrid};
 use crate::{text_slice::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
+use derive_more::Error;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
 use std::{
@@ -170,9 +171,10 @@ pub enum LoadCharReport<'a> {
 }
 
 /// Failure value of [`LazyCharGrid::load_char`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::Display, Error)]
 pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.
+    #[display(fmt = "CR is poorly placed, it was before {followed_by} instead of LF")]
     IllPlacedCarriageReturn { followed_by: char },
     /// Error emitted by character iterator.
     IterError(IterError),
