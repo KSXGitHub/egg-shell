@@ -43,19 +43,19 @@ pub trait IterLoadLine<'a> {
 }
 
 /// Get a character cell by coordinate.
-pub trait CharAt: LoadCharAt {
+pub trait CharAt<'a>: LoadCharAt<'a> {
     /// The associate error which is returned on failure.
     type Error;
     /// Get a character cell by coordinate.
-    fn char_at(&self, coord: CharCoord) -> Result<CharCell, <Self as CharAt>::Error>;
+    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell, <Self as CharAt>::Error>;
 }
 
 /// Load a character cell by coordinate.
-pub trait LoadCharAt {
+pub trait LoadCharAt<'a> {
     /// The associate error which is returned on failure.
     type Error;
     /// Load character cell by coordinate.
-    fn load_char_at(&mut self, coord: CharCoord) -> Result<CharCell, Self::Error>;
+    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell, Self::Error>;
 }
 
 /// Get a line of character cells by coordinate.

@@ -41,9 +41,9 @@ pub enum CharAtError {
     ColumnOutOfBound,
 }
 
-impl CharAt for CompletedCharGrid {
+impl<'a> CharAt<'a> for CompletedCharGrid {
     type Error = CharAtError;
-    fn char_at(&self, coord: CharCoord) -> Result<CharCell, CharAtError> {
+    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell, CharAtError> {
         let (line, _) = *self
             .line_list
             .get(coord.line.pred_count())
@@ -60,9 +60,9 @@ impl CharAt for CompletedCharGrid {
     }
 }
 
-impl LoadCharAt for CompletedCharGrid {
+impl<'a> LoadCharAt<'a> for CompletedCharGrid {
     type Error = CharAtError;
-    fn load_char_at(&mut self, coord: CharCoord) -> Result<CharCell, CharAtError> {
+    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell, CharAtError> {
         self.char_at(coord)
     }
 }
