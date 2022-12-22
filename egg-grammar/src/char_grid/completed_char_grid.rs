@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLoadChar, LoadCharAt,
-    TextSliceDef,
+    CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLine, IterLoadChar,
+    IterLoadLine, LoadCharAt, TextSliceDef,
 };
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -89,5 +89,39 @@ impl<'a> IterLoadChar<'a> for CompletedCharGrid {
     >;
     fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
         self.iter_char()
+    }
+}
+
+/// An iterator that emits lines from a [`CompletedCharGrid`].
+pub struct CompletedCharGridLineIter<'a> {
+    iter: slice::Iter<'a, (TextSliceDef, EndOfLine)>,
+    grid: &'a CompletedCharGrid,
+}
+
+impl<'a> Iterator for CompletedCharGridLineIter<'a> {
+    type Item = Result<CharGridLine<'a, CompletedCharGrid>, Infallible>;
+    fn next(&mut self) -> Option<Self::Item> {
+        let (slice, eol) = *self.iter.next()?;
+        CharGridLine::new(slice, eol, self.grid).pipe(Ok).pipe(Some)
+    }
+}
+
+impl<'a> IterLine<'a> for CompletedCharGrid {
+    type Error = Infallible;
+    type LineIter = Self::LineLoadIter;
+    fn iter_line(&'a self) -> Self::LineIter {
+        CompletedCharGridLineIter {
+            iter: self.line_list.iter(),
+            grid: self,
+        }
+    }
+}
+
+impl<'a> IterLoadLine<'a> for CompletedCharGrid {
+    type Line = CharGridLine<'a, Self>;
+    type Error = Infallible;
+    type LineLoadIter = CompletedCharGridLineIter<'a>;
+    fn iter_load_line(&'a mut self) -> Self::LineLoadIter {
+        self.iter_line()
     }
 }
