@@ -106,7 +106,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
 
     /// List all loaded lines.
     pub fn loaded_line_list(&self) -> impl Iterator<Item = CharGridLine<'_, Self>> {
-        let create = |(coord, eol)| CharGridLine::new(coord, eol, self);
+        let create = |(slice, eol)| CharGridLine::new(slice, eol, self);
         self.loaded_line_list.iter().copied().map(create)
     }
 
