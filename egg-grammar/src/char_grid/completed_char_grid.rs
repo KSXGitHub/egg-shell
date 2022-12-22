@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
     CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLine, IterLoadChar,
-    IterLoadLine, LoadCharAt, TextSliceDef,
+    IterLoadLine, LineAt, LoadCharAt, LoadLineAt, Ordinal, TextSliceDef,
 };
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -64,6 +64,32 @@ impl LoadCharAt for CompletedCharGrid {
     type Error = CharAtError;
     fn load_char_at(&mut self, coord: CharCoord) -> Result<CharCell, CharAtError> {
         self.char_at(coord)
+    }
+}
+
+/// Error type of [`LineAt`] and [`LoadLineAt`] for [`CompletedCharGrid`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
+pub enum LineAtError {
+    #[error("Line does not exist")]
+    LineOutOfBound,
+}
+
+impl<'a> LineAt<'a> for CompletedCharGrid {
+    type Error = LineAtError;
+    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError> {
+        let (line, eol) = *self
+            .line_list
+            .get(ln_num.pred_count())
+            .ok_or(LineAtError::LineOutOfBound)?;
+        CharGridLine::new(line, eol, self).pipe(Ok)
+    }
+}
+
+impl<'a> LoadLineAt<'a> for CompletedCharGrid {
+    type Line = CharGridLine<'a, CompletedCharGrid>;
+    type Error = LineAtError;
+    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
+        self.line_at(ln_num)
     }
 }
 
