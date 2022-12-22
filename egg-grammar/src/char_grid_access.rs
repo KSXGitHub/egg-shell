@@ -1,4 +1,33 @@
 use crate::{CharCell, CharCoord, Ordinal};
+use std::{convert::Infallible, iter};
+
+fn from_infallible<X>(infallible: Infallible) -> X {
+    match infallible {}
+}
+
+type IntoOk<X> = fn(Result<X, Infallible>) -> X;
+
+fn into_ok<X>(result: Result<X, Infallible>) -> X {
+    result.unwrap_or_else(from_infallible)
+}
+
+/// Iterate over each character.
+pub trait IterChar<'a>: TryIterChar<'a, Error = Infallible> {
+    /// Type of the resulting iterator.
+    type CharIter: IntoIterator<Item = CharCell> + 'a;
+    /// Iterate over each character.
+    fn iter_char(&'a self) -> Self::CharIter;
+}
+
+impl<'a, Grid> IterChar<'a> for Grid
+where
+    Grid: TryIterChar<'a, Error = Infallible>,
+{
+    type CharIter = iter::Map<Self::CharResultIter, IntoOk<CharCell>>;
+    fn iter_char(&'a self) -> Self::CharIter {
+        self.try_iter_char().map(into_ok)
+    }
+}
 
 /// Iterate over each character.
 pub trait TryIterChar<'a>: TryIterLoadChar<'a> {
@@ -8,6 +37,24 @@ pub trait TryIterChar<'a>: TryIterLoadChar<'a> {
     type CharResultIter: Iterator<Item = Result<CharCell, <Self as TryIterChar<'a>>::Error>> + 'a;
     /// Iterate over each character.
     fn try_iter_char(&'a self) -> Self::CharResultIter;
+}
+
+/// Iterate over and load each character.
+pub trait IterLoadChar<'a>: TryIterLoadChar<'a> {
+    /// Type of the resulting iterator.
+    type CharLoadIter: Iterator<Item = CharCell> + 'a;
+    /// Iterate over and load each character.
+    fn iter_load_char(&'a mut self) -> Self::CharLoadIter;
+}
+
+impl<'a, Grid> IterLoadChar<'a> for Grid
+where
+    Grid: TryIterLoadChar<'a, Error = Infallible>,
+{
+    type CharLoadIter = iter::Map<Self::CharResultLoadIter, IntoOk<CharCell>>;
+    fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
+        self.try_iter_load_char().map(into_ok)
+    }
 }
 
 /// Iterate over and load each character.
@@ -21,6 +68,24 @@ pub trait TryIterLoadChar<'a> {
 }
 
 /// Iterate over each line.
+pub trait IterLine<'a>: TryIterLine<'a, Error = Infallible> {
+    /// Type of the resulting iterator.
+    type LineIter: Iterator<Item = Self::Line>;
+    /// Iterate over each line.
+    fn iter_line(&'a self) -> Self::LineIter;
+}
+
+impl<'a, Grid> IterLine<'a> for Grid
+where
+    Grid: TryIterLine<'a, Error = Infallible>,
+{
+    type LineIter = iter::Map<Self::LineResultIter, IntoOk<Self::Line>>;
+    fn iter_line(&'a self) -> Self::LineIter {
+        self.try_iter_line().map(into_ok)
+    }
+}
+
+/// Iterate over each line.
 pub trait TryIterLine<'a>: TryIterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
@@ -28,6 +93,24 @@ pub trait TryIterLine<'a>: TryIterLoadLine<'a> {
     type LineResultIter: Iterator<Item = Result<Self::Line, <Self as TryIterLine<'a>>::Error>>;
     /// Iterate over each line.
     fn try_iter_line(&'a self) -> Self::LineResultIter;
+}
+
+/// Iterate over each line.
+pub trait IterLoadLine<'a>: TryIterLoadLine<'a, Error = Infallible> {
+    /// Type of the resulting iterator.
+    type LineLoadIter: Iterator<Item = Self::Line>;
+    /// Iterate over each line.
+    fn iter_load_line(&'a mut self) -> Self::LineLoadIter;
+}
+
+impl<'a, Grid> IterLoadLine<'a> for Grid
+where
+    Grid: TryIterLoadLine<'a, Error = Infallible>,
+{
+    type LineLoadIter = iter::Map<Self::LineResultLoadIter, IntoOk<Self::Line>>;
+    fn iter_load_line(&'a mut self) -> Self::LineLoadIter {
+        self.try_iter_load_line().map(into_ok)
+    }
 }
 
 /// Iterate over and load each line.
