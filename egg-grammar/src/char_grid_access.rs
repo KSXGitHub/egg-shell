@@ -1,43 +1,43 @@
 use crate::{CharCell, CharCoord, Ordinal};
 
 /// Iterate over each character.
-pub trait IterChar: IterLoadChar {
+pub trait IterChar<'a>: IterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharIter: IntoIterator<Item = Result<CharCell, <Self as IterChar>::Error>>;
+    type CharIter: IntoIterator<Item = Result<CharCell, <Self as IterChar<'a>>::Error>> + 'a;
     /// Iterate over each character.
-    fn iter_char(&self) -> Self::CharIter;
+    fn iter_char(&'a self) -> Self::CharIter;
 }
 
 /// Iterate over and load each character.
-pub trait IterLoadChar {
+pub trait IterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
+    type CharLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>> + 'a;
     /// Iterate over and load each character.
-    fn iter_load_char(&mut self) -> Self::CharLoadIter;
+    fn iter_load_char(&'a mut self) -> Self::CharLoadIter;
 }
 
 /// Iterate over each line.
-pub trait IterLine: IterLoadLine {
+pub trait IterLine<'a>: IterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineIter: IntoIterator<Item = Result<CharCell, <Self as IterLine>::Error>>;
+    type LineIter: IntoIterator<Item = Result<CharCell, <Self as IterLine<'a>>::Error>>;
     /// Iterate over each line.
-    fn iter_line(&self) -> Self::LineIter;
+    fn iter_line(&'a self) -> Self::LineIter;
 }
 
 /// Iterate over and load each line.
-pub trait IterLoadLine {
+pub trait IterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
     type LineLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
     /// Iterate over and load each line.
-    fn iter_load_line(&mut self) -> Self::LineLoadIter;
+    fn iter_load_line(&'a mut self) -> Self::LineLoadIter;
 }
 
 /// Get a character cell by coordinate.
