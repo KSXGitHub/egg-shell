@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
     CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLine, IterLoadChar,
-    IterLoadLine, LineAt, LoadCharAt, LoadLineAt, Ordinal, TextSliceDef,
+    IterLoadLine, LineAt, LineCount, LoadCharAt, LoadLineAt, Ordinal, TextSliceDef,
 };
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -96,6 +96,12 @@ impl<'a> LoadLineAt<'a> for CompletedCharGrid {
 impl CharCount for CompletedCharGrid {
     fn char_count(&self) -> usize {
         self.char_list().len()
+    }
+}
+
+impl LineCount for CompletedCharGrid {
+    fn line_count(&self) -> usize {
+        self.line_list.len()
     }
 }
 
