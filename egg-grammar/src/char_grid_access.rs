@@ -25,17 +25,19 @@ pub trait IterLine<'a>: IterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineIter: IntoIterator<Item = Result<CharCell, <Self as IterLine<'a>>::Error>>;
+    type LineIter: IntoIterator<Item = Result<Self::Line, <Self as IterLine<'a>>::Error>>;
     /// Iterate over each line.
     fn iter_line(&'a self) -> Self::LineIter;
 }
 
 /// Iterate over and load each line.
 pub trait IterLoadLine<'a> {
+    /// Type of item to be yielded on success.
+    type Line;
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
+    type LineLoadIter: IntoIterator<Item = Result<Self::Line, Self::Error>>;
     /// Iterate over and load each line.
     fn iter_load_line(&'a mut self) -> Self::LineLoadIter;
 }
