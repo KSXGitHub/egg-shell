@@ -1,4 +1,4 @@
-use egg_grammar::{CompletedCharGrid, EndOfLine::*, LazyCharGrid};
+use egg_grammar::{CompletedCharGrid, EndOfLine::*, IterChar, IterLine, LazyCharGrid};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
@@ -19,7 +19,7 @@ fn grid() -> CompletedCharGrid {
 #[test]
 fn char_correctness() {
     let grid = grid();
-    for char_cell in grid.char_list().iter() {
+    for char_cell in grid.iter_char() {
         eprintln!();
         dbg!(char_cell);
         let len_utf8 = dbg!(char_cell.value().len_utf8());
@@ -33,7 +33,7 @@ fn char_correctness() {
 fn line_correctness() {
     let grid = grid();
     let received: Vec<_> = grid
-        .line_list()
+        .iter_line()
         .map(|line| (line.text_without_eol(), line.eol()))
         .collect();
     dbg!(&received);
