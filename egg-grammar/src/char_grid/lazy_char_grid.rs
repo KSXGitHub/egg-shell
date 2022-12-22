@@ -264,13 +264,12 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
     /// * `Err(error)` means that an error occurred.
     pub fn load_line(
         &mut self,
-    ) -> Result<Option<(CharGridLine<'_, Self>, &'_ str)>, LoadCharError<IterError>> {
+    ) -> Result<Option<CharGridLine<'_, Self>>, LoadCharError<IterError>> {
         loop {
             match self.load_char()? {
                 LoadCharReport::Char(_) => continue,
-                LoadCharReport::Line { def, value, eol } => {
-                    let line = CharGridLine::new(def, eol, self);
-                    return Ok(Some((line, value)));
+                LoadCharReport::Line { def, eol, .. } => {
+                    return CharGridLine::new(def, eol, self).pipe(Some).pipe(Ok);
                 }
                 LoadCharReport::Document => return Ok(None),
             }
