@@ -110,8 +110,13 @@ pub struct CharIter<'a>(slice::Iter<'a, CharCell>);
 
 impl<'a> Iterator for CharIter<'a> {
     type Item = Result<CharCell, Infallible>;
+
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next().copied()?.pipe(Ok).pipe(Some)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.0.size_hint()
     }
 }
 
@@ -139,9 +144,14 @@ pub struct LineIter<'a> {
 
 impl<'a> Iterator for LineIter<'a> {
     type Item = Result<CharGridLine<'a, CompletedCharGrid>, Infallible>;
+
     fn next(&mut self) -> Option<Self::Item> {
         let (slice, eol) = *self.iter.next()?;
         CharGridLine::new(slice, eol, self.grid).pipe(Ok).pipe(Some)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.iter.size_hint()
     }
 }
 
