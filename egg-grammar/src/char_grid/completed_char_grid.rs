@@ -106,9 +106,9 @@ impl LineCount for CompletedCharGrid {
 }
 
 /// An iterator that emits character cells from [`CompletedCharGrid`].
-pub struct CompletedCharGridCharIter<'a>(slice::Iter<'a, CharCell>);
+pub struct CharIter<'a>(slice::Iter<'a, CharCell>);
 
-impl<'a> Iterator for CompletedCharGridCharIter<'a> {
+impl<'a> Iterator for CharIter<'a> {
     type Item = Result<CharCell, Infallible>;
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next().copied()?.pipe(Ok).pipe(Some)
@@ -119,25 +119,25 @@ impl<'a> IterChar<'a> for CompletedCharGrid {
     type Error = Infallible;
     type CharIter = Self::CharLoadIter;
     fn iter_char(&'a self) -> Self::CharIter {
-        self.char_list().iter().pipe(CompletedCharGridCharIter)
+        self.char_list().iter().pipe(CharIter)
     }
 }
 
 impl<'a> IterLoadChar<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type CharLoadIter = CompletedCharGridCharIter<'a>;
+    type CharLoadIter = CharIter<'a>;
     fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
         self.iter_char()
     }
 }
 
 /// An iterator that emits lines from a [`CompletedCharGrid`].
-pub struct CompletedCharGridLineIter<'a> {
+pub struct LineIter<'a> {
     iter: slice::Iter<'a, (TextSliceDef, EndOfLine)>,
     grid: &'a CompletedCharGrid,
 }
 
-impl<'a> Iterator for CompletedCharGridLineIter<'a> {
+impl<'a> Iterator for LineIter<'a> {
     type Item = Result<CharGridLine<'a, CompletedCharGrid>, Infallible>;
     fn next(&mut self) -> Option<Self::Item> {
         let (slice, eol) = *self.iter.next()?;
@@ -149,7 +149,7 @@ impl<'a> IterLine<'a> for CompletedCharGrid {
     type Error = Infallible;
     type LineIter = Self::LineLoadIter;
     fn iter_line(&'a self) -> Self::LineIter {
-        CompletedCharGridLineIter {
+        LineIter {
             iter: self.line_list.iter(),
             grid: self,
         }
@@ -159,7 +159,7 @@ impl<'a> IterLine<'a> for CompletedCharGrid {
 impl<'a> IterLoadLine<'a> for CompletedCharGrid {
     type Line = CharGridLine<'a, Self>;
     type Error = Infallible;
-    type LineLoadIter = CompletedCharGridLineIter<'a>;
+    type LineLoadIter = LineIter<'a>;
     fn iter_load_line(&'a mut self) -> Self::LineLoadIter {
         self.iter_line()
     }
