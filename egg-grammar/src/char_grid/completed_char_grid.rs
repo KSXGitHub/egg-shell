@@ -1,5 +1,5 @@
 use super::CharGridLine;
-use crate::{CharAt, CharCell, CharCoord, EndOfLine, LoadCharAt, TextSliceDef};
+use crate::{CharAt, CharCell, CharCoord, CharCount, EndOfLine, LoadCharAt, TextSliceDef};
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
 use thiserror::Error;
@@ -60,5 +60,11 @@ impl LoadCharAt for CompletedCharGrid {
     type Error = CharAtError;
     fn load_char_at(&mut self, coord: CharCoord) -> Result<CharCell, CharAtError> {
         self.char_at(coord)
+    }
+}
+
+impl CharCount for CompletedCharGrid {
+    fn char_count(&self) -> usize {
+        self.char_list().len()
     }
 }
