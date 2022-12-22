@@ -7,7 +7,7 @@ pub trait IterChar: IterLoadChar {
     /// Type of the resulting iterator.
     type CharIter: IntoIterator<Item = Result<CharCell, <Self as IterChar>::Error>>;
     /// Iterate over each character.
-    fn iter_load_char(&self) -> Self::CharIter;
+    fn iter_char(&self) -> Self::CharIter;
 }
 
 /// Iterate over and load each character.
@@ -27,7 +27,7 @@ pub trait IterLine: IterLoadLine {
     /// Type of the resulting iterator.
     type LineIter: IntoIterator<Item = Result<CharCell, <Self as IterLine>::Error>>;
     /// Iterate over each line.
-    fn iter_load_char(&self) -> Self::LineIter;
+    fn iter_line(&self) -> Self::LineIter;
 }
 
 /// Iterate over and load each line.
@@ -37,7 +37,7 @@ pub trait IterLoadLine {
     /// Type of the resulting iterator.
     type LineLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>>;
     /// Iterate over and load each line.
-    fn iter_load_char(&mut self) -> Self::LineLoadIter;
+    fn iter_load_line(&mut self) -> Self::LineLoadIter;
 }
 
 /// Get a character cell by coordinate.
