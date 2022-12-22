@@ -1,4 +1,4 @@
-use crate::{CharCell, CharCoord};
+use crate::{CharCell, CharCoord, Ordinal};
 use getset::CopyGetters;
 
 /// Information of a text slice.
@@ -11,6 +11,8 @@ pub struct TextSliceDef {
     size: usize,
     /// Coordinate of the first character.
     first_char_coord: CharCoord,
+    /// Position of the first character.
+    first_char_pos: Ordinal,
     /// Number of characters in the slice.
     char_count: usize,
 }
@@ -38,6 +40,7 @@ impl<'a> ScanText<'a> {
             first_char_coord,
             offset,
         } = self;
+        let first_char_pos = Ordinal::from_pred_count(char_list.len());
         let initial_char_count = char_list.len();
         let mut offset_from_ln_start = 0;
         for (col_add, value) in src_text.chars().enumerate() {
@@ -52,6 +55,7 @@ impl<'a> ScanText<'a> {
         TextSliceDef {
             offset,
             first_char_coord,
+            first_char_pos,
             size: src_text.len(),
             char_count: char_list.len() - initial_char_count,
         }
