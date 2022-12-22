@@ -59,21 +59,21 @@ pub trait LoadCharAt {
 }
 
 /// Get a line of character cells by coordinate.
-pub trait LineAt: LoadLineAt {
+pub trait LineAt<'a>: LoadLineAt<'a> {
     /// The associate error which is returned on failure.
     type Error;
     /// Get a line of character cells by coordinate.
-    fn line_at(&self, ln_num: Ordinal) -> Result<Self::Line, <Self as LineAt>::Error>;
+    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, <Self as LineAt>::Error>;
 }
 
 /// Load a line of character cells by coordinate.
-pub trait LoadLineAt {
+pub trait LoadLineAt<'a> {
     /// Type of return value on success.
     type Line;
     /// The associate error which is returned on failure.
     type Error;
     // Load a line of character cells by coordinate.
-    fn load_line_at(&mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error>;
+    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error>;
 }
 
 /// Get the number of character cells.
