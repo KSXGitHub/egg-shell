@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLine, IterLoadChar,
-    IterLoadLine, LineAt, LineCount, LoadCharAt, LoadLineAt, Ordinal, TextSliceDef,
+    CharAt, CharCell, CharCoord, CharCount, EndOfLine, LineAt, LineCount, LoadCharAt, LoadLineAt,
+    Ordinal, TextSliceDef, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
 };
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
@@ -120,19 +120,19 @@ impl<'a> Iterator for CharIter<'a> {
     }
 }
 
-impl<'a> IterChar<'a> for CompletedCharGrid {
+impl<'a> TryIterChar<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type CharIter = Self::CharLoadIter;
-    fn iter_char(&'a self) -> Self::CharIter {
+    type CharResultIter = Self::CharResultLoadIter;
+    fn try_iter_char(&'a self) -> Self::CharResultIter {
         self.char_list().iter().pipe(CharIter)
     }
 }
 
-impl<'a> IterLoadChar<'a> for CompletedCharGrid {
+impl<'a> TryIterLoadChar<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type CharLoadIter = CharIter<'a>;
-    fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
-        self.iter_char()
+    type CharResultLoadIter = CharIter<'a>;
+    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
+        self.try_iter_char()
     }
 }
 
@@ -155,10 +155,10 @@ impl<'a> Iterator for LineIter<'a> {
     }
 }
 
-impl<'a> IterLine<'a> for CompletedCharGrid {
+impl<'a> TryIterLine<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type LineIter = Self::LineLoadIter;
-    fn iter_line(&'a self) -> Self::LineIter {
+    type LineResultIter = Self::LineResultLoadIter;
+    fn try_iter_line(&'a self) -> Self::LineResultIter {
         LineIter {
             iter: self.line_list.iter(),
             grid: self,
@@ -166,11 +166,11 @@ impl<'a> IterLine<'a> for CompletedCharGrid {
     }
 }
 
-impl<'a> IterLoadLine<'a> for CompletedCharGrid {
+impl<'a> TryIterLoadLine<'a> for CompletedCharGrid {
     type Line = CharGridLine<'a, Self>;
     type Error = Infallible;
-    type LineLoadIter = LineIter<'a>;
-    fn iter_load_line(&'a mut self) -> Self::LineLoadIter {
-        self.iter_line()
+    type LineResultLoadIter = LineIter<'a>;
+    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {
+        self.try_iter_line()
     }
 }

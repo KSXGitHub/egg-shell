@@ -1,45 +1,46 @@
 use crate::{CharCell, CharCoord, Ordinal};
 
 /// Iterate over each character.
-pub trait IterChar<'a>: IterLoadChar<'a> {
+pub trait TryIterChar<'a>: TryIterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharIter: IntoIterator<Item = Result<CharCell, <Self as IterChar<'a>>::Error>> + 'a;
+    type CharResultIter: IntoIterator<Item = Result<CharCell, <Self as TryIterChar<'a>>::Error>>
+        + 'a;
     /// Iterate over each character.
-    fn iter_char(&'a self) -> Self::CharIter;
+    fn try_iter_char(&'a self) -> Self::CharResultIter;
 }
 
 /// Iterate over and load each character.
-pub trait IterLoadChar<'a> {
+pub trait TryIterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>> + 'a;
+    type CharResultLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>> + 'a;
     /// Iterate over and load each character.
-    fn iter_load_char(&'a mut self) -> Self::CharLoadIter;
+    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter;
 }
 
 /// Iterate over each line.
-pub trait IterLine<'a>: IterLoadLine<'a> {
+pub trait TryIterLine<'a>: TryIterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineIter: IntoIterator<Item = Result<Self::Line, <Self as IterLine<'a>>::Error>>;
+    type LineResultIter: IntoIterator<Item = Result<Self::Line, <Self as TryIterLine<'a>>::Error>>;
     /// Iterate over each line.
-    fn iter_line(&'a self) -> Self::LineIter;
+    fn try_iter_line(&'a self) -> Self::LineResultIter;
 }
 
 /// Iterate over and load each line.
-pub trait IterLoadLine<'a> {
+pub trait TryIterLoadLine<'a> {
     /// Type of item to be yielded on success.
     type Line;
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineLoadIter: IntoIterator<Item = Result<Self::Line, Self::Error>>;
+    type LineResultLoadIter: IntoIterator<Item = Result<Self::Line, Self::Error>>;
     /// Iterate over and load each line.
-    fn iter_load_line(&'a mut self) -> Self::LineLoadIter;
+    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter;
 }
 
 /// Get a character cell by coordinate.
