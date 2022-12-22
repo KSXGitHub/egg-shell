@@ -5,7 +5,7 @@ use crate::{
 };
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
-use std::{convert::Infallible, iter, slice};
+use std::{convert::Infallible, slice};
 use thiserror::Error;
 
 /// Character grid with all characters loaded.
@@ -73,20 +73,27 @@ impl CharCount for CompletedCharGrid {
     }
 }
 
+/// An iterator that emits character cells from [`CompletedCharGrid`].
+pub struct CompletedCharGridCharIter<'a>(slice::Iter<'a, CharCell>);
+
+impl<'a> Iterator for CompletedCharGridCharIter<'a> {
+    type Item = Result<CharCell, Infallible>;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next().copied()?.pipe(Ok).pipe(Some)
+    }
+}
+
 impl<'a> IterChar<'a> for CompletedCharGrid {
     type Error = Infallible;
     type CharIter = Self::CharLoadIter;
     fn iter_char(&'a self) -> Self::CharIter {
-        self.char_list().iter().copied().map(Ok)
+        self.char_list().iter().pipe(CompletedCharGridCharIter)
     }
 }
 
 impl<'a> IterLoadChar<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type CharLoadIter = iter::Map<
-        iter::Copied<slice::Iter<'a, CharCell>>,
-        fn(CharCell) -> Result<CharCell, Infallible>,
-    >;
+    type CharLoadIter = CompletedCharGridCharIter<'a>;
     fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
         self.iter_char()
     }
