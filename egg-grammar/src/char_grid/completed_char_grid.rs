@@ -1,7 +1,11 @@
 use super::CharGridLine;
-use crate::{CharAt, CharCell, CharCoord, CharCount, EndOfLine, LoadCharAt, TextSliceDef};
+use crate::{
+    CharAt, CharCell, CharCoord, CharCount, EndOfLine, IterChar, IterLoadChar, LoadCharAt,
+    TextSliceDef,
+};
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
+use std::{convert::Infallible, iter, slice};
 use thiserror::Error;
 
 /// Character grid with all characters loaded.
@@ -66,5 +70,27 @@ impl LoadCharAt for CompletedCharGrid {
 impl CharCount for CompletedCharGrid {
     fn char_count(&self) -> usize {
         self.char_list().len()
+    }
+}
+
+impl<'a> IterChar<'a> for CompletedCharGrid {
+    type Error = Infallible;
+    type CharIter = iter::Map<
+        iter::Copied<slice::Iter<'a, CharCell>>,
+        fn(CharCell) -> Result<CharCell, Infallible>,
+    >;
+    fn iter_char(&'a self) -> Self::CharIter {
+        self.char_list().iter().copied().map(Ok)
+    }
+}
+
+impl<'a> IterLoadChar<'a> for CompletedCharGrid {
+    type Error = Infallible;
+    type CharLoadIter = iter::Map<
+        iter::Copied<slice::Iter<'a, CharCell>>,
+        fn(CharCell) -> Result<CharCell, Infallible>,
+    >;
+    fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
+        self.iter_char()
     }
 }
