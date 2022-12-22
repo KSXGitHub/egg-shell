@@ -254,6 +254,27 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
         }
     }
 
+    /// Load a whole line.
+    ///
+    /// **Returns:**
+    /// * `Ok(Some((slice, text)))` means that a line with the shape of `slice` and content of `text` has been loaded.
+    /// * `Ok(None)` means that there are no more line to load (i.e. the grid is completed).
+    /// * `Err(error)` means that an error occurred.
+    pub fn load_line(
+        &mut self,
+    ) -> Result<Option<(CharGridLine<'_, Self>, &'_ str)>, LoadCharError<IterError>> {
+        loop {
+            match self.load_char()? {
+                LoadCharReport::Char(_) => continue,
+                LoadCharReport::Line { def, value, eol } => {
+                    let line = CharGridLine::new(def, eol, self);
+                    return Ok(Some((line, value)));
+                }
+                LoadCharReport::Document => return Ok(None),
+            }
+        }
+    }
+
     /// Load the whole text.
     pub fn load_all(&mut self) -> Result<(), LoadCharError<IterError>> {
         while self.completion() == CompletionStatus::Incomplete {
