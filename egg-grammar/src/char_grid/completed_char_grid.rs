@@ -75,10 +75,7 @@ impl CharCount for CompletedCharGrid {
 
 impl<'a> IterChar<'a> for CompletedCharGrid {
     type Error = Infallible;
-    type CharIter = iter::Map<
-        iter::Copied<slice::Iter<'a, CharCell>>,
-        fn(CharCell) -> Result<CharCell, Infallible>,
-    >;
+    type CharIter = Self::CharLoadIter;
     fn iter_char(&'a self) -> Self::CharIter {
         self.char_list().iter().copied().map(Ok)
     }
