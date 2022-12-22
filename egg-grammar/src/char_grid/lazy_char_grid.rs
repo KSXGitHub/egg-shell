@@ -160,7 +160,11 @@ pub enum LoadCharReport<'a> {
     /// The grid is completed.
     Document,
     /// Complete a line.
-    Line(&'a str, EndOfLine),
+    Line {
+        def: TextSliceDef,
+        value: &'a str,
+        eol: EndOfLine,
+    },
     /// Get another character.
     Char(char),
 }
@@ -234,7 +238,11 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             *loaded_char_count += 1;
             *prev_non_lf = None;
             *prev_line_offset = loaded_text.len();
-            LoadCharReport::Line(line_src_text, eol).pipe(Ok)
+            Ok(LoadCharReport::Line {
+                def: line_slice_def,
+                value: line_src_text,
+                eol,
+            })
         } else {
             if *prev_non_lf == Some('\r') {
                 dbg!(loaded_text);
