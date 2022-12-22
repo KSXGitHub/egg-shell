@@ -5,8 +5,7 @@ pub trait TryIterChar<'a>: TryIterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharResultIter: IntoIterator<Item = Result<CharCell, <Self as TryIterChar<'a>>::Error>>
-        + 'a;
+    type CharResultIter: Iterator<Item = Result<CharCell, <Self as TryIterChar<'a>>::Error>> + 'a;
     /// Iterate over each character.
     fn try_iter_char(&'a self) -> Self::CharResultIter;
 }
@@ -16,7 +15,7 @@ pub trait TryIterLoadChar<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharResultLoadIter: IntoIterator<Item = Result<CharCell, Self::Error>> + 'a;
+    type CharResultLoadIter: Iterator<Item = Result<CharCell, Self::Error>> + 'a;
     /// Iterate over and load each character.
     fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter;
 }
@@ -26,7 +25,7 @@ pub trait TryIterLine<'a>: TryIterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineResultIter: IntoIterator<Item = Result<Self::Line, <Self as TryIterLine<'a>>::Error>>;
+    type LineResultIter: Iterator<Item = Result<Self::Line, <Self as TryIterLine<'a>>::Error>>;
     /// Iterate over each line.
     fn try_iter_line(&'a self) -> Self::LineResultIter;
 }
@@ -38,7 +37,7 @@ pub trait TryIterLoadLine<'a> {
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineResultLoadIter: IntoIterator<Item = Result<Self::Line, Self::Error>>;
+    type LineResultLoadIter: Iterator<Item = Result<Self::Line, Self::Error>>;
     /// Iterate over and load each line.
     fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter;
 }
