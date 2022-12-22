@@ -78,7 +78,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// use utf8_chars::BufReadCharsExt;
     ///
     /// let file = File::open("my-file.txt").unwrap();
-    /// let size: u64 = metadata("my-file.txt").unwrap().len();
+    /// let size: u64 = file.metadata().unwrap().len();
     /// let size: usize = size.try_into().unwrap_or_else(|_| {
     ///     eprintln!("warning: {size}bytes is too big to allocate all at once,");
     ///     eprintln!("         the program can only handle part of the file");
