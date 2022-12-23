@@ -47,7 +47,7 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
         let line = self
             .line_at(coord.column)
             .map_err(|error| match error {
-                LineAtError::LineOutOfBound => CharAtError::LineOutOfBound,
+                LineAtError::OutOfBound => CharAtError::LineOutOfBound,
             })?
             .slice();
         if coord.column.pred_count() > line.char_count() {
@@ -73,7 +73,7 @@ impl<'a> LoadCharAt<'a> for CompletedCharGrid {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError {
     #[error("Line does not exist")]
-    LineOutOfBound,
+    OutOfBound,
 }
 
 impl<'a> LineAt<'a> for CompletedCharGrid {
@@ -82,7 +82,7 @@ impl<'a> LineAt<'a> for CompletedCharGrid {
         let (line, eol) = *self
             .line_list
             .get(ln_num.pred_count())
-            .ok_or(LineAtError::LineOutOfBound)?;
+            .ok_or(LineAtError::OutOfBound)?;
         CharGridLine::new(line, eol, self).pipe(Ok)
     }
 }
