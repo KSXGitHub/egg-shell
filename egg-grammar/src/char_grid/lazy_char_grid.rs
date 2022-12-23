@@ -171,7 +171,7 @@ pub enum LoadCharReport<'a> {
 }
 
 /// Failure value of [`LazyCharGrid::load_char`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, derive_more::Display, Error)]
+#[derive(Debug, derive_more::Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.
     #[display(fmt = "CR is poorly placed, it was before {followed_by} instead of LF")]
