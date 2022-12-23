@@ -72,7 +72,7 @@ impl<'a> LoadCharAt<'a> for CompletedCharGrid {
 /// Error type of [`LineAt`] and [`LoadLineAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError {
-    #[error("Line does not exist")]
+    #[error("Column does not exist")]
     OutOfBound,
 }
 
