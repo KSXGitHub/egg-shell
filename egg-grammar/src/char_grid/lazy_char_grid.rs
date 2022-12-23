@@ -1,7 +1,7 @@
 use super::{CharGridLine, CompletedCharGrid};
 use crate::{
     text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadCharAt, LoadLineAt, Ordinal,
-    TextSliceDef,
+    TextSliceDef, TryIterLoadChar,
 };
 use assert_cmp::debug_assert_op;
 use derive_more::Error;
@@ -426,5 +426,50 @@ where
             "ln_num ({ln_num}) should be less than loaded_line_list.len() ({len}), this should have been unreachable",
             len = self.loaded_line_list.len(),
         )
+    }
+}
+
+pub struct CharIter<'a, SrcIterError, SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    index: usize,
+    grid: &'a mut LazyCharGrid<SrcIter>,
+}
+
+impl<'a, SrcIterError, SrcIter> Iterator for CharIter<'a, SrcIterError, SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    type Item = Result<CharCell, LoadCharError<SrcIterError>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(char) = self.grid.loaded_char_list.get(self.index).copied() {
+            self.index += 1;
+            return char.pipe(Ok).pipe(Some);
+        }
+        match self.grid.load_char() {
+            Err(error) => Some(Err(error)),
+            Ok(LoadCharReport::Document) => None,
+            Ok(_) => self.next(),
+        }
+    }
+}
+
+impl<'a, SrcIterError, SrcIter> TryIterLoadChar<'a> for LazyCharGrid<SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    type Error = LoadCharError<SrcIterError>;
+    type CharResultLoadIter = CharIter<'a, SrcIterError, SrcIter>;
+
+    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
+        CharIter {
+            index: 0,
+            grid: self,
+        }
     }
 }
