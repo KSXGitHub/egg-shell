@@ -429,6 +429,7 @@ where
     }
 }
 
+/// An iterator that emits character cells from [`LazyCharGrid`].
 pub struct CharIter<'a, SrcIterError, SrcIter>
 where
     SrcIterError: 'a,
