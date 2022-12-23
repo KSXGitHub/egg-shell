@@ -365,7 +365,7 @@ pub enum LineAtError<IterError> {
     LoadCharError(LoadCharError<IterError>),
     /// The source iterator doesn't have enough lines to match the requested index.
     #[display(fmt = "Line does not exist")]
-    LineOutOfBound,
+    OutOfBound,
 }
 
 impl<'a, IterError, CharIter> LoadLineAt<'a> for LazyCharGrid<CharIter>
@@ -378,7 +378,7 @@ where
         while self.loaded_line_list.len() < ln_num.pred_count() {
             self.load_line()
                 .map_err(LineAtError::LoadCharError)?
-                .ok_or(LineAtError::LineOutOfBound)?;
+                .ok_or(LineAtError::OutOfBound)?;
         }
         if let Some((slice, eol)) = self.loaded_line_list.get(ln_num.pred_count()) {
             return Ok(CharGridLine::new(*slice, *eol, self));
