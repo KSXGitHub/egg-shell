@@ -1,7 +1,7 @@
 use super::{CharGridLine, CompletedCharGrid};
 use crate::{
     text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadCharAt, LoadLineAt, Ordinal,
-    TextSliceDef, TryIterLoadChar,
+    TextSliceDef, TryIterLoadChar, TryIterLoadLine,
 };
 use assert_cmp::debug_assert_op;
 use derive_more::Error;
@@ -469,6 +469,59 @@ where
 
     fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
         CharIter {
+            index: 0,
+            grid: self,
+        }
+    }
+}
+
+/// An iterator that emits lines from [`LazyCharGrid`].
+pub struct LineIter<'a, SrcIterError, SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    index: usize,
+    grid: &'a mut LazyCharGrid<SrcIter>,
+}
+
+impl<'a, SrcIterError, SrcIter> Iterator for LineIter<'a, SrcIterError, SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    type Item = Result<CharGridLine<'a, LazyCharGrid<SrcIter>>, LoadCharError<SrcIterError>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some((def, eol)) = self.grid.loaded_line_list.get(self.index).copied() {
+            self.index += 1;
+
+            // Cannot pass self.grid directly to CharGridLine::new because the lifetime self is short-lived.
+            // But since self.grid has lifetime 'a, it should be safe to cast it as pointer and then pass.
+            let grid: *const LazyCharGrid<SrcIter> = self.grid;
+            let grid = unsafe { &*grid }; // would there be a problem here? 🤔
+            return CharGridLine::new(def, eol, grid).pipe(Ok).pipe(Some);
+        }
+
+        match self.grid.load_line() {
+            Err(error) => Some(Err(error)),
+            Ok(None) => None,
+            Ok(Some(_)) => self.next(),
+        }
+    }
+}
+
+impl<'a, SrcIterError, SrcIter> TryIterLoadLine<'a> for LazyCharGrid<SrcIter>
+where
+    SrcIterError: 'a,
+    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
+{
+    type Line = CharGridLine<'a, Self>;
+    type Error = LoadCharError<SrcIterError>;
+    type LineResultLoadIter = LineIter<'a, SrcIterError, SrcIter>;
+
+    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {
+        LineIter {
             index: 0,
             grid: self,
         }
