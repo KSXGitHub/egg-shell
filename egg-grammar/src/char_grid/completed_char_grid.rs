@@ -35,8 +35,10 @@ impl CompletedCharGrid {
 /// Error type of [`CharAt`] and [`LoadCharAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
 pub enum CharAtError {
+    /// The source iterator doesn't have enough lines to match the requested line index.
     #[error("Line does not exist")]
     LineOutOfBound,
+    /// The line doesn't have enough characters to match the requested column index.
     #[error("Column does not exist")]
     ColumnOutOfBound,
 }
@@ -72,6 +74,7 @@ impl<'a> LoadCharAt<'a> for CompletedCharGrid {
 /// Error type of [`LineAt`] and [`LoadLineAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError {
+    /// The line doesn't have enough characters to match the requested column index.
     #[error("Column does not exist")]
     OutOfBound,
 }
