@@ -429,7 +429,7 @@ where
     }
 }
 
-/// An iterator that emits character cells from [`LazyCharGrid`].
+/// An iterator that emits instances of [`CharCell`] from [`LazyCharGrid`].
 pub struct CharIter<'a, SrcIterError, SrcIter>
 where
     SrcIterError: 'a,
@@ -475,7 +475,7 @@ where
     }
 }
 
-/// An iterator that emits lines from [`LazyCharGrid`].
+/// An iterator that emits instances of [`CharGridLine`] from [`LazyCharGrid`].
 pub struct LineIter<'a, SrcIterError, SrcIter>
 where
     SrcIterError: 'a,
