@@ -1,6 +1,7 @@
 use super::{CharGridLine, CompletedCharGrid};
 use crate::{
-    text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadLineAt, Ordinal, TextSliceDef,
+    text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadCharAt, LoadLineAt, Ordinal,
+    TextSliceDef,
 };
 use assert_cmp::debug_assert_op;
 use derive_more::Error;
@@ -355,6 +356,44 @@ impl LazyCharGrid<Infallible> {
         src_text: &str,
     ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
         LazyCharGrid::new_infallible(src_text.chars(), src_text.len())
+    }
+}
+
+/// Error type of [`LoadCharAt`] for [`LazyCharGrid`].
+#[derive(Debug, derive_more::Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum CharAtError<IterError> {
+    /// An error occurred while loading a character.
+    LoadCharError(LoadCharError<IterError>),
+    /// The source iterator doesn't have enough lines to match the requested line index.
+    #[display(fmt = "Line does not exist")]
+    LineOutOfBound,
+    /// The line doesn't have enough characters to match the requested column index.
+    #[display(fmt = "Column does not exist")]
+    ColumnOutOfBound,
+}
+
+impl<'a, IterError, CharIter> LoadCharAt<'a> for LazyCharGrid<CharIter>
+where
+    CharIter: Iterator<Item = Result<char, IterError>>,
+{
+    type Error = CharAtError<IterError>;
+    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell, Self::Error> {
+        let line = self.load_line_at(coord.line).map_err(|error| match error {
+            LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
+            LineAtError::OutOfBound => CharAtError::LineOutOfBound,
+        })?;
+        if coord.column.pred_count() > line.slice().char_count() {
+            return Err(CharAtError::ColumnOutOfBound);
+        }
+        let char_pos = line
+            .slice()
+            .first_char_pos()
+            .advance_by(coord.column.pred_count());
+        self.loaded_char_list()
+            .get(char_pos.pred_count())
+            .copied()
+            .expect("char_pos should be within the range of char_list")
+            .pipe(Ok)
     }
 }
 
