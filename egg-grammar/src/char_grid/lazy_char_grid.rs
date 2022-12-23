@@ -1,5 +1,7 @@
 use super::{CharGridLine, CompletedCharGrid};
-use crate::{text_slice::ScanText, CharCell, CharCoord, EndOfLine, TextSliceDef};
+use crate::{
+    text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadLineAt, Ordinal, TextSliceDef,
+};
 use assert_cmp::debug_assert_op;
 use derive_more::Error;
 use getset::{CopyGetters, Getters};
@@ -353,5 +355,37 @@ impl LazyCharGrid<Infallible> {
         src_text: &str,
     ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
         LazyCharGrid::new_infallible(src_text.chars(), src_text.len())
+    }
+}
+
+/// Error type of [`LoadLineAt`] for [`LazyCharGrid`].
+#[derive(Debug, derive_more::Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum LineAtError<IterError> {
+    /// An error occurred while loading a character.
+    LoadCharError(LoadCharError<IterError>),
+    /// The source iterator doesn't have enough lines to match the requested index.
+    #[display(fmt = "Line does not exist")]
+    LineOutOfBound,
+}
+
+impl<'a, IterError, CharIter> LoadLineAt<'a> for LazyCharGrid<CharIter>
+where
+    CharIter: Iterator<Item = Result<char, IterError>> + 'a,
+{
+    type Error = LineAtError<IterError>;
+    type Line = CharGridLine<'a, Self>;
+    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
+        while self.loaded_line_list.len() < ln_num.pred_count() {
+            self.load_line()
+                .map_err(LineAtError::LoadCharError)?
+                .ok_or(LineAtError::LineOutOfBound)?;
+        }
+        if let Some((slice, eol)) = self.loaded_line_list.get(ln_num.pred_count()) {
+            return Ok(CharGridLine::new(*slice, *eol, self));
+        }
+        unreachable!(
+            "ln_num ({ln_num}) should be less than loaded_line_list.len() ({len}), this should have been unreachable",
+            len = self.loaded_line_list.len(),
+        )
     }
 }
