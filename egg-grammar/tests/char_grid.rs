@@ -1,4 +1,8 @@
-use egg_grammar::{CharCell, CompletedCharGrid, EndOfLine::*, IterChar, IterLine, LazyCharGrid};
+use egg_grammar::{
+    CharCell, CompletedCharGrid,
+    EndOfLine::{self, *},
+    IterChar, IterLine, LazyCharGrid,
+};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
@@ -19,6 +23,8 @@ fn grid() -> CompletedCharGrid {
 #[test]
 fn char_correctness() {
     let grid = grid();
+
+    eprintln!("\nTEST: NON END-OF-LINE ONLY");
     let non_eol = grid
         .iter_char()
         .map(CharCell::<char>::try_from)
@@ -30,6 +36,20 @@ fn char_correctness() {
         let offset = dbg!(char_cell.offset_from_doc_start());
         let src_char = dbg!(&SRC_TEXT[offset..(offset + len_utf8)]);
         assert_eq!(char_cell.to_string(), src_char);
+    }
+
+    eprintln!("\nTEST: END-OF-LINE ONLY");
+    let eol_only = grid
+        .iter_char()
+        .map(CharCell::<EndOfLine>::try_from)
+        .filter_map(Result::ok);
+    for char_cell in eol_only {
+        eprintln!();
+        dbg!(char_cell);
+        let len = dbg!(char_cell.value().len());
+        let offset = dbg!(char_cell.offset_from_doc_start());
+        let src_char = dbg!(&SRC_TEXT[offset..(offset + len)]);
+        assert_eq!(char_cell.value().as_ref(), src_char);
     }
 }
 
