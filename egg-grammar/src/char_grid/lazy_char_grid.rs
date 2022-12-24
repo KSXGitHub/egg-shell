@@ -490,17 +490,12 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Item = Result<CharGridLine<'a, LazyCharGrid<SrcIter>>, LoadCharError<SrcIterError>>;
+    type Item = Result<(TextSliceDef, EndOfLine), LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some((def, eol)) = self.grid.loaded_line_list.get(self.index).copied() {
+        if let Some(line) = self.grid.loaded_line_list.get(self.index).copied() {
             self.index += 1;
-
-            // Cannot pass self.grid directly to CharGridLine::new because the lifetime self is short-lived.
-            // But since self.grid has lifetime 'a, it should be safe to cast it as pointer and then pass.
-            let grid: *const LazyCharGrid<SrcIter> = self.grid;
-            let grid = unsafe { &*grid }; // would there be a problem here? 🤔
-            return CharGridLine::new(def, eol, grid).pipe(Ok).pipe(Some);
+            return Some(Ok(line));
         }
 
         match self.grid.load_line() {
@@ -516,7 +511,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Line = CharGridLine<'a, Self>;
+    type Line = (TextSliceDef, EndOfLine);
     type Error = LoadCharError<SrcIterError>;
     type LineResultLoadIter = LineIter<'a, SrcIterError, SrcIter>;
 
