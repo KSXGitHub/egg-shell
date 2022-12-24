@@ -53,7 +53,7 @@ pub struct LazyCharGrid<CharIter> {
     pub(super) loaded_text: String,
     /// List of loaded character cells.
     #[getset(get = "pub")]
-    pub(super) loaded_char_list: Vec<CharCell>,
+    pub(super) loaded_char_list: Vec<CharCell<char>>,
     /// List of loaded line coordinates.
     pub(super) loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
     /// State of the grid.
@@ -377,7 +377,7 @@ where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
     type Error = CharAtError<IterError>;
-    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell, Self::Error> {
+    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell<char>, Self::Error> {
         let line = self.load_line_at(coord.line).map_err(|error| match error {
             LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
@@ -444,7 +444,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Item = Result<CharCell, LoadCharError<SrcIterError>>;
+    type Item = Result<CharCell<char>, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(char) = self.grid.loaded_char_list.get(self.index).copied() {

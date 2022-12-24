@@ -19,7 +19,7 @@ pub struct CompletedCharGrid {
     pub(super) text: String,
     /// List of character cells.
     #[getset(get = "pub")]
-    pub(super) char_list: Vec<CharCell>,
+    pub(super) char_list: Vec<CharCell<char>>,
     /// List of lines.
     pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
 }
@@ -45,7 +45,7 @@ pub enum CharAtError {
 
 impl<'a> CharAt<'a> for CompletedCharGrid {
     type Error = CharAtError;
-    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell, CharAtError> {
+    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         let line = self.line_at(coord.column).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;
@@ -66,7 +66,7 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
 
 impl<'a> LoadCharAt<'a> for CompletedCharGrid {
     type Error = CharAtError;
-    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell, CharAtError> {
+    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         self.char_at(coord)
     }
 }
@@ -111,10 +111,10 @@ impl LineCount for CompletedCharGrid {
 }
 
 /// An iterator that emits character cells from [`CompletedCharGrid`].
-pub struct CharIter<'a>(slice::Iter<'a, CharCell>);
+pub struct CharIter<'a>(slice::Iter<'a, CharCell<char>>);
 
 impl<'a> Iterator for CharIter<'a> {
-    type Item = Result<CharCell, Infallible>;
+    type Item = Result<CharCell<char>, Infallible>;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next().copied()?.pipe(Ok).pipe(Some)

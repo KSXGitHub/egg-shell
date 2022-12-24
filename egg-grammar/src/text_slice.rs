@@ -21,7 +21,7 @@ pub struct TextSliceDef {
 #[must_use = "call the `run` method to scan the text"]
 pub struct ScanText<'a> {
     /// Character list to append to.
-    pub char_list: &'a mut Vec<CharCell>,
+    pub char_list: &'a mut Vec<CharCell<char>>,
     /// Source text for reference.
     pub src_text: &'a str,
     /// Coordinate of the first character of the slice.
