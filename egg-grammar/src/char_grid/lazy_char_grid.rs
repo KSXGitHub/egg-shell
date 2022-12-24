@@ -384,7 +384,7 @@ where
             LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;
-        if coord.column.pred_count() > line.slice().char_count() {
+        if coord.column.pred_count() >= line.slice().char_count() {
             return Err(CharAtError::ColumnOutOfBound);
         }
         let char_pos = line

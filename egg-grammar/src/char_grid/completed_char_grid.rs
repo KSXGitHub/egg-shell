@@ -49,7 +49,7 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
         let line = self.line_at(coord.column).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;
-        if coord.column.pred_count() > line.slice().char_count() {
+        if coord.column.pred_count() >= line.slice().char_count() {
             return Err(CharAtError::ColumnOutOfBound);
         }
         let char_pos = line
