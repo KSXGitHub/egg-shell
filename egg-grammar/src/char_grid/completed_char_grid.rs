@@ -1,12 +1,12 @@
 use super::CharGridLine;
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, EndOfLine, LineAt, LineCount, LoadCharAt, LoadLineAt,
-    Ordinal, TextSliceDef, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCell, CharCoord, CharCount, CharOrEol, EndOfLine, LineAt, LineCount, LoadCharAt,
+    LoadLineAt, Ordinal, TextSliceDef, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
-use std::{convert::Infallible, slice};
+use std::{cmp::Ordering, convert::Infallible, slice};
 
 /// Character grid with all characters loaded.
 #[derive(Clone, CopyGetters, Getters)]
@@ -112,17 +112,59 @@ impl LineCount for CompletedCharGrid {
 }
 
 /// An iterator that emits character cells from [`CompletedCharGrid`].
-pub struct CharIter<'a>(slice::Iter<'a, CharCell<char>>);
+pub struct CharIter<'a> {
+    ln_index: Ordinal,
+    col_index: Ordinal,
+    grid: &'a CompletedCharGrid,
+}
 
 impl<'a> Iterator for CharIter<'a> {
-    type Item = Result<CharCell<char>, Infallible>;
+    type Item = Result<CharCell<CharOrEol>, Infallible>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.next().copied()?.pipe(Ok).pipe(Some)
+        let line = self.grid.line_at(self.ln_index).ok()?;
+        match self.col_index.pred_count().cmp(&line.slice().char_count()) {
+            Ordering::Greater => panic!("Column index should never be greater than line count"),
+            Ordering::Equal => {
+                let coord = CharCoord {
+                    line: self.ln_index,
+                    column: self.col_index,
+                };
+                self.ln_index = self.ln_index.advance_by(1);
+                self.col_index = Ordinal::from_pred_count(0);
+                let offset_from_ln_start = line.slice().size();
+                let offset_from_doc_start = line.slice().offset() + line.slice().size();
+                let value = CharOrEol::EndOfLine(line.eol());
+                let char_cell = CharCell {
+                    coord,
+                    offset_from_ln_start,
+                    offset_from_doc_start,
+                    value,
+                };
+                Some(Ok(char_cell))
+            }
+            Ordering::Less => {
+                let char_pos = line
+                    .slice()
+                    .first_char_pos()
+                    .advance_by(self.col_index.pred_count());
+                self.col_index = self.col_index.advance_by(1);
+                self.grid
+                    .char_list()
+                    .get(char_pos.pred_count())
+                    .copied()?
+                    .map(CharOrEol::from)
+                    .pipe(Ok)
+                    .pipe(Some)
+            }
+        }
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
-        self.0.size_hint()
+        let non_eol_count = self.grid.char_list.len();
+        let eol_count = self.grid.line_list.len();
+        let size = non_eol_count + eol_count;
+        (size, Some(size))
     }
 }
 
@@ -130,12 +172,16 @@ impl<'a> TryIterChar<'a> for CompletedCharGrid {
     type Error = Infallible;
     type CharResultIter = Self::CharResultLoadIter;
     fn try_iter_char(&'a self) -> Self::CharResultIter {
-        self.char_list().iter().pipe(CharIter)
+        CharIter {
+            ln_index: Ordinal::from_pred_count(0),
+            col_index: Ordinal::from_pred_count(0),
+            grid: self,
+        }
     }
 }
 
 impl<'a> TryIterLoadChar<'a> for CompletedCharGrid {
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
+    type Char = CharCell<CharOrEol>;
     type Error = Infallible;
     type CharResultLoadIter = CharIter<'a>;
     fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {

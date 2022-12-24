@@ -6,7 +6,7 @@ mod eol;
 mod ordinal;
 pub mod text_slice;
 
-pub use char_cell::CharCell;
+pub use char_cell::{CharCell, CharOrEol};
 pub use char_coord::CharCoord;
 pub use char_grid::{CompletedCharGrid, LazyCharGrid};
 pub use char_grid_access::*;

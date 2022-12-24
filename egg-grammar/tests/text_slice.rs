@@ -1,10 +1,10 @@
-use egg_grammar::{text_slice::ScanText, CharCoord};
+use egg_grammar::{text_slice::ScanText, CharCell, CharCoord};
 use pretty_assertions::assert_eq;
 
 #[test]
 fn char_offset() {
     let src_text = "I Love ❤️ Rust 🦀!";
-    let mut char_list = Vec::new();
+    let mut char_list = Vec::<CharCell<char>>::new();
     ScanText::run(ScanText {
         char_list: &mut char_list,
         src_text,
