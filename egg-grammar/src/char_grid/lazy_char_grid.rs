@@ -511,7 +511,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Line = (TextSliceDef, EndOfLine);
+    type Line = (TextSliceDef, EndOfLine); // Can't use CharGridLine because of borrow rule
     type Error = LoadCharError<SrcIterError>;
     type LineResultLoadIter = LineIter<'a, SrcIterError, SrcIter>;
 
