@@ -1,8 +1,4 @@
-use egg_grammar::{
-    CharCell, CompletedCharGrid,
-    EndOfLine::{self, *},
-    IterChar, IterLine, LazyCharGrid,
-};
+use egg_grammar::{CharCell, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 
@@ -55,6 +51,7 @@ fn char_correctness() {
 
 #[test]
 fn line_correctness() {
+    use EndOfLine::*;
     let grid = grid();
     let received: Vec<_> = grid
         .iter_line()
