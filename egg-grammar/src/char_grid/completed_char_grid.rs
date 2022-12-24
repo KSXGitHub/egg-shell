@@ -65,6 +65,7 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
 }
 
 impl<'a> LoadCharAt<'a> for CompletedCharGrid {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = CharAtError;
     fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         self.char_at(coord)
@@ -134,6 +135,7 @@ impl<'a> TryIterChar<'a> for CompletedCharGrid {
 }
 
 impl<'a> TryIterLoadChar<'a> for CompletedCharGrid {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = Infallible;
     type CharResultLoadIter = CharIter<'a>;
     fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {

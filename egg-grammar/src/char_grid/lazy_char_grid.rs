@@ -376,7 +376,9 @@ impl<'a, IterError, CharIter> LoadCharAt<'a> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = CharAtError<IterError>;
+
     fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell<char>, Self::Error> {
         let line = self.load_line_at(coord.line).map_err(|error| match error {
             LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
@@ -464,6 +466,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = LoadCharError<SrcIterError>;
     type CharResultLoadIter = CharIter<'a, SrcIterError, SrcIter>;
 
