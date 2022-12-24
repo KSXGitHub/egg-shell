@@ -3,7 +3,7 @@ use crate::{EndOfLine, TextSliceDef};
 use getset::CopyGetters;
 use std::fmt::{self, Debug, Display, Formatter};
 
-/// Represent a line in the [`super::LazyCharGrid`].
+/// Represent a line in [`super::LazyCharGrid`] and [`super::CompletedCharGrid`].
 #[derive(Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct CharGridLine<'a, CharGrid> {
