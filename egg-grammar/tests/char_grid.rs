@@ -47,6 +47,13 @@ fn char_correctness() {
         let src_char = dbg!(&SRC_TEXT[offset..(offset + len)]);
         assert_eq!(char_cell.value().as_ref(), src_char);
     }
+
+    eprintln!("\nTEST: THE WHOLE THING");
+    let mut acc = String::new();
+    for char_cell in grid.iter_char() {
+        acc += char_cell.to_string().as_str();
+    }
+    assert_eq!(acc, SRC_TEXT);
 }
 
 #[test]
