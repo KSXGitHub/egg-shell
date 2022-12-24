@@ -12,3 +12,11 @@ pub enum EndOfLine {
     #[strum(serialize = "")]
     EOF,
 }
+
+impl EndOfLine {
+    /// Get the length of the EOL sequence.
+    #[allow(clippy::len_without_is_empty)] // is_empty on this type would be misleading
+    pub fn len(self) -> usize {
+        <&'static str>::from(self).len()
+    }
+}
