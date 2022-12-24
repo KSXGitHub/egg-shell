@@ -1,13 +1,14 @@
 use super::{CharGridLine, CompletedCharGrid};
 use crate::{
-    text_slice::ScanText, CharCell, CharCoord, EndOfLine, LoadCharAt, LoadLineAt, Ordinal,
-    TextSliceDef, TryIterLoadChar, TryIterLoadLine,
+    text_slice::ScanText, CharCell, CharCoord, CharOrEol, EndOfLine, LoadCharAt, LoadLineAt,
+    Ordinal, TextSliceDef, TryIterLoadChar, TryIterLoadLine,
 };
 use assert_cmp::debug_assert_op;
 use derive_more::Error;
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
 use std::{
+    cmp::Ordering,
     convert::Infallible,
     fmt::{self, Debug, Formatter},
 };
@@ -437,7 +438,8 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    index: usize,
+    ln_index: Ordinal,
+    col_index: Ordinal,
     grid: &'a mut LazyCharGrid<SrcIter>,
 }
 
@@ -446,17 +448,55 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Item = Result<CharCell<char>, LoadCharError<SrcIterError>>;
+    type Item = Result<CharCell<CharOrEol>, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(char) = self.grid.loaded_char_list.get(self.index).copied() {
-            self.index += 1;
-            return char.pipe(Ok).pipe(Some);
-        }
-        match self.grid.load_char() {
-            Err(error) => Some(Err(error)),
-            Ok(LoadCharReport::Document) => None,
-            Ok(_) => self.next(),
+        let line = self
+            .grid
+            .loaded_line_list
+            .get(self.ln_index.pred_count())
+            .copied();
+        let Some((slice, eol)) = line else {
+            // if line is yet available, load another line and try again
+            return match self.grid.load_line() {
+                Err(error) => Some(Err(error)),
+                Ok(None) => None, // no more line, stop the iterator
+                Ok(Some(_)) => self.next(), // added a line, recurse
+            };
+        };
+        match self.col_index.pred_count().cmp(&slice.char_count()) {
+            Ordering::Greater => panic!("Column index should never be greater than line count"),
+            Ordering::Equal => {
+                let coord = CharCoord {
+                    line: self.ln_index,
+                    column: self.col_index,
+                };
+                self.ln_index = self.ln_index.advance_by(1);
+                self.col_index = Ordinal::from_pred_count(0);
+                let offset_from_ln_start = slice.size();
+                let offset_from_doc_start = slice.offset() + slice.size();
+                let value = CharOrEol::EndOfLine(eol);
+                let char_cell = CharCell {
+                    coord,
+                    offset_from_ln_start,
+                    offset_from_doc_start,
+                    value,
+                };
+                Some(Ok(char_cell))
+            }
+            Ordering::Less => {
+                let char_pos = slice
+                    .first_char_pos()
+                    .advance_by(self.col_index.pred_count());
+                self.col_index = self.col_index.advance_by(1);
+                self.grid
+                    .loaded_char_list()
+                    .get(char_pos.pred_count())
+                    .copied()?
+                    .map(CharOrEol::from)
+                    .pipe(Ok)
+                    .pipe(Some)
+            }
         }
     }
 }
@@ -466,13 +506,14 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
+    type Char = CharCell<CharOrEol>;
     type Error = LoadCharError<SrcIterError>;
     type CharResultLoadIter = CharIter<'a, SrcIterError, SrcIter>;
 
     fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
         CharIter {
-            index: 0,
+            ln_index: Ordinal::from_pred_count(0),
+            col_index: Ordinal::from_pred_count(0),
             grid: self,
         }
     }
