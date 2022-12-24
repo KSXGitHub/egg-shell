@@ -4,7 +4,7 @@ use std::fmt::{self, Debug, Display, Formatter};
 
 /// Information of a single character.
 #[derive(Clone, Copy, CopyGetters, Getters)]
-pub struct CharCell<Value> {
+pub struct CharCell<Char> {
     /// Character coordinate.
     #[getset(get_copy = "pub")]
     pub(crate) coord: CharCoord,
@@ -16,16 +16,16 @@ pub struct CharCell<Value> {
     pub(crate) offset_from_doc_start: usize,
     /// Content of the character.
     #[getset(get = "pub")]
-    pub(crate) value: Value,
+    pub(crate) value: Char,
 }
 
-impl<Value: Display> Display for CharCell<Value> {
+impl<Char: Display> Display for CharCell<Char> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}", &self.value)
     }
 }
 
-impl<Value: Debug> Debug for CharCell<Value> {
+impl<Char: Debug> Debug for CharCell<Char> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let CharCell { value, coord, .. } = self;
         write!(f, "CharCell at {coord} of {value:?}")
