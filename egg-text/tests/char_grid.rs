@@ -1,4 +1,4 @@
-use egg_grammar::{CharCell, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid};
+use egg_text::{CharCell, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid};
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
 

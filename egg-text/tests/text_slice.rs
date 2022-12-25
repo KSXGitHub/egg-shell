@@ -1,4 +1,4 @@
-use egg_grammar::{text_slice::ScanText, CharCell, CharCoord};
+use egg_text::{text_slice::ScanText, CharCell, CharCoord};
 use pretty_assertions::assert_eq;
 
 #[test]

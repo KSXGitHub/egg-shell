@@ -76,7 +76,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// **Example:** Load from file
     ///
     /// ```rust,no_run
-    /// use egg_grammar::LazyCharGrid;
+    /// use egg_text::LazyCharGrid;
     /// use std::{
     ///     fs::{metadata, File},
     ///     io::BufReader,
@@ -318,7 +318,7 @@ impl LazyCharGrid<Infallible> {
     ///
     /// ```rust
     /// # use pretty_assertions::assert_eq;
-    /// use egg_grammar::{LazyCharGrid, EndOfLine};
+    /// use egg_text::{LazyCharGrid, EndOfLine};
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
     /// let mut grid = LazyCharGrid::new_infallible(src_text.chars(), src_text.len());
     /// grid.load_all().unwrap();
