@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, CharOrEol, EndOfLine, LineAt, LineCount, LoadCharAt,
-    LoadLineAt, Ordinal, TextSliceDef, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCell, CharCoord, CharCount, CharOrEol, LineAt, LineCount, LoadCharAt, LoadLineAt,
+    Ordinal, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -21,15 +21,8 @@ pub struct CompletedCharGrid {
     #[getset(get = "pub")]
     pub(super) char_list: Vec<CharCell<char>>,
     /// List of lines.
-    pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
-}
-
-impl CompletedCharGrid {
-    /// List all loaded lines.
-    pub fn line_list(&self) -> impl Iterator<Item = CharGridLine<'_, Self>> {
-        let create = |(coord, eol)| CharGridLine::new(coord, eol, self);
-        self.line_list.iter().copied().map(create)
-    }
+    #[getset(get = "pub")]
+    pub(super) line_list: Vec<CharGridLine>,
 }
 
 /// Error type of [`CharAt`] and [`LoadCharAt`] for [`CompletedCharGrid`].
@@ -83,16 +76,15 @@ pub enum LineAtError {
 impl<'a> LineAt<'a> for CompletedCharGrid {
     type Error = LineAtError;
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError> {
-        let (line, eol) = *self
-            .line_list
+        self.line_list
             .get(ln_num.pred_count())
-            .ok_or(LineAtError::OutOfBound)?;
-        CharGridLine::new(line, eol, self).pipe(Ok)
+            .copied()
+            .ok_or(LineAtError::OutOfBound)
     }
 }
 
 impl<'a> LoadLineAt<'a> for CompletedCharGrid {
-    type Line = CharGridLine<'a, CompletedCharGrid>;
+    type Line = CharGridLine;
     type Error = LineAtError;
     fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
         self.line_at(ln_num)
@@ -191,16 +183,14 @@ impl<'a> TryIterLoadChar<'a> for CompletedCharGrid {
 
 /// An iterator that emits lines from a [`CompletedCharGrid`].
 pub struct LineIter<'a> {
-    iter: slice::Iter<'a, (TextSliceDef, EndOfLine)>,
-    grid: &'a CompletedCharGrid,
+    iter: slice::Iter<'a, CharGridLine>,
 }
 
 impl<'a> Iterator for LineIter<'a> {
-    type Item = Result<CharGridLine<'a, CompletedCharGrid>, Infallible>;
+    type Item = Result<CharGridLine, Infallible>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let (slice, eol) = *self.iter.next()?;
-        CharGridLine::new(slice, eol, self.grid).pipe(Ok).pipe(Some)
+        self.iter.next().copied().map(Ok)
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -214,13 +204,12 @@ impl<'a> TryIterLine<'a> for CompletedCharGrid {
     fn try_iter_line(&'a self) -> Self::LineResultIter {
         LineIter {
             iter: self.line_list.iter(),
-            grid: self,
         }
     }
 }
 
 impl<'a> TryIterLoadLine<'a> for CompletedCharGrid {
-    type Line = CharGridLine<'a, Self>;
+    type Line = CharGridLine;
     type Error = Infallible;
     type LineResultLoadIter = LineIter<'a>;
     fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {

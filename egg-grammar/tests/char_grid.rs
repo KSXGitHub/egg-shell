@@ -62,7 +62,7 @@ fn line_correctness() {
     let grid = grid();
     let received: Vec<_> = grid
         .iter_line()
-        .map(|line| (line.text_without_eol(), line.eol()))
+        .map(|line| (line.text_without_eol(&grid), line.eol()))
         .collect();
     dbg!(&received);
     let expected = [

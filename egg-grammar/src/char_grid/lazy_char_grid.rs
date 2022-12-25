@@ -56,7 +56,8 @@ pub struct LazyCharGrid<CharIter> {
     #[getset(get = "pub")]
     pub(super) loaded_char_list: Vec<CharCell<char>>,
     /// List of loaded line coordinates.
-    pub(super) loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
+    #[getset(get = "pub")]
+    pub(super) loaded_line_list: Vec<CharGridLine>,
     /// State of the grid.
     ///
     /// `Some` means that the grid is incomplete.
@@ -109,12 +110,6 @@ impl<CharIter> LazyCharGrid<CharIter> {
         }
     }
 
-    /// List all loaded lines.
-    pub fn loaded_line_list(&self) -> impl Iterator<Item = CharGridLine<'_, Self>> {
-        let create = |(slice, eol)| CharGridLine::new(slice, eol, self);
-        self.loaded_line_list.iter().copied().map(create)
-    }
-
     /// Number of lines.
     pub fn loaded_line_count(&self) -> usize {
         self.loaded_line_list.len()
@@ -151,7 +146,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// Return reference to the complete list of lines if the grid is fully loaded.
     /// * `Some(list)` means that the grid is fully loaded with `list` being the complete list of lines.
     /// * `None` means that the grid isn't yet completed.
-    pub fn all_lines(&self) -> Option<impl Iterator<Item = CharGridLine<'_, Self>>> {
+    pub fn all_lines(&self) -> Option<&'_ Vec<CharGridLine>> {
         match self.completion() {
             CompletionStatus::Complete => Some(self.loaded_line_list()),
             CompletionStatus::Incomplete => None,
@@ -212,7 +207,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset
             });
-            loaded_line_list.push((line_slice_def, EndOfLine::EOF));
+            loaded_line_list.push(CharGridLine::new(line_slice_def, EndOfLine::EOF));
             loaded_char_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
@@ -240,7 +235,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset,
             });
-            loaded_line_list.push((line_slice_def, eol));
+            loaded_line_list.push(CharGridLine::new(line_slice_def, eol));
             *loaded_char_count += 1;
             *prev_non_lf = None;
             *prev_line_offset = loaded_text.len();
@@ -266,14 +261,12 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
     /// * `Ok(Some(slice))` means that a line of `slice` has been loaded.
     /// * `Ok(None)` means that there are no more line to load (i.e. the grid is completed).
     /// * `Err(error)` means that an error occurred.
-    pub fn load_line(
-        &mut self,
-    ) -> Result<Option<CharGridLine<'_, Self>>, LoadCharError<IterError>> {
+    pub fn load_line(&mut self) -> Result<Option<CharGridLine>, LoadCharError<IterError>> {
         loop {
             match self.load_char()? {
                 LoadCharReport::Char(_) => continue,
                 LoadCharReport::Line { def, eol, .. } => {
-                    return CharGridLine::new(def, eol, self).pipe(Some).pipe(Ok);
+                    return CharGridLine::new(def, eol).pipe(Some).pipe(Ok);
                 }
                 LoadCharReport::Document => return Ok(None),
             }
@@ -332,7 +325,8 @@ impl LazyCharGrid<Infallible> {
     /// assert_eq!(grid.loaded_text(), src_text);
     /// let lines: Vec<_> = grid
     ///     .loaded_line_list()
-    ///     .map(|line| (line.text_without_eol(), line.eol()))
+    ///     .iter()
+    ///     .map(|line| (line.text_without_eol(&grid), line.eol()))
     ///     .collect();
     /// assert_eq!(lines, [
     ///     ("Hello,", EndOfLine::CRLF),
@@ -415,15 +409,15 @@ where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
     type Error = LineAtError<IterError>;
-    type Line = CharGridLine<'a, Self>;
+    type Line = CharGridLine;
     fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
         while self.loaded_line_list.len() < ln_num.pred_count() {
             self.load_line()
                 .map_err(LineAtError::LoadCharError)?
                 .ok_or(LineAtError::OutOfBound)?;
         }
-        if let Some((slice, eol)) = self.loaded_line_list.get(ln_num.pred_count()) {
-            return Ok(CharGridLine::new(*slice, *eol, self));
+        if let Some(line) = self.loaded_line_list.get(ln_num.pred_count()) {
+            return Ok(*line);
         }
         unreachable!(
             "ln_num ({ln_num}) should be less than loaded_line_list.len() ({len}), this should have been unreachable",
@@ -456,7 +450,7 @@ where
             .loaded_line_list
             .get(self.ln_index.pred_count())
             .copied();
-        let Some((slice, eol)) = line else {
+        let Some(line) = line else {
             // if line is yet available, load another line and try again
             return match self.grid.load_line() {
                 Err(error) => Some(Err(error)),
@@ -464,7 +458,7 @@ where
                 Ok(Some(_)) => self.next(), // added a line, recurse
             };
         };
-        match self.col_index.pred_count().cmp(&slice.char_count()) {
+        match self.col_index.pred_count().cmp(&line.slice().char_count()) {
             Ordering::Greater => panic!("Column index should never be greater than line count"),
             Ordering::Equal => {
                 let coord = CharCoord {
@@ -473,9 +467,9 @@ where
                 };
                 self.ln_index = self.ln_index.advance_by(1);
                 self.col_index = Ordinal::from_pred_count(0);
-                let offset_from_ln_start = slice.size();
-                let offset_from_doc_start = slice.offset() + slice.size();
-                let value = CharOrEol::EndOfLine(eol);
+                let offset_from_ln_start = line.slice().size();
+                let offset_from_doc_start = line.slice().offset() + line.slice().size();
+                let value = CharOrEol::EndOfLine(line.eol());
                 let char_cell = CharCell {
                     coord,
                     offset_from_ln_start,
@@ -485,7 +479,8 @@ where
                 Some(Ok(char_cell))
             }
             Ordering::Less => {
-                let char_pos = slice
+                let char_pos = line
+                    .slice()
                     .first_char_pos()
                     .advance_by(self.col_index.pred_count());
                 self.col_index = self.col_index.advance_by(1);
@@ -534,7 +529,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Item = Result<(TextSliceDef, EndOfLine), LoadCharError<SrcIterError>>;
+    type Item = Result<CharGridLine, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(line) = self.grid.loaded_line_list.get(self.index).copied() {
@@ -555,7 +550,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Line = (TextSliceDef, EndOfLine); // Can't use CharGridLine because of borrow rule
+    type Line = CharGridLine;
     type Error = LoadCharError<SrcIterError>;
     type LineResultLoadIter = LineIter<'a, SrcIterError, SrcIter>;
 
