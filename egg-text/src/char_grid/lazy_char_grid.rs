@@ -411,16 +411,15 @@ where
     type Error = LineAtError<IterError>;
     type Line = CharGridLine;
     fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        while self.loaded_line_list.len() <= ln_num.pred_count() {
+        while self.loaded_line_list.len() <= ln_num.pred_count()
+            && self.completion().is_incomplete()
+        {
             self.load_line().map_err(LineAtError::LoadCharError)?;
         }
         if let Some(line) = self.loaded_line_list.get(ln_num.pred_count()) {
             return Ok(*line);
         }
-        unreachable!(
-            "ln_num ({ln_num}) should be less than loaded_line_list.len() ({len}), this should have been unreachable",
-            len = self.loaded_line_list.len(),
-        )
+        Err(LineAtError::OutOfBound)
     }
 }
 
