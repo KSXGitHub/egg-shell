@@ -4,7 +4,7 @@ use crate::{
     Ordinal, TextSliceDef, TryIterLoadChar, TryIterLoadLine,
 };
 use assert_cmp::debug_assert_op;
-use derive_more::Error;
+use derive_more::{Error, IsVariant};
 use getset::{CopyGetters, Getters};
 use pipe_trait::Pipe;
 use std::{
@@ -35,7 +35,7 @@ pub(super) struct LoadingProgress<CharIter> {
 type CompletionProgress<CharIter> = Option<LoadingProgress<CharIter>>;
 
 /// Whether the [`LazyCharGrid`] is completed.
-#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr)]
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr, IsVariant)]
 pub enum CompletionStatus {
     /// Not all characters are loaded.
     Incomplete,
