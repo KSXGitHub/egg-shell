@@ -411,7 +411,7 @@ where
     type Error = LineAtError<IterError>;
     type Line = CharGridLine;
     fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        while self.loaded_line_list.len() < ln_num.pred_count() {
+        while self.loaded_line_list.len() <= ln_num.pred_count() {
             self.load_line()
                 .map_err(LineAtError::LoadCharError)?
                 .ok_or(LineAtError::OutOfBound)?;
