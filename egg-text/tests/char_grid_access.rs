@@ -35,7 +35,7 @@ fn partially_loaded_grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Inf
 fn lazy_load_char_at() {
     let mut grid = partially_loaded_grid();
 
-    eprintln!("TEST: 1:1");
+    eprintln!("TEST 1:1");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(0, 0))
         .expect("char_at 1:1");
@@ -46,7 +46,7 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), "Hello,\nI ❤");
     assert_eq!(grid.loaded_char_count(), 10);
 
-    eprintln!("TEST: 1:5");
+    eprintln!("TEST 1:5");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(0, 4))
         .expect("char_at 1:5");
@@ -57,13 +57,13 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), "Hello,\nI ❤");
     assert_eq!(grid.loaded_char_count(), 10);
 
-    eprintln!("TEST: 1:7 (expect error)");
+    eprintln!("TEST 1:7 (expect error)");
     let error = grid
         .load_char_at(CharCoord::from_pred_counts(0, 6))
         .expect_err("char_at 1:7");
     assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
 
-    eprintln!("TEST: 2:1");
+    eprintln!("TEST 2:1");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(1, 0))
         .expect("char_at 2:1");
@@ -74,7 +74,7 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
     assert_eq!(grid.loaded_char_count(), 21);
 
-    eprintln!("TEST: 2:3");
+    eprintln!("TEST 2:3");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(1, 2))
         .expect("char_at 2:3");
@@ -85,13 +85,13 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
     assert_eq!(grid.loaded_char_count(), 21);
 
-    eprintln!("TEST: 2:13 (expect error)");
+    eprintln!("TEST 2:13 (expect error)");
     let error = grid
         .load_char_at(CharCoord::from_pred_counts(1, 12))
         .expect_err("char_at 2:13");
     assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
 
-    eprintln!("TEST: 4:1");
+    eprintln!("TEST 4:1");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(3, 0))
         .expect("char_at 4:1");
@@ -102,7 +102,7 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), 103);
 
-    eprintln!("TEST: 4:36");
+    eprintln!("TEST 4:36");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(3, 35))
         .expect("char_at 4:36");
@@ -113,19 +113,19 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), 103);
 
-    eprintln!("TEST: 4:37 (expect error)");
+    eprintln!("TEST 4:37 (expect error)");
     let error = grid
         .load_char_at(CharCoord::from_pred_counts(3, 36))
         .expect_err("char_at 4:37");
     assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
 
-    eprintln!("TEST: 5:1 (expect error)");
+    eprintln!("TEST 5:1 (expect error)");
     let error = grid
         .load_char_at(CharCoord::from_pred_counts(4, 0))
         .expect_err("char_at 5:1");
     assert_eq!(error, lazy_char_grid::CharAtError::LineOutOfBound);
 
-    eprintln!("TEST: 1:1 (again)");
+    eprintln!("TEST 1:1 (again)");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(0, 0))
         .expect("char_at 1:1");
@@ -136,7 +136,7 @@ fn lazy_load_char_at() {
     assert_eq!(grid.loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), 103);
 
-    eprintln!("TEST: 2:3 (again)");
+    eprintln!("TEST 2:3 (again)");
     let char = grid
         .load_char_at(CharCoord::from_pred_counts(1, 2))
         .expect("char_at 2:3");
