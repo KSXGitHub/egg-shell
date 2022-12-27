@@ -3,7 +3,7 @@ use crate::{EndOfLine, TextSliceDef};
 use getset::CopyGetters;
 
 /// Represent a line in [`super::LazyCharGrid`] and [`super::CompletedCharGrid`].
-#[derive(Clone, Copy, CopyGetters)]
+#[derive(Debug, Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct CharGridLine {
     /// Coordinate of the line
