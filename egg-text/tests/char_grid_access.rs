@@ -124,4 +124,26 @@ fn lazy_load_char_at() {
         .load_char_at(CharCoord::from_pred_counts(4, 0))
         .expect_err("char_at 5:1");
     assert_eq!(error, lazy_char_grid::CharAtError::LineOutOfBound);
+
+    eprintln!("TEST: 1:1 (again)");
+    let char = grid
+        .load_char_at(CharCoord::from_pred_counts(0, 0))
+        .expect("char_at 1:1");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(0, 0));
+    assert_eq!(char.offset_from_ln_start(), 0);
+    assert_eq!(char.offset_from_doc_start(), 0);
+    assert_eq!(char.value(), &'H');
+    assert_eq!(grid.loaded_text(), SRC_TEXT);
+    assert_eq!(grid.loaded_char_count(), 103);
+
+    eprintln!("TEST: 2:3 (again)");
+    let char = grid
+        .load_char_at(CharCoord::from_pred_counts(1, 2))
+        .expect("char_at 2:3");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1, 2));
+    assert_eq!(char.offset_from_ln_start(), 2);
+    assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
+    assert_eq!(char.value(), &'❤');
+    assert_eq!(grid.loaded_text(), SRC_TEXT);
+    assert_eq!(grid.loaded_char_count(), 103);
 }
