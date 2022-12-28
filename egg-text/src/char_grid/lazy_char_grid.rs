@@ -322,7 +322,10 @@ where
     }
 }
 
-impl<SrcCharIter> LazyCharGrid<InfallibleCharIter<SrcCharIter>>
+/// Return type of [`LazyCharGrid::new_infallible`].
+pub type LazyCharGridInfallible<SrcCharIter> = LazyCharGrid<InfallibleCharIter<SrcCharIter>>;
+
+impl<SrcCharIter> LazyCharGridInfallible<SrcCharIter>
 where
     SrcCharIter: Iterator<Item = char>,
 {
@@ -363,7 +366,13 @@ where
     }
 }
 
-impl<'a> LazyCharGrid<InfallibleCharIter<Chars<'a>>> {
+/// `CharIter` type of [`LazyCharGrid::from_str`].
+pub type FromStrCharIter<'a> = InfallibleCharIter<Chars<'a>>;
+
+/// Return type of [`LazyCharGrid::from_str`].
+pub type LazyCharGridFromStr<'a> = LazyCharGrid<FromStrCharIter<'a>>;
+
+impl<'a> LazyCharGridFromStr<'a> {
     /// Start load characters from a string slice.
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(src_text: &'a str) -> Self {
