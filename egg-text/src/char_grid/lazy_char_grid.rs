@@ -11,6 +11,7 @@ use std::{
     cmp::Ordering,
     convert::Infallible,
     fmt::{self, Debug, Formatter},
+    str::Chars,
 };
 use strum::{AsRefStr, Display, IntoStaticStr};
 
@@ -362,12 +363,10 @@ where
     }
 }
 
-impl LazyCharGrid<Infallible> {
+impl<'a> LazyCharGrid<InfallibleCharIter<Chars<'a>>> {
     /// Start load characters from a string slice.
     #[allow(clippy::should_implement_trait)]
-    pub fn from_str(
-        src_text: &str,
-    ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>> + '_> {
+    pub fn from_str(src_text: &'a str) -> Self {
         LazyCharGrid::new_infallible(src_text.chars(), src_text.len())
     }
 }
