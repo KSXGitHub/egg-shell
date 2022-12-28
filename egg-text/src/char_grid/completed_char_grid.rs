@@ -39,7 +39,7 @@ pub enum CharAtError {
 impl<'a> CharAt<'a> for CompletedCharGrid {
     type Error = CharAtError;
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
-        let line = self.line_at(coord.column).map_err(|error| match error {
+        let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;
         if coord.column.pred_count() >= line.slice().char_count() {
