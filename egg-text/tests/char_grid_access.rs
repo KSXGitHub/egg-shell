@@ -1,6 +1,5 @@
 use egg_text::{
-    char_grid::lazy_char_grid::{self, LoadCharReport},
-    CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
+    char_grid::lazy_char_grid, CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -23,7 +22,7 @@ fn partially_loaded_grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Inf
     assert_eq!(first_line, "Hello,");
     let next_3_chars = (0..3).map(|index| match grid.load_char() {
         Err(error) => panic!("load_char fails at {index}: {error}"),
-        Ok(LoadCharReport::Char(char)) => char,
+        Ok(lazy_char_grid::LoadCharReport::Char(char)) => char,
         Ok(report) => {
             panic!("load_char at {index} does not return a char, but instead: {report:?}")
         }
