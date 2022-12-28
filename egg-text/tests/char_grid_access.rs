@@ -1,9 +1,10 @@
 use egg_text::{
     char_grid::lazy_char_grid::{self, LoadCharReport},
-    CharCoord, LazyCharGrid, LoadCharAt,
+    CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
 };
+use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
-use std::convert::Infallible;
+use std::{convert::Infallible, str::Chars};
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
@@ -146,4 +147,82 @@ fn lazy_load_char_at() {
     assert_eq!(char.value(), &'❤');
     assert_eq!(grid.loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), 103);
+}
+
+#[test]
+fn lazy_load_line_at() {
+    let mut grid = partially_loaded_grid();
+
+    eprintln!("TEST 1");
+    let line = grid
+        .load_line_at(Ordinal::from_pred_count(0))
+        .expect("line_at 1");
+    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(0, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::LF);
+    assert_eq!(line.text_without_eol(&grid), "Hello,"); // preloaded from partially_loaded_grid
+    assert_eq!(grid.loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
+
+    eprintln!("TEST 2");
+    let line = grid
+        .load_line_at(Ordinal::from_pred_count(1))
+        .expect("line_at 2");
+    assert_eq!(
+        line.slice().first_char_pos(),
+        "Hello,".chars().count().pipe(Ordinal::from_pred_count),
+    );
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(1, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::CRLF);
+    assert_eq!(line.text_without_eol(&grid), "I ❤️ Rust 🦀,");
+    assert_eq!(grid.loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
+
+    eprintln!("TEST 4");
+    let line = grid
+        .load_line_at(Ordinal::from_pred_count(3))
+        .expect("line_at 4");
+    assert_eq!(
+        line.slice().first_char_pos(),
+        SRC_TEXT
+            .lines()
+            .take(3)
+            .map(str::chars)
+            .map(Chars::count)
+            .sum::<usize>()
+            .pipe(Ordinal::from_pred_count),
+    );
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(3, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::EOF);
+    assert_eq!(
+        line.text_without_eol(&grid),
+        "The language is called 'egg-shell' 🥚",
+    );
+    assert_eq!(grid.loaded_text(), SRC_TEXT);
+
+    eprintln!("TEST 5 (expect error)");
+    let error = grid
+        .load_line_at(Ordinal::from_pred_count(4))
+        .expect_err("line_at 5");
+    assert_eq!(error, lazy_char_grid::LineAtError::OutOfBound);
+
+    eprintln!("TEST 1 (again)");
+    let line = grid
+        .load_line_at(Ordinal::from_pred_count(0))
+        .expect("line_at 1");
+    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(0, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::LF);
+    assert_eq!(line.text_without_eol(&grid), "Hello,");
+    assert_eq!(grid.loaded_text(), SRC_TEXT);
 }
