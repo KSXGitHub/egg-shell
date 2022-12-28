@@ -1,5 +1,6 @@
 use egg_text::{
     char_grid::lazy_char_grid, CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
+    TryIterLoadChar,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -224,4 +225,17 @@ fn lazy_load_line_at() {
     assert_eq!(line.eol(), EndOfLine::LF);
     assert_eq!(line.text_without_eol(&grid), "Hello,");
     assert_eq!(grid.loaded_text(), SRC_TEXT);
+}
+
+#[test]
+fn lazy_iter_char() {
+    let mut acc = String::new();
+    for (index, char) in partially_loaded_grid().try_iter_load_char().enumerate() {
+        use std::fmt::Write;
+        let char = char.unwrap_or_else(|error| panic!("attempt at index {index} failed: {error}"));
+        dbg!(char);
+        write!(acc, "{}", char).expect("add char to acc");
+    }
+    eprintln!("ACTUAL:\n{acc}\n");
+    assert_eq!(acc, SRC_TEXT);
 }
