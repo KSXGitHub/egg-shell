@@ -509,7 +509,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    index: usize,
+    index: Ordinal,
     grid: &'a mut LazyCharGrid<SrcIter>,
 }
 
@@ -522,8 +522,11 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.index;
-        self.index += 1;
-        match self.grid.load_line_at(Ordinal::from_pred_count(index)) {
+        self.index = index.advance_by(1);
+        let line = self
+            .grid
+            .load_line_at(Ordinal::from_pred_count(index.pred_count()));
+        match line {
             Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
             Err(LineAtError::OutOfBound) => None,
             Ok(line) => Some(Ok(line)),
@@ -542,7 +545,7 @@ where
 
     fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {
         LineIter {
-            index: 0,
+            index: Ordinal::from_pred_count(0),
             grid: self,
         }
     }
