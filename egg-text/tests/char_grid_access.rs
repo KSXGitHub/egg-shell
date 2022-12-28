@@ -231,10 +231,9 @@ fn lazy_load_line_at() {
 fn lazy_iter_char() {
     let mut acc = String::new();
     for (index, char) in partially_loaded_grid().try_iter_load_char().enumerate() {
-        use std::fmt::Write;
         let char = char.unwrap_or_else(|error| panic!("attempt at index {index} failed: {error}"));
         dbg!(char);
-        write!(acc, "{}", char).expect("add char to acc");
+        acc += char.to_string().as_str();
     }
     eprintln!("ACTUAL:\n{acc}\n");
     assert_eq!(acc, SRC_TEXT);
