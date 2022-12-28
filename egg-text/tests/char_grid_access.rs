@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
-    CharAt, CharCoord, CompletedCharGrid, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
-    TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCoord, CompletedCharGrid, EndOfLine, LazyCharGrid, LineAt, LoadCharAt, LoadLineAt,
+    Ordinal, TryIterLoadChar, TryIterLoadLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -349,4 +349,66 @@ fn completed_char_at() {
         .char_at(CharCoord::from_pred_counts(4, 0))
         .expect_err("char_at 5:1");
     assert_eq!(error, completed_char_grid::CharAtError::LineOutOfBound);
+}
+
+#[test]
+fn completed_line_at() {
+    let grid = completed_grid();
+
+    eprintln!("TEST 1");
+    let line = grid
+        .line_at(Ordinal::from_pred_count(0))
+        .expect("line_at 1");
+    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(0, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::LF);
+    assert_eq!(line.text_without_eol(&grid), "Hello,");
+
+    eprintln!("TEST 2");
+    let line = grid
+        .line_at(Ordinal::from_pred_count(1))
+        .expect("line_at 2");
+    assert_eq!(
+        line.slice().first_char_pos(),
+        "Hello,".chars().count().pipe(Ordinal::from_pred_count),
+    );
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(1, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::CRLF);
+    assert_eq!(line.text_without_eol(&grid), "I ❤️ Rust 🦀,");
+
+    eprintln!("TEST 4");
+    let line = grid
+        .line_at(Ordinal::from_pred_count(3))
+        .expect("line_at 4");
+    assert_eq!(
+        line.slice().first_char_pos(),
+        SRC_TEXT
+            .lines()
+            .take(3)
+            .map(str::chars)
+            .map(Iterator::count)
+            .sum::<usize>()
+            .pipe(Ordinal::from_pred_count),
+    );
+    assert_eq!(
+        line.slice().first_char_coord(),
+        CharCoord::from_pred_counts(3, 0),
+    );
+    assert_eq!(line.eol(), EndOfLine::EOF);
+    assert_eq!(
+        line.text_without_eol(&grid),
+        "The language is called 'egg-shell' 🥚",
+    );
+
+    eprintln!("TEST 5 (expect error)");
+    let error = grid
+        .line_at(Ordinal::from_pred_count(4))
+        .expect_err("line_at 5");
+    assert_eq!(error, completed_char_grid::LineAtError::OutOfBound);
 }
