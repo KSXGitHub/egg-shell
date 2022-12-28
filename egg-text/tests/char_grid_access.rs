@@ -1,5 +1,6 @@
 use egg_text::{
-    char_grid::lazy_char_grid, CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
+    char_grid::{completed_char_grid, lazy_char_grid},
+    CharAt, CharCoord, CompletedCharGrid, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
     TryIterLoadChar, TryIterLoadLine,
 };
 use pipe_trait::Pipe;
@@ -258,4 +259,94 @@ fn lazy_try_iter_load_line() {
     }
     eprintln!("ACTUAL:\n{acc}\n");
     assert_eq!(acc, SRC_TEXT);
+}
+
+fn completed_grid() -> CompletedCharGrid {
+    SRC_TEXT
+        .pipe(LazyCharGrid::from_str)
+        .into_completed()
+        .expect("load grid")
+}
+
+#[test]
+fn completed_char_at() {
+    let grid = completed_grid();
+
+    eprintln!("TEST 1:1");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(0, 0))
+        .expect("char_at 1:1");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(0, 0));
+    assert_eq!(char.offset_from_ln_start(), 0);
+    assert_eq!(char.offset_from_doc_start(), 0);
+    assert_eq!(char.value(), &'H');
+
+    eprintln!("TEST 1:5");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(0, 4))
+        .expect("char_at 1:5");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(0, 4));
+    assert_eq!(char.offset_from_ln_start(), 4);
+    assert_eq!(char.offset_from_doc_start(), "Hell".len());
+    assert_eq!(char.value(), &'o');
+
+    eprintln!("TEST 1:7 (expect error)");
+    let error = grid
+        .char_at(CharCoord::from_pred_counts(0, 6))
+        .expect_err("char_at 1:7");
+    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+
+    eprintln!("TEST 2:1");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(1, 0))
+        .expect("char_at 2:1");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1, 0));
+    assert_eq!(char.offset_from_ln_start(), 0);
+    assert_eq!(char.offset_from_doc_start(), "Hello,\n".len());
+    assert_eq!(char.value(), &'I');
+
+    eprintln!("TEST 2:3");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(1, 2))
+        .expect("char_at 2:3");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1, 2));
+    assert_eq!(char.offset_from_ln_start(), 2);
+    assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
+    assert_eq!(char.value(), &'❤');
+
+    eprintln!("TEST 2:13 (expect error)");
+    let error = grid
+        .char_at(CharCoord::from_pred_counts(1, 12))
+        .expect_err("char_at 2:13");
+    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+
+    eprintln!("TEST 4:1");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(3, 0))
+        .expect("char_at 4:1");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(3, 0));
+    assert_eq!(char.offset_from_ln_start(), 0);
+    assert_eq!(char.offset_from_doc_start(), 74);
+    assert_eq!(char.value(), &'T');
+
+    eprintln!("TEST 4:36");
+    let char = grid
+        .char_at(CharCoord::from_pred_counts(3, 35))
+        .expect("char_at 4:36");
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(3, 35));
+    assert_eq!(char.offset_from_ln_start(), 35);
+    assert_eq!(char.offset_from_doc_start(), 109);
+    assert_eq!(char.value(), &'🥚');
+
+    eprintln!("TEST 4:37 (expect error)");
+    let error = grid
+        .char_at(CharCoord::from_pred_counts(3, 36))
+        .expect_err("char_at 4:37");
+    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+
+    eprintln!("TEST 5:1 (expect error)");
+    let error = grid
+        .char_at(CharCoord::from_pred_counts(4, 0))
+        .expect_err("char_at 5:1");
+    assert_eq!(error, completed_char_grid::CharAtError::LineOutOfBound);
 }
