@@ -162,7 +162,7 @@ fn lazy_load_line_at() {
         CharCoord::from_pred_counts(0, 0),
     );
     assert_eq!(line.eol(), EndOfLine::LF);
-    assert_eq!(line.text_without_eol(&grid), "Hello,"); // preloaded from partially_loaded_grid
+    assert_eq!(line.text_without_eol(&grid), "Hello,");
     assert_eq!(grid.loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
 
     eprintln!("TEST 2");
