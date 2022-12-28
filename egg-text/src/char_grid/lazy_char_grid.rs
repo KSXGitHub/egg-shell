@@ -442,18 +442,10 @@ where
     type Item = Result<CharCell<CharOrEol>, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let line = self
-            .grid
-            .loaded_line_list
-            .get(self.ln_index.pred_count())
-            .copied();
-        let Some(line) = line else {
-            // if line is yet available, load another line and try again
-            return match self.grid.load_line() {
-                Err(error) => Some(Err(error)),
-                Ok(None) => None, // no more line, stop the iterator
-                Ok(Some(_)) => self.next(), // added a line, recurse
-            };
+        let line = match self.grid.load_line_at(self.ln_index) {
+            Err(LineAtError::LoadCharError(error)) => return Some(Err(error)),
+            Err(LineAtError::OutOfBound) => return None,
+            Ok(line) => line,
         };
         match self.col_index.pred_count().cmp(&line.slice().char_count()) {
             Ordering::Greater => panic!("Column index should never be greater than line count"),
