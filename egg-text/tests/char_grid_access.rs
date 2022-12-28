@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
-    CharAt, CharCoord, CompletedCharGrid, EndOfLine, LazyCharGrid, LineAt, LoadCharAt, LoadLineAt,
-    Ordinal, TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCoord, CompletedCharGrid, EndOfLine, IterChar, LazyCharGrid, LineAt, LoadCharAt,
+    LoadLineAt, Ordinal, TryIterLoadChar, TryIterLoadLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -411,4 +411,15 @@ fn completed_line_at() {
         .line_at(Ordinal::from_pred_count(4))
         .expect_err("line_at 5");
     assert_eq!(error, completed_char_grid::LineAtError::OutOfBound);
+}
+
+#[test]
+fn completed_iter_char() {
+    let mut acc = String::new();
+    for char in completed_grid().iter_char() {
+        dbg!(char);
+        acc += char.to_string().as_str();
+    }
+    eprintln!("ACTUAL:\n{acc}\n");
+    assert_eq!(acc, SRC_TEXT);
 }
