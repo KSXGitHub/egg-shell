@@ -521,15 +521,12 @@ where
     type Item = Result<CharGridLine, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(line) = self.grid.loaded_line_list.get(self.index).copied() {
-            self.index += 1;
-            return Some(Ok(line));
-        }
-
-        match self.grid.load_line() {
-            Err(error) => Some(Err(error)),
-            Ok(None) => None,
-            Ok(Some(_)) => self.next(),
+        let index = self.index;
+        self.index += 1;
+        match self.grid.load_line_at(Ordinal::from_pred_count(index)) {
+            Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
+            Err(LineAtError::OutOfBound) => None,
+            Ok(line) => Some(Ok(line)),
         }
     }
 }
