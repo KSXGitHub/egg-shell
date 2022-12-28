@@ -1,6 +1,6 @@
 use egg_text::{
     char_grid::lazy_char_grid, CharCoord, EndOfLine, LazyCharGrid, LoadCharAt, LoadLineAt, Ordinal,
-    TryIterLoadChar,
+    TryIterLoadChar, TryIterLoadLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -234,6 +234,28 @@ fn lazy_iter_char() {
         let char = char.unwrap_or_else(|error| panic!("attempt at index {index} failed: {error}"));
         dbg!(char);
         acc += char.to_string().as_str();
+    }
+    eprintln!("ACTUAL:\n{acc}\n");
+    assert_eq!(acc, SRC_TEXT);
+}
+
+#[test]
+fn lazy_iter_line() {
+    let mut grid = partially_loaded_grid();
+    let mut lines = Vec::new();
+    for (index, line) in grid.try_iter_load_line().enumerate() {
+        let line = line.unwrap_or_else(|error| panic!("attempt at line {index} failed: {error}"));
+        dbg!(line);
+        lines.push(line);
+    }
+    dbg!(&lines);
+    let mut acc = String::new();
+    for line in lines {
+        dbg!(line);
+        let text_without_eol = dbg!(line.text_without_eol(&grid));
+        let eol = dbg!(line.eol());
+        acc += text_without_eol;
+        acc += eol.as_ref();
     }
     eprintln!("ACTUAL:\n{acc}\n");
     assert_eq!(acc, SRC_TEXT);
