@@ -305,7 +305,26 @@ impl<CharIter> Debug for LazyCharGrid<CharIter> {
     }
 }
 
-impl LazyCharGrid<Infallible> {
+/// `CharIter` type of [`LazyCharGrid::new_infallible`].
+pub struct InfallibleCharIter<SrcCharIter>(SrcCharIter)
+where
+    SrcCharIter: Iterator<Item = char>;
+
+impl<SrcCharIter> Iterator for InfallibleCharIter<SrcCharIter>
+where
+    SrcCharIter: Iterator<Item = char>,
+{
+    type Item = Result<char, Infallible>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next().map(Result::Ok)
+    }
+}
+
+impl<SrcCharIter> LazyCharGrid<InfallibleCharIter<SrcCharIter>>
+where
+    SrcCharIter: Iterator<Item = char>,
+{
     /// Allocating a character grid and assign a stream to load from.
     ///
     /// Unlike [`new()`](LazyCharGrid::new), this constructor takes an infallible iterator.
@@ -334,17 +353,16 @@ impl LazyCharGrid<Infallible> {
     ///     ("And I program in it.", EndOfLine::EOF),
     /// ]);
     /// ```
-    pub fn new_infallible<InfallibleCharIter>(
-        src_char_iter: InfallibleCharIter,
-        capacity: usize,
-    ) -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>>
+    pub fn new_infallible<SrcCharIntoIter>(src_char_iter: SrcCharIntoIter, capacity: usize) -> Self
     where
-        InfallibleCharIter: IntoIterator<Item = char>,
+        SrcCharIntoIter: IntoIterator<IntoIter = SrcCharIter>,
     {
-        let char_iter = src_char_iter.into_iter().map(Result::Ok);
+        let char_iter = src_char_iter.into_iter().pipe(InfallibleCharIter);
         LazyCharGrid::new(char_iter, capacity)
     }
+}
 
+impl LazyCharGrid<Infallible> {
     /// Start load characters from a string slice.
     #[allow(clippy::should_implement_trait)]
     pub fn from_str(
