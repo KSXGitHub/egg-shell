@@ -100,7 +100,7 @@ fn lazy_load_char_at() {
     assert_eq!(char.offset_from_doc_start(), 74);
     assert_eq!(char.value(), &'T');
     assert_eq!(grid.loaded_text(), SRC_TEXT);
-    assert_eq!(grid.loaded_char_count(), 103);
+    assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
     eprintln!("TEST 4:36");
     let char = grid
@@ -111,7 +111,7 @@ fn lazy_load_char_at() {
     assert_eq!(char.offset_from_doc_start(), 109);
     assert_eq!(char.value(), &'🥚');
     assert_eq!(grid.loaded_text(), SRC_TEXT);
-    assert_eq!(grid.loaded_char_count(), 103);
+    assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
     eprintln!("TEST 4:37 (expect error)");
     let error = grid
@@ -134,7 +134,7 @@ fn lazy_load_char_at() {
     assert_eq!(char.offset_from_doc_start(), 0);
     assert_eq!(char.value(), &'H');
     assert_eq!(grid.loaded_text(), SRC_TEXT);
-    assert_eq!(grid.loaded_char_count(), 103);
+    assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
     eprintln!("TEST 2:3 (again)");
     let char = grid
@@ -145,7 +145,7 @@ fn lazy_load_char_at() {
     assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
     assert_eq!(char.value(), &'❤');
     assert_eq!(grid.loaded_text(), SRC_TEXT);
-    assert_eq!(grid.loaded_char_count(), 103);
+    assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 }
 
 #[test]
