@@ -4,7 +4,6 @@ use egg_text::{
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
-use std::convert::Infallible;
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
@@ -13,7 +12,7 @@ const SRC_TEXT: &str = concat! {
     "The language is called 'egg-shell' 🥚",
 };
 
-fn partially_loaded_grid() -> LazyCharGrid<impl Iterator<Item = Result<char, Infallible>>> {
+fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
     let mut grid = LazyCharGrid::from_str(SRC_TEXT);
     let first_line = grid
         .load_line()
