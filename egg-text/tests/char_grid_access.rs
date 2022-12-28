@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
-    CharAt, CharCoord, CompletedCharGrid, EndOfLine, IterChar, LazyCharGrid, LineAt, LoadCharAt,
-    LoadLineAt, Ordinal, TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCoord, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid, LineAt,
+    LoadCharAt, LoadLineAt, Ordinal, TryIterLoadChar, TryIterLoadLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -419,6 +419,21 @@ fn completed_iter_char() {
     for char in completed_grid().iter_char() {
         dbg!(char);
         acc += char.to_string().as_str();
+    }
+    eprintln!("ACTUAL:\n{acc}\n");
+    assert_eq!(acc, SRC_TEXT);
+}
+
+#[test]
+fn completed_iter_line() {
+    let grid = completed_grid();
+    let mut acc = String::new();
+    for line in grid.iter_line() {
+        dbg!(line);
+        let text_without_eol = dbg!(line.text_without_eol(&grid));
+        let eol = dbg!(line.eol());
+        acc += text_without_eol;
+        acc += eol.as_ref();
     }
     eprintln!("ACTUAL:\n{acc}\n");
     assert_eq!(acc, SRC_TEXT);
