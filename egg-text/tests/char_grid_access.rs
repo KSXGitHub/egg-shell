@@ -227,7 +227,7 @@ fn lazy_load_line_at() {
 }
 
 #[test]
-fn lazy_iter_char() {
+fn lazy_try_iter_load_char() {
     let mut acc = String::new();
     for (index, char) in partially_loaded_grid().try_iter_load_char().enumerate() {
         let char = char.unwrap_or_else(|error| panic!("attempt at index {index} failed: {error}"));
@@ -239,7 +239,7 @@ fn lazy_iter_char() {
 }
 
 #[test]
-fn lazy_iter_line() {
+fn lazy_try_iter_load_line() {
     let mut grid = partially_loaded_grid();
     let mut lines = Vec::new();
     for (index, line) in grid.try_iter_load_line().enumerate() {
