@@ -3,7 +3,7 @@ use egg_text::{
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
-use std::{convert::Infallible, str::Chars};
+use std::convert::Infallible;
 
 const SRC_TEXT: &str = concat! {
     "Hello,\n",
@@ -191,7 +191,7 @@ fn lazy_load_line_at() {
             .lines()
             .take(3)
             .map(str::chars)
-            .map(Chars::count)
+            .map(Iterator::count)
             .sum::<usize>()
             .pipe(Ordinal::from_pred_count),
     );
