@@ -8,12 +8,12 @@ pub struct Response<Input, Output> {
 }
 
 impl<Input, Output> Response<Input, Output> {
-    /// Create a [`Response`] from a tuple of output and remaining input.
+    /// Create a [`Response`] from a tuple of [output](Response::output) and [remaining input](Response::remaining).
     pub const fn from_tuple(output: Output, remaining: Input) -> Self {
         Response { output, remaining }
     }
 
-    /// Convert the [`Response`] into a tuple of output and remaining input.
+    /// Convert the [`Response`] into a tuple of [output](Response::output) and [remaining input](Response::remaining).
     pub fn into_tuple(self) -> (Output, Input) {
         (self.output, self.remaining)
     }
