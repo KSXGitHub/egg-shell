@@ -1,0 +1,8 @@
+[package]
+name = "egg-parser"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.66"
+
+[dependencies]
+egg-text = { version = "0.0.0", path = "../egg-text" }
