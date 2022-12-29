@@ -1,7 +1,9 @@
 /// Success value of [`Parse::parse`].
 #[derive(Debug, Clone, Copy)]
 pub struct Response<Input, Output> {
+    /// Output emitted by the parser.
     pub output: Output,
+    /// Remaining unparsed input.
     pub remaining: Input,
 }
 
