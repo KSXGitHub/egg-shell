@@ -5,6 +5,18 @@ pub struct Response<Input, Output> {
     pub remaining: Input,
 }
 
+impl<Input, Output> Response<Input, Output> {
+    /// Create a [`Response`] from a tuple of output and remaining input.
+    pub const fn from_tuple(output: Output, remaining: Input) -> Self {
+        Response { output, remaining }
+    }
+
+    /// Convert the [`Response`] into a tuple of output and remaining input.
+    pub fn into_tuple(self) -> (Output, Input) {
+        (self.output, self.remaining)
+    }
+}
+
 /// Return type of [`Parse::parse`].
 pub type ParseResult<Input, Output, Error> = Result<Response<Input, Output>, Error>;
 
