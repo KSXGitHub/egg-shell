@@ -31,44 +31,15 @@ where
 }
 
 /// Iterate over each character.
-pub trait TryIterChar<'a>: TryIterLoadChar<'a> {
-    /// The associate error which is yielded on failure.
-    type Error;
-    /// Type of the resulting iterator.
-    type CharResultIter: Iterator<Item = Result<Self::Char, <Self as TryIterChar<'a>>::Error>> + 'a;
-    /// Iterate over each character.
-    fn try_iter_char(&'a self) -> Self::CharResultIter;
-}
-
-/// Iterate over and load each character.
-pub trait IterLoadChar<'a>: TryIterLoadChar<'a> {
-    /// Type of the resulting iterator.
-    type CharLoadIter: Iterator<Item = Self::Char> + 'a;
-    /// Iterate over and load each character.
-    fn iter_load_char(&'a mut self) -> Self::CharLoadIter;
-}
-
-impl<'a, Grid> IterLoadChar<'a> for Grid
-where
-    Grid: TryIterLoadChar<'a, Error = Infallible>,
-    Grid::Char: 'a,
-{
-    type CharLoadIter = iter::Map<Self::CharResultLoadIter, IntoOk<Self::Char>>;
-    fn iter_load_char(&'a mut self) -> Self::CharLoadIter {
-        self.try_iter_load_char().map(into_ok)
-    }
-}
-
-/// Iterate over and load each character.
-pub trait TryIterLoadChar<'a> {
+pub trait TryIterChar<'a> {
     /// Character type to be emitted on success.
     type Char;
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharResultLoadIter: Iterator<Item = Result<Self::Char, Self::Error>> + 'a;
-    /// Iterate over and load each character.
-    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter;
+    type CharResultIter: Iterator<Item = Result<Self::Char, Self::Error>> + 'a;
+    /// Iterate over each character.
+    fn try_iter_char(&'a self) -> Self::CharResultIter;
 }
 
 /// Iterate over each line.
@@ -90,79 +61,35 @@ where
 }
 
 /// Iterate over each line.
-pub trait TryIterLine<'a>: TryIterLoadLine<'a> {
-    /// The associate error which is yielded on failure.
-    type Error;
-    /// Type of the resulting iterator.
-    type LineResultIter: Iterator<Item = Result<Self::Line, <Self as TryIterLine<'a>>::Error>>;
-    /// Iterate over each line.
-    fn try_iter_line(&'a self) -> Self::LineResultIter;
-}
-
-/// Iterate over each line.
-pub trait IterLoadLine<'a>: TryIterLoadLine<'a, Error = Infallible> {
-    /// Type of the resulting iterator.
-    type LineLoadIter: Iterator<Item = Self::Line>;
-    /// Iterate over each line.
-    fn iter_load_line(&'a mut self) -> Self::LineLoadIter;
-}
-
-impl<'a, Grid> IterLoadLine<'a> for Grid
-where
-    Grid: TryIterLoadLine<'a, Error = Infallible>,
-{
-    type LineLoadIter = iter::Map<Self::LineResultLoadIter, IntoOk<Self::Line>>;
-    fn iter_load_line(&'a mut self) -> Self::LineLoadIter {
-        self.try_iter_load_line().map(into_ok)
-    }
-}
-
-/// Iterate over and load each line.
-pub trait TryIterLoadLine<'a> {
+pub trait TryIterLine<'a> {
     /// Type of item to be yielded on success.
     type Line;
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type LineResultLoadIter: Iterator<Item = Result<Self::Line, Self::Error>>;
-    /// Iterate over and load each line.
-    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter;
+    type LineResultIter: Iterator<Item = Result<Self::Line, Self::Error>>;
+    /// Iterate over each line.
+    fn try_iter_line(&'a self) -> Self::LineResultIter;
 }
 
 /// Get a character cell by coordinate.
-pub trait CharAt<'a>: LoadCharAt<'a> {
-    /// The associate error which is returned on failure.
-    type Error;
-    /// Get a character cell by coordinate.
-    fn char_at(&'a self, coord: CharCoord) -> Result<Self::Char, <Self as CharAt>::Error>;
-}
-
-/// Load a character cell by coordinate.
-pub trait LoadCharAt<'a> {
+pub trait CharAt<'a> {
     /// Character type to return on success.
     type Char;
     /// The associate error which is returned on failure.
     type Error;
-    /// Load character cell by coordinate.
-    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<Self::Char, Self::Error>;
+    /// Get a character cell by coordinate.
+    fn char_at(&'a self, coord: CharCoord) -> Result<Self::Char, Self::Error>;
 }
 
 /// Get a line of character cells by coordinate.
-pub trait LineAt<'a>: LoadLineAt<'a> {
-    /// The associate error which is returned on failure.
-    type Error;
-    /// Get a line of character cells by coordinate.
-    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, <Self as LineAt>::Error>;
-}
-
-/// Load a line of character cells by coordinate.
-pub trait LoadLineAt<'a> {
+pub trait LineAt<'a> {
     /// Type of return value on success.
     type Line;
     /// The associate error which is returned on failure.
     type Error;
-    // Load a line of character cells by coordinate.
-    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error>;
+    /// Get a line of character cells by coordinate.
+    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, Self::Error>;
 }
 
 /// Get the number of character cells.

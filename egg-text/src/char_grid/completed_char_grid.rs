@@ -1,7 +1,7 @@
 use super::CharGridLine;
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, CharOrEol, LineAt, LineCount, LoadCharAt, LoadLineAt,
-    Ordinal, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
+    CharAt, CharCell, CharCoord, CharCount, CharOrEol, LineAt, LineCount, Ordinal, TryIterChar,
+    TryIterLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -37,6 +37,7 @@ pub enum CharAtError {
 }
 
 impl<'a> CharAt<'a> for CompletedCharGrid {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = CharAtError;
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
@@ -57,14 +58,6 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
     }
 }
 
-impl<'a> LoadCharAt<'a> for CompletedCharGrid {
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
-    type Error = CharAtError;
-    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
-        self.char_at(coord)
-    }
-}
-
 /// Error type of [`LineAt`] and [`LoadLineAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError {
@@ -74,20 +67,13 @@ pub enum LineAtError {
 }
 
 impl<'a> LineAt<'a> for CompletedCharGrid {
+    type Line = CharGridLine;
     type Error = LineAtError;
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError> {
         self.line_list
             .get(ln_num.pred_count())
             .copied()
             .ok_or(LineAtError::OutOfBound)
-    }
-}
-
-impl<'a> LoadLineAt<'a> for CompletedCharGrid {
-    type Line = CharGridLine;
-    type Error = LineAtError;
-    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        self.line_at(ln_num)
     }
 }
 
@@ -161,23 +147,15 @@ impl<'a> Iterator for CharIter<'a> {
 }
 
 impl<'a> TryIterChar<'a> for CompletedCharGrid {
+    type Char = CharCell<CharOrEol>;
     type Error = Infallible;
-    type CharResultIter = Self::CharResultLoadIter;
+    type CharResultIter = CharIter<'a>;
     fn try_iter_char(&'a self) -> Self::CharResultIter {
         CharIter {
             ln_index: Ordinal::from_pred_count(0),
             col_index: Ordinal::from_pred_count(0),
             grid: self,
         }
-    }
-}
-
-impl<'a> TryIterLoadChar<'a> for CompletedCharGrid {
-    type Char = CharCell<CharOrEol>;
-    type Error = Infallible;
-    type CharResultLoadIter = CharIter<'a>;
-    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
-        self.try_iter_char()
     }
 }
 
@@ -199,20 +177,12 @@ impl<'a> Iterator for LineIter<'a> {
 }
 
 impl<'a> TryIterLine<'a> for CompletedCharGrid {
+    type Line = CharGridLine;
     type Error = Infallible;
-    type LineResultIter = Self::LineResultLoadIter;
+    type LineResultIter = LineIter<'a>;
     fn try_iter_line(&'a self) -> Self::LineResultIter {
         LineIter {
             iter: self.line_list.iter(),
         }
-    }
-}
-
-impl<'a> TryIterLoadLine<'a> for CompletedCharGrid {
-    type Line = CharGridLine;
-    type Error = Infallible;
-    type LineResultLoadIter = LineIter<'a>;
-    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {
-        self.try_iter_line()
     }
 }

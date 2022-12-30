@@ -1,7 +1,7 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
-    char_grid::CharGridLine, CharAt, CharCell, CharCoord, CharOrEol, LineAt, LoadCharAt,
-    LoadLineAt, Ordinal, TryIterChar, TryIterLine, TryIterLoadChar, TryIterLoadLine,
+    char_grid::CharGridLine, CharAt, CharCell, CharCoord, CharOrEol, LineAt, Ordinal, TryIterChar,
+    TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -24,6 +24,7 @@ impl<'a, IterError, CharIter> CharAt<'a> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
+    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
     type Error = CharAtError<IterError>;
 
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError<IterError>> {
@@ -47,18 +48,6 @@ where
     }
 }
 
-impl<'a, IterError, CharIter> LoadCharAt<'a> for LazyCharGrid<CharIter>
-where
-    CharIter: Iterator<Item = Result<char, IterError>>,
-{
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
-    type Error = CharAtError<IterError>;
-
-    fn load_char_at(&'a mut self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
-        self.char_at(coord)
-    }
-}
-
 /// Error type of [`LoadLineAt`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError<IterError> {
@@ -73,6 +62,7 @@ impl<'a, IterError, CharIter> LineAt<'a> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
+    type Line = CharGridLine;
     type Error = LineAtError<IterError>;
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError<IterError>> {
         while self.data().loaded_line_list.len() <= ln_num.pred_count()
@@ -84,17 +74,6 @@ where
             return Ok(*line);
         }
         Err(LineAtError::OutOfBound)
-    }
-}
-
-impl<'a, IterError, CharIter> LoadLineAt<'a> for LazyCharGrid<CharIter>
-where
-    CharIter: Iterator<Item = Result<char, IterError>> + 'a,
-{
-    type Error = LineAtError<IterError>;
-    type Line = CharGridLine;
-    fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        self.line_at(ln_num)
     }
 }
 
@@ -166,29 +145,16 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
+    type Char = CharCell<CharOrEol>;
     type Error = LoadCharError<SrcIterError>;
     type CharResultIter = CharIter<'a, SrcIterError, SrcIter>;
 
-    fn try_iter_char(&'a self) -> Self::CharResultLoadIter {
+    fn try_iter_char(&'a self) -> Self::CharResultIter {
         CharIter {
             ln_index: Ordinal::from_pred_count(0),
             col_index: Ordinal::from_pred_count(0),
             grid: self,
         }
-    }
-}
-
-impl<'a, SrcIterError, SrcIter> TryIterLoadChar<'a> for LazyCharGrid<SrcIter>
-where
-    SrcIterError: 'a,
-    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
-{
-    type Char = CharCell<CharOrEol>;
-    type Error = LoadCharError<SrcIterError>;
-    type CharResultLoadIter = CharIter<'a, SrcIterError, SrcIter>;
-
-    fn try_iter_load_char(&'a mut self) -> Self::CharResultLoadIter {
-        self.try_iter_char()
     }
 }
 
@@ -228,27 +194,14 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
+    type Line = CharGridLine;
     type Error = LoadCharError<SrcIterError>;
     type LineResultIter = LineIter<'a, SrcIterError, SrcIter>;
 
-    fn try_iter_line(&'a self) -> Self::LineResultLoadIter {
+    fn try_iter_line(&'a self) -> Self::LineResultIter {
         LineIter {
             index: Ordinal::from_pred_count(0),
             grid: self,
         }
-    }
-}
-
-impl<'a, SrcIterError, SrcIter> TryIterLoadLine<'a> for LazyCharGrid<SrcIter>
-where
-    SrcIterError: 'a,
-    SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
-{
-    type Line = CharGridLine;
-    type Error = LoadCharError<SrcIterError>;
-    type LineResultLoadIter = LineIter<'a, SrcIterError, SrcIter>;
-
-    fn try_iter_load_line(&'a mut self) -> Self::LineResultLoadIter {
-        self.try_iter_line()
     }
 }
