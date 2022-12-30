@@ -6,6 +6,7 @@ use crate::{
 use assert_cmp::debug_assert_op;
 use derive_more::{Error, IsVariant};
 use getset::{CopyGetters, Getters};
+use parking_lot::{RwLock, RwLockReadGuard};
 use pipe_trait::Pipe;
 use std::{
     cmp::Ordering,
@@ -44,9 +45,9 @@ pub enum CompletionStatus {
     Complete,
 }
 
-/// Grid of characters.
-#[derive(Clone, CopyGetters, Getters)]
-pub struct LazyCharGrid<CharIter> {
+/// Inner data of [`LazyCharGrid`].
+#[derive(CopyGetters, Getters)]
+struct LazyCharGridData<CharIter> {
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
     pub(super) loaded_char_count: usize,
@@ -65,6 +66,12 @@ pub struct LazyCharGrid<CharIter> {
     ///
     /// `None` means that the grid is completed.
     pub(super) completion_progress: CompletionProgress<CharIter>,
+}
+
+/// Grid of characters.
+pub struct LazyCharGrid<CharIter> {
+    /// Inner data of the grid.
+    data: RwLock<LazyCharGridData<CharIter>>,
 }
 
 impl<CharIter> LazyCharGrid<CharIter> {
@@ -102,23 +109,36 @@ impl<CharIter> LazyCharGrid<CharIter> {
             prev_non_lf: None,
             prev_line_offset: 0,
         });
-        LazyCharGrid {
+        let data = LazyCharGridData {
             loaded_char_count: 0,
             loaded_text: String::with_capacity(capacity),
             loaded_char_list: Vec::with_capacity(capacity),
             loaded_line_list: Vec::new(),
             completion_progress: state,
+        };
+        LazyCharGrid {
+            data: RwLock::new(data),
         }
+    }
+
+    // Acquire read of the inner data.
+    pub(super) fn data(&self) -> RwLockReadGuard<'_, LazyCharGridData<CharIter>> {
+        self.data.read()
+    }
+
+    /// Total number of loaded characters.
+    pub fn loaded_char_count(&self) -> usize {
+        self.data().loaded_char_count()
     }
 
     /// Number of lines.
     pub fn loaded_line_count(&self) -> usize {
-        self.loaded_line_list.len()
+        self.data().loaded_line_list.len()
     }
 
     /// Whether the grid is completed.
-    pub const fn completion(&self) -> CompletionStatus {
-        match self.completion_progress {
+    pub fn completion(&self) -> CompletionStatus {
+        match self.data().completion_progress {
             Some(_) => CompletionStatus::Incomplete,
             None => CompletionStatus::Complete,
         }
@@ -127,29 +147,9 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// Return the total number of characters if the grid is fully loaded.
     /// * `Some(n)` means that the grid is fully loaded with `n` characters.
     /// * `None` means that the grid isn't yet completed.
-    pub const fn total_char_count(&self) -> Option<usize> {
+    pub fn total_char_count(&self) -> Option<usize> {
         match self.completion() {
-            CompletionStatus::Complete => Some(self.loaded_char_count),
-            CompletionStatus::Incomplete => None,
-        }
-    }
-
-    /// Return reference to the full string if the grid is fully loaded.
-    /// * `Some(text)` means that the grid is fully loaded with `text` being the content.
-    /// * `None` means that the grid isn't yet completed.
-    pub const fn full_text(&self) -> Option<&String> {
-        match self.completion() {
-            CompletionStatus::Complete => Some(&self.loaded_text),
-            CompletionStatus::Incomplete => None,
-        }
-    }
-
-    /// Return reference to the complete list of lines if the grid is fully loaded.
-    /// * `Some(list)` means that the grid is fully loaded with `list` being the complete list of lines.
-    /// * `None` means that the grid isn't yet completed.
-    pub fn all_lines(&self) -> Option<&'_ Vec<CharGridLine>> {
-        match self.completion() {
-            CompletionStatus::Complete => Some(self.loaded_line_list()),
+            CompletionStatus::Complete => Some(self.data().loaded_char_count),
             CompletionStatus::Incomplete => None,
         }
     }
@@ -157,15 +157,11 @@ impl<CharIter> LazyCharGrid<CharIter> {
 
 /// Success value of [`LazyCharGrid::load_char`].
 #[derive(Debug, Clone, Copy)]
-pub enum LoadCharReport<'a> {
+pub enum LoadCharReport {
     /// The grid is completed.
     Document,
     /// Complete a line.
-    Line {
-        def: TextSliceDef,
-        value: &'a str,
-        eol: EndOfLine,
-    },
+    Line { def: TextSliceDef, eol: EndOfLine },
     /// Get another character.
     Char(char),
 }
@@ -180,10 +176,10 @@ pub enum LoadCharError<IterError> {
     IterError(IterError),
 }
 
-impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid<CharIter> {
+impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGridData<CharIter> {
     /// Add another character to the grid.
-    pub fn load_char(&mut self) -> Result<LoadCharReport<'_>, LoadCharError<IterError>> {
-        let LazyCharGrid {
+    fn load_char(&mut self) -> Result<LoadCharReport, LoadCharError<IterError>> {
+        let LazyCharGridData {
             loaded_char_count,
             loaded_text,
             loaded_char_list,
@@ -242,7 +238,6 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             *prev_line_offset = loaded_text.len();
             Ok(LoadCharReport::Line {
                 def: line_slice_def,
-                value: line_src_text,
                 eol,
             })
         } else {
@@ -254,6 +249,13 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             *prev_non_lf = Some(char);
             char.pipe(LoadCharReport::Char).pipe(Ok)
         }
+    }
+}
+
+impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid<CharIter> {
+    /// Add another character to the grid.
+    pub fn load_char(&mut self) -> Result<LoadCharReport, LoadCharError<IterError>> {
+        self.data.write().load_char()
     }
 
     /// Load a whole line.
@@ -285,11 +287,12 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
     /// Load the whole text and return a [`CompletedCharGrid`].
     pub fn into_completed(mut self) -> Result<CompletedCharGrid, LoadCharError<IterError>> {
         self.load_all()?;
+        let data = self.data.into_inner();
         Ok(CompletedCharGrid {
-            char_count: self.loaded_char_count,
-            text: self.loaded_text,
-            char_list: self.loaded_char_list,
-            line_list: self.loaded_line_list,
+            char_count: data.loaded_char_count,
+            text: data.loaded_text,
+            char_list: data.loaded_char_list,
+            line_list: data.loaded_line_list,
         })
     }
 }
@@ -412,7 +415,8 @@ where
             .slice()
             .first_char_pos()
             .advance_by(coord.column.pred_count());
-        self.loaded_char_list()
+        self.data()
+            .loaded_char_list()
             .get(char_pos.pred_count())
             .copied()
             .expect("char_pos should be within the range of char_list")
@@ -437,12 +441,12 @@ where
     type Error = LineAtError<IterError>;
     type Line = CharGridLine;
     fn load_line_at(&'a mut self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        while self.loaded_line_list.len() <= ln_num.pred_count()
+        while self.data().loaded_line_list.len() <= ln_num.pred_count()
             && self.completion().is_incomplete()
         {
             self.load_line().map_err(LineAtError::LoadCharError)?;
         }
-        if let Some(line) = self.loaded_line_list.get(ln_num.pred_count()) {
+        if let Some(line) = self.data().loaded_line_list.get(ln_num.pred_count()) {
             return Ok(*line);
         }
         Err(LineAtError::OutOfBound)
@@ -500,6 +504,7 @@ where
                     .advance_by(self.col_index.pred_count());
                 self.col_index = self.col_index.advance_by(1);
                 self.grid
+                    .data()
                     .loaded_char_list()
                     .get(char_pos.pred_count())
                     .copied()?

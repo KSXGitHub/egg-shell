@@ -9,3 +9,5 @@ pub use char_grid::{CompletedCharGrid, LazyCharGrid};
 pub use char_grid_access::*;
 pub use ordinal::{AsOrdinalIndexed, Ordinal, OrdinalIndexed};
 pub use text_slice::TextSliceDef;
+
+pub use parking_lot;

@@ -8,7 +8,7 @@ pub trait GridCommon {
 
 impl<CharIter> GridCommon for LazyCharGrid<CharIter> {
     fn loaded_text(&self) -> &'_ str {
-        &self.loaded_text
+        &self.data().loaded_text
     }
 }
 
