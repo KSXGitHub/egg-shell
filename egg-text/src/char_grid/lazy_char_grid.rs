@@ -11,7 +11,7 @@ use pipe_trait::Pipe;
 use std::{
     cmp::Ordering,
     convert::Infallible,
-    fmt::{self, Debug, Formatter},
+    fmt::{self, Debug, Display, Formatter},
     str::Chars,
 };
 use strum::{AsRefStr, Display, IntoStaticStr};
@@ -580,5 +580,40 @@ where
             index: Ordinal::from_pred_count(0),
             grid: self,
         }
+    }
+}
+
+/// Slice of inner text of [`LazyCharGrid`].
+pub struct InnerTextSlice<'a, CharIter> {
+    pub(super) data: RwLockReadGuard<'a, LazyCharGridData<CharIter>>,
+    pub(super) start: usize,
+    pub(super) end: usize,
+}
+
+impl<'a, CharIter> InnerTextSlice<'a, CharIter> {
+    /// Create a slice.
+    pub(super) fn new(grid: &'a LazyCharGrid<CharIter>, start: usize, end: usize) -> Self {
+        let data = grid.data();
+        InnerTextSlice { data, start, end }
+    }
+
+    /// Perform an action on the internal string.
+    fn run<Act, Return>(&self, act: Act) -> Return
+    where
+        Act: FnOnce(&str) -> Return,
+    {
+        act(&self.data.loaded_text[self.start..self.end])
+    }
+}
+
+impl<'a, CharIter> Display for InnerTextSlice<'a, CharIter> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.run(|text| write!(f, "{text}"))
+    }
+}
+
+impl<'a, CharIter> Debug for InnerTextSlice<'a, CharIter> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.run(|text| write!(f, "InnerTextSlice {text:?}"))
     }
 }

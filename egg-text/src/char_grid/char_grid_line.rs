@@ -19,12 +19,12 @@ impl CharGridLine {
     }
 
     /// Get text content of the slice without EOL.
-    pub fn text_without_eol<'a, CharGrid>(&self, grid: &'a CharGrid) -> &'a str
+    pub fn text_without_eol<'a, CharGrid>(&self, grid: &'a CharGrid) -> CharGrid::Slice
     where
-        CharGrid: GridCommon,
+        CharGrid: GridCommon<'a>,
     {
         let start = self.slice.offset();
         let end = start + self.slice.size();
-        &grid.loaded_text()[start..end]
+        grid.inner_text_slice(start, end)
     }
 }
