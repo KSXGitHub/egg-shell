@@ -4,7 +4,7 @@ use assert_cmp::debug_assert_op;
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 
-/// Success value of [`LazyCharGrid::load_char`].
+/// Success value of [`LazyCharGrid::load_char`](super::LazyCharGrid::load_char).
 #[derive(Debug, Clone, Copy)]
 pub enum LoadCharReport {
     /// The grid is completed.
@@ -15,7 +15,7 @@ pub enum LoadCharReport {
     Char(char),
 }
 
-/// Failure value of [`LazyCharGrid::load_char`].
+/// Failure value of [`LazyCharGrid::load_char`](super::LazyCharGrid::load_char).
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LoadCharError<IterError> {
     /// Encounter an invalid character.

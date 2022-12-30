@@ -25,7 +25,7 @@ pub struct CompletedCharGrid {
     pub(super) line_list: Vec<CharGridLine>,
 }
 
-/// Error type of [`CharAt`] and [`LoadCharAt`] for [`CompletedCharGrid`].
+/// Error type of [`CharAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum CharAtError {
     /// The source iterator doesn't have enough lines to match the requested line index.
@@ -58,7 +58,7 @@ impl<'a> CharAt<'a> for CompletedCharGrid {
     }
 }
 
-/// Error type of [`LineAt`] and [`LoadLineAt`] for [`CompletedCharGrid`].
+/// Error type of [`LineAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError {
     /// The line doesn't have enough characters to match the requested column index.

@@ -24,7 +24,7 @@ pub(super) struct LoadingProgress<CharIter> {
 /// `None` means that the grid is completed.
 type CompletionProgress<CharIter> = Option<LoadingProgress<CharIter>>;
 
-/// Whether the [`LazyCharGrid`] is completed.
+/// Whether the [`LazyCharGrid`](super::LazyCharGrid) is completed.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, AsRefStr, IntoStaticStr, IsVariant)]
 pub enum CompletionStatus {
     /// Not all characters are loaded.
@@ -33,7 +33,7 @@ pub enum CompletionStatus {
     Complete,
 }
 
-/// Inner data of [`LazyCharGrid`].
+/// Inner data of [`LazyCharGrid`](super::LazyCharGrid).
 #[derive(CopyGetters, Getters)]
 pub struct LazyCharGridData<CharIter> {
     /// Total number of loaded characters.

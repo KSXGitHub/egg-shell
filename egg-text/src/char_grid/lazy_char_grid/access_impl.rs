@@ -7,7 +7,7 @@ use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 use std::{cmp::Ordering, fmt::Debug};
 
-/// Error type of [`LoadCharAt`] for [`LazyCharGrid`].
+/// Error type of [`CharAt`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum CharAtError<IterError> {
     /// An error occurred while loading a character.
@@ -48,7 +48,7 @@ where
     }
 }
 
-/// Error type of [`LoadLineAt`] for [`LazyCharGrid`].
+/// Error type of [`LineAt`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum LineAtError<IterError> {
     /// An error occurred while loading a character.
