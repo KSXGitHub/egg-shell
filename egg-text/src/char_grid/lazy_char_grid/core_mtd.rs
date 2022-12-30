@@ -192,16 +192,15 @@ where
     /// let mut grid = LazyCharGrid::new_infallible(src_text.chars(), src_text.len());
     /// grid.load_all().unwrap();
     /// assert_eq!(grid.data().loaded_text(), src_text);
-    /// let lines: Vec<_> = grid
-    ///     .try_iter_line()
-    ///     .map(Result::unwrap)
-    ///     .map(|line| (line.text_without_eol().to_string(), line.eol())) // TODO: remove .to_string()
-    ///     .collect();
-    /// assert_eq!(lines, [
-    ///     ("Hello,".to_string(), EndOfLine::CRLF),
-    ///     ("I ❤️ Rust 🦀!!".to_string(), EndOfLine::LF),
-    ///     ("And I program in it.".to_string(), EndOfLine::EOF),
-    /// ]);
+    /// let mut iter = grid.try_iter_line();
+    /// let mut test = |text_without_eol, eol| {
+    ///     let line = iter.next().expect("Some").expect("Ok");
+    ///     assert_eq!(&line.text_without_eol(), text_without_eol);
+    ///     assert_eq!(line.eol(), eol);
+    /// };
+    /// test("Hello,", EndOfLine::CRLF);
+    /// test("I ❤️ Rust 🦀!!", EndOfLine::LF);
+    /// test("And I program in it.", EndOfLine::EOF);
     /// ```
     pub fn new_infallible<SrcCharIntoIter>(src_char_iter: SrcCharIntoIter, capacity: usize) -> Self
     where
