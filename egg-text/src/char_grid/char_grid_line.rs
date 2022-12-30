@@ -19,6 +19,7 @@ impl CharGridLine {
     }
 
     /// Get text content of the slice without EOL.
+    // TODO: remove grid parameter
     pub fn text_without_eol<'a, CharGrid>(&self, grid: &'a CharGrid) -> CharGrid::Slice
     where
         CharGrid: GridCommon<'a>,
