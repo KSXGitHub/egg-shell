@@ -353,7 +353,7 @@ where
     ///     .data()
     ///     .loaded_line_list()
     ///     .iter()
-    ///     .map(|line| (line.text_without_eol(&grid).to_string(), line.eol()))
+    ///     .map(|line| (line.text_without_eol(&grid).to_string(), line.eol())) // TODO: remove .to_string()
     ///     .collect();
     /// assert_eq!(lines, [
     ///     ("Hello,".to_string(), EndOfLine::CRLF),
