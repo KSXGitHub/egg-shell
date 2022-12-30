@@ -14,7 +14,7 @@ const SRC_TEXT: &str = concat! {
 };
 
 fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
-    let mut grid = LazyCharGrid::from_str(SRC_TEXT);
+    let grid = LazyCharGrid::from_str(SRC_TEXT);
     let first_line = grid
         .load_line()
         .expect("load a line")
