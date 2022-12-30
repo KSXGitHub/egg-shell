@@ -24,7 +24,7 @@ impl<'a, IterError, CharIter> CharAt<'a> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
+    type Char = CharCell<char>;
     type Error = CharAtError<IterError>;
 
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError<IterError>> {

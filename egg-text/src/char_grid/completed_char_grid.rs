@@ -37,7 +37,7 @@ pub enum CharAtError {
 }
 
 impl<'a> CharAt<'a> for CompletedCharGrid {
-    type Char = CharCell<char>; // TODO: change this to CharCell<CharOrEol>
+    type Char = CharCell<char>;
     type Error = CharAtError;
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
