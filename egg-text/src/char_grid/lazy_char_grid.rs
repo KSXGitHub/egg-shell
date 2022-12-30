@@ -353,12 +353,12 @@ where
     ///     .data()
     ///     .loaded_line_list()
     ///     .iter()
-    ///     .map(|line| (line.text_without_eol(&grid), line.eol()))
+    ///     .map(|line| (line.text_without_eol(&grid).to_string(), line.eol()))
     ///     .collect();
     /// assert_eq!(lines, [
-    ///     ("Hello,", EndOfLine::CRLF),
-    ///     ("I ❤️ Rust 🦀!!", EndOfLine::LF),
-    ///     ("And I program in it.", EndOfLine::EOF),
+    ///     ("Hello,".to_string(), EndOfLine::CRLF),
+    ///     ("I ❤️ Rust 🦀!!".to_string(), EndOfLine::LF),
+    ///     ("And I program in it.".to_string(), EndOfLine::EOF),
     /// ]);
     /// ```
     pub fn new_infallible<SrcCharIntoIter>(src_char_iter: SrcCharIntoIter, capacity: usize) -> Self

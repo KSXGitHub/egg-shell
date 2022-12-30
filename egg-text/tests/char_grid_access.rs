@@ -20,7 +20,8 @@ fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
         .expect("load a line")
         .expect("there should be a line")
         .text_without_eol(&grid);
-    assert_eq!(first_line, "Hello,");
+    assert_eq!(&first_line, "Hello,");
+    drop(first_line); // TODO: remove this line
     let next_3_chars = (0..3).map(|index| match grid.load_char() {
         Err(error) => panic!("load_char fails at {index}: {error}"),
         Ok(lazy_char_grid::LoadCharReport::Char(char)) => char,
@@ -163,7 +164,7 @@ fn lazy_load_line_at() {
         CharCoord::from_pred_counts(0, 0),
     );
     assert_eq!(line.eol(), EndOfLine::LF);
-    assert_eq!(line.text_without_eol(&grid), "Hello,");
+    assert_eq!(&line.text_without_eol(&grid), "Hello,");
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
 
     eprintln!("TEST 2");
@@ -179,7 +180,7 @@ fn lazy_load_line_at() {
         CharCoord::from_pred_counts(1, 0),
     );
     assert_eq!(line.eol(), EndOfLine::CRLF);
-    assert_eq!(line.text_without_eol(&grid), "I ❤️ Rust 🦀,");
+    assert_eq!(&line.text_without_eol(&grid), "I ❤️ Rust 🦀,");
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
 
     eprintln!("TEST 4");
@@ -202,7 +203,7 @@ fn lazy_load_line_at() {
     );
     assert_eq!(line.eol(), EndOfLine::EOF);
     assert_eq!(
-        line.text_without_eol(&grid),
+        &line.text_without_eol(&grid),
         "The language is called 'egg-shell' 🥚",
     );
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
@@ -223,7 +224,7 @@ fn lazy_load_line_at() {
         CharCoord::from_pred_counts(0, 0),
     );
     assert_eq!(line.eol(), EndOfLine::LF);
-    assert_eq!(line.text_without_eol(&grid), "Hello,");
+    assert_eq!(&line.text_without_eol(&grid), "Hello,");
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
 }
 
@@ -254,7 +255,7 @@ fn lazy_try_iter_load_line() {
         dbg!(line);
         let text_without_eol = dbg!(line.text_without_eol(&grid));
         let eol = dbg!(line.eol());
-        acc += text_without_eol;
+        acc += text_without_eol.to_string().as_str();
         acc += eol.as_ref();
     }
     eprintln!("ACTUAL:\n{acc}\n");
