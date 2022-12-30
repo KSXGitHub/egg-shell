@@ -617,3 +617,17 @@ impl<'a, CharIter> Debug for InnerTextSlice<'a, CharIter> {
         self.run(|text| write!(f, "InnerTextSlice {text:?}"))
     }
 }
+
+impl<'a, CharIter> PartialEq<str> for InnerTextSlice<'a, CharIter> {
+    fn eq(&self, other: &str) -> bool {
+        self.run(|text| text == other)
+    }
+}
+
+impl<'a, CharIter> PartialEq<Self> for InnerTextSlice<'a, CharIter> {
+    fn eq(&self, other: &Self) -> bool {
+        self.run(|a| other.run(|b| a == b))
+    }
+}
+
+impl<'a, CharIter> Eq for InnerTextSlice<'a, CharIter> {}
