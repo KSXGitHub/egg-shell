@@ -8,7 +8,10 @@ pub trait GridCommon {
 
 impl<CharIter> GridCommon for LazyCharGrid<CharIter> {
     fn loaded_text(&self) -> &'_ str {
-        &self.data().loaded_text
+        unsafe {
+            let text: *const str = self.data().loaded_text.as_str();
+            &*text
+        }
     }
 }
 

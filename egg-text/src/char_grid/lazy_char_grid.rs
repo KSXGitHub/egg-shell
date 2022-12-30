@@ -47,7 +47,7 @@ pub enum CompletionStatus {
 
 /// Inner data of [`LazyCharGrid`].
 #[derive(CopyGetters, Getters)]
-struct LazyCharGridData<CharIter> {
+pub struct LazyCharGridData<CharIter> {
     /// Total number of loaded characters.
     #[getset(get_copy = "pub")]
     pub(super) loaded_char_count: usize,
@@ -122,7 +122,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     }
 
     // Acquire read of the inner data.
-    pub(super) fn data(&self) -> RwLockReadGuard<'_, LazyCharGridData<CharIter>> {
+    pub fn data(&self) -> RwLockReadGuard<'_, LazyCharGridData<CharIter>> {
         self.data.read()
     }
 
@@ -348,8 +348,9 @@ where
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
     /// let mut grid = LazyCharGrid::new_infallible(src_text.chars(), src_text.len());
     /// grid.load_all().unwrap();
-    /// assert_eq!(grid.loaded_text(), src_text);
+    /// assert_eq!(grid.data().loaded_text(), src_text);
     /// let lines: Vec<_> = grid
+    ///     .data()
     ///     .loaded_line_list()
     ///     .iter()
     ///     .map(|line| (line.text_without_eol(&grid), line.eol()))
