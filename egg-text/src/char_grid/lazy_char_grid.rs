@@ -254,7 +254,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
 
 impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid<CharIter> {
     /// Add another character to the grid.
-    pub fn load_char(&mut self) -> Result<LoadCharReport, LoadCharError<IterError>> {
+    pub fn load_char(&self) -> Result<LoadCharReport, LoadCharError<IterError>> {
         self.data.write().load_char()
     }
 
