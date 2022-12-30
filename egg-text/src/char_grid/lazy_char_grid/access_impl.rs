@@ -62,7 +62,7 @@ impl<'a, IterError, CharIter> LineAt<'a> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
-    type Line = CharGridLine;
+    type Line = CharGridLine<&'a Self>;
     type Error = LineAtError<IterError>;
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError<IterError>> {
         while self.data().loaded_line_list.len() <= ln_num.pred_count()
@@ -70,8 +70,8 @@ where
         {
             self.load_line().map_err(LineAtError::LoadCharError)?;
         }
-        if let Some(line) = self.data().loaded_line_list.get(ln_num.pred_count()) {
-            return Ok(*line);
+        if let Some((slice, eol)) = self.data().loaded_line_list.get(ln_num.pred_count()) {
+            return Ok(CharGridLine::new(*slice, *eol, self));
         }
         Err(LineAtError::OutOfBound)
     }
@@ -173,7 +173,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Item = Result<CharGridLine, LoadCharError<SrcIterError>>;
+    type Item = Result<CharGridLine<&'a LazyCharGrid<SrcIter>>, LoadCharError<SrcIterError>>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.index;
@@ -194,7 +194,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    type Line = CharGridLine;
+    type Line = CharGridLine<&'a Self>;
     type Error = LoadCharError<SrcIterError>;
     type LineResultIter = LineIter<'a, SrcIterError, SrcIter>;
 

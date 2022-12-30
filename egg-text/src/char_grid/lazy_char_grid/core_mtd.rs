@@ -107,12 +107,12 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
     /// * `Ok(Some(slice))` means that a line of `slice` has been loaded.
     /// * `Ok(None)` means that there are no more line to load (i.e. the grid is completed).
     /// * `Err(error)` means that an error occurred.
-    pub fn load_line(&self) -> Result<Option<CharGridLine>, LoadCharError<IterError>> {
+    pub fn load_line(&self) -> Result<Option<CharGridLine<&'_ Self>>, LoadCharError<IterError>> {
         loop {
             match self.load_char()? {
                 LoadCharReport::Char(_) => continue,
                 LoadCharReport::Line { def, eol, .. } => {
-                    return CharGridLine::new(def, eol).pipe(Some).pipe(Ok);
+                    return CharGridLine::new(def, eol, self).pipe(Some).pipe(Ok);
                 }
                 LoadCharReport::Document => return Ok(None),
             }
@@ -185,7 +185,7 @@ where
     ///
     /// **Example:** Load a stream of characters
     ///
-    /// ```rust
+    /// ```rust,ignore
     /// # use pretty_assertions::assert_eq;
     /// use egg_text::{LazyCharGrid, EndOfLine};
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";

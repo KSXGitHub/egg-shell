@@ -1,4 +1,4 @@
-use crate::{char_grid::CharGridLine, CharCell};
+use crate::{CharCell, EndOfLine, TextSliceDef};
 use derive_more::IsVariant;
 use getset::{CopyGetters, Getters};
 use std::fmt::Debug;
@@ -47,7 +47,7 @@ pub struct LazyCharGridData<CharIter> {
     pub(super) loaded_char_list: Vec<CharCell<char>>,
     /// List of loaded line coordinates.
     #[getset(get = "pub")]
-    pub(super) loaded_line_list: Vec<CharGridLine>,
+    pub(super) loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
     /// State of the grid.
     ///
     /// `Some` means that the grid is incomplete.

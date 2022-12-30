@@ -1,5 +1,5 @@
 use super::{LazyCharGridData, LoadingProgress};
-use crate::{char_grid::CharGridLine, text_slice::ScanText, CharCoord, EndOfLine, TextSliceDef};
+use crate::{text_slice::ScanText, CharCoord, EndOfLine, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -53,7 +53,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset
             });
-            loaded_line_list.push(CharGridLine::new(line_slice_def, EndOfLine::EOF));
+            loaded_line_list.push((line_slice_def, EndOfLine::EOF));
             loaded_char_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
@@ -81,7 +81,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset,
             });
-            loaded_line_list.push(CharGridLine::new(line_slice_def, eol));
+            loaded_line_list.push((line_slice_def, eol));
             *loaded_char_count += 1;
             *prev_non_lf = None;
             *prev_line_offset = loaded_text.len();

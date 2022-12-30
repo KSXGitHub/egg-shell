@@ -62,14 +62,17 @@ fn line_correctness() {
     let grid = grid();
     let received: Vec<_> = grid
         .iter_line()
-        .map(|line| (line.text_without_eol(&grid), line.eol()))
+        .map(|line| (line.text_without_eol().to_string(), line.eol())) // TODO: remove .to_string()
         .collect();
     dbg!(&received);
     let expected = [
-        ("Hello,", LF),
-        ("I ❤️ Rust 🦀,", CRLF),
-        ("So I use it to create a programming language,", LF),
-        ("The language is called 'egg-shell' 🥚", EOF),
+        ("Hello,".to_string(), LF),
+        ("I ❤️ Rust 🦀,".to_string(), CRLF),
+        (
+            "So I use it to create a programming language,".to_string(),
+            LF,
+        ),
+        ("The language is called 'egg-shell' 🥚".to_string(), EOF),
     ];
     assert_eq!(received, expected);
 }
