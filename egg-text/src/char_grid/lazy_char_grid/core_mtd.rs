@@ -185,18 +185,17 @@ where
     ///
     /// **Example:** Load a stream of characters
     ///
-    /// ```rust,ignore
+    /// ```rust
     /// # use pretty_assertions::assert_eq;
-    /// use egg_text::{LazyCharGrid, EndOfLine};
+    /// use egg_text::{LazyCharGrid, EndOfLine, TryIterLine};
     /// let src_text = "Hello,\r\nI ❤️ Rust 🦀!!\nAnd I program in it.";
     /// let mut grid = LazyCharGrid::new_infallible(src_text.chars(), src_text.len());
     /// grid.load_all().unwrap();
     /// assert_eq!(grid.data().loaded_text(), src_text);
     /// let lines: Vec<_> = grid
-    ///     .data()
-    ///     .loaded_line_list()
-    ///     .iter()
-    ///     .map(|line| (line.text_without_eol(&grid).to_string(), line.eol())) // TODO: remove .to_string()
+    ///     .try_iter_line()
+    ///     .map(Result::unwrap)
+    ///     .map(|line| (line.text_without_eol().to_string(), line.eol())) // TODO: remove .to_string()
     ///     .collect();
     /// assert_eq!(lines, [
     ///     ("Hello,".to_string(), EndOfLine::CRLF),
