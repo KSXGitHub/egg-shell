@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
     CharAt, CharCoord, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid, LineAt,
-    Ordinal, TryIterChar, TryIterLine,
+    LineNumber, Ordinal, TryIterChar, TryIterLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -154,7 +154,7 @@ fn lazy_line_at() {
 
     eprintln!("TEST 1");
     let line = grid
-        .line_at(Ordinal::from_pred_count(0))
+        .line_at(LineNumber::from_pred_count(0))
         .expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
@@ -167,7 +167,7 @@ fn lazy_line_at() {
 
     eprintln!("TEST 2");
     let line = grid
-        .line_at(Ordinal::from_pred_count(1))
+        .line_at(LineNumber::from_pred_count(1))
         .expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
@@ -183,7 +183,7 @@ fn lazy_line_at() {
 
     eprintln!("TEST 4");
     let line = grid
-        .line_at(Ordinal::from_pred_count(3))
+        .line_at(LineNumber::from_pred_count(3))
         .expect("line_at 4");
     assert_eq!(
         line.slice().first_char_pos(),
@@ -208,13 +208,13 @@ fn lazy_line_at() {
 
     eprintln!("TEST 5 (expect error)");
     let error = grid
-        .line_at(Ordinal::from_pred_count(4))
+        .line_at(LineNumber::from_pred_count(4))
         .expect_err("line_at 5");
     assert_eq!(error, lazy_char_grid::LineAtError::OutOfBound);
 
     eprintln!("TEST 1 (again)");
     let line = grid
-        .line_at(Ordinal::from_pred_count(0))
+        .line_at(LineNumber::from_pred_count(0))
         .expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
@@ -350,7 +350,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 1");
     let line = grid
-        .line_at(Ordinal::from_pred_count(0))
+        .line_at(LineNumber::from_pred_count(0))
         .expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
@@ -362,7 +362,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 2");
     let line = grid
-        .line_at(Ordinal::from_pred_count(1))
+        .line_at(LineNumber::from_pred_count(1))
         .expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
@@ -377,7 +377,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 4");
     let line = grid
-        .line_at(Ordinal::from_pred_count(3))
+        .line_at(LineNumber::from_pred_count(3))
         .expect("line_at 4");
     assert_eq!(
         line.slice().first_char_pos(),
@@ -401,7 +401,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 5 (expect error)");
     let error = grid
-        .line_at(Ordinal::from_pred_count(4))
+        .line_at(LineNumber::from_pred_count(4))
         .expect_err("line_at 5");
     assert_eq!(error, completed_char_grid::LineAtError::OutOfBound);
 }

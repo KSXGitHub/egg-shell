@@ -1,7 +1,8 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
     char_grid::{CharGridLine, CharGridSliceFrom},
-    CharAt, CharCell, CharCoord, CharOrEol, LineAt, Ordinal, SliceFrom, TryIterChar, TryIterLine,
+    CharAt, CharCell, CharCoord, CharOrEol, ColumnNumber, LineAt, LineNumber, Ordinal, SliceFrom,
+    TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -64,7 +65,7 @@ where
 {
     type Line = CharGridLine<&'a Self>;
     type Error = LineAtError<IterError>;
-    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError<IterError>> {
+    fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, LineAtError<IterError>> {
         while self.data().loaded_line_list.len() <= ln_num.pred_count()
             && self.completion().is_incomplete()
         {
@@ -91,8 +92,8 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    ln_index: Ordinal,
-    col_index: Ordinal,
+    ln_index: LineNumber,
+    col_index: ColumnNumber,
     grid: &'a LazyCharGrid<SrcIter>,
 }
 
@@ -117,7 +118,7 @@ where
                     column: self.col_index,
                 };
                 self.ln_index = self.ln_index.advance_by(1);
-                self.col_index = Ordinal::from_pred_count(0);
+                self.col_index = ColumnNumber::from_pred_count(0);
                 let offset_from_ln_start = line.slice().size();
                 let offset_from_doc_start = line.slice().offset() + line.slice().size();
                 let value = CharOrEol::EndOfLine(line.eol());
@@ -159,8 +160,8 @@ where
 
     fn try_iter_char(&'a self) -> Self::CharResultIter {
         CharIter {
-            ln_index: Ordinal::from_pred_count(0),
-            col_index: Ordinal::from_pred_count(0),
+            ln_index: LineNumber::from_pred_count(0),
+            col_index: ColumnNumber::from_pred_count(0),
             grid: self,
         }
     }
@@ -188,7 +189,7 @@ where
         self.index = index.advance_by(1);
         let line = self
             .grid
-            .line_at(Ordinal::from_pred_count(index.pred_count()));
+            .line_at(LineNumber::from_pred_count(index.pred_count()));
         match line {
             Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
             Err(LineAtError::OutOfBound) => None,

@@ -4,6 +4,6 @@ mod char_or_eol;
 mod eol;
 
 pub use char_cell::CharCell;
-pub use char_coord::CharCoord;
+pub use char_coord::{CharCoord, ColumnNumber, LineNumber};
 pub use char_or_eol::CharOrEol;
 pub use eol::EndOfLine;

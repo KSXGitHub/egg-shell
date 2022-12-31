@@ -1,7 +1,7 @@
 use super::{CharGridLine, CharGridSliceFrom};
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, CharOrEol, EndOfLine, LineAt, LineCount, Ordinal,
-    SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
+    CharAt, CharCell, CharCoord, CharCount, CharOrEol, ColumnNumber, EndOfLine, LineAt, LineCount,
+    LineNumber, SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -69,7 +69,7 @@ pub enum LineAtError {
 impl<'a> LineAt<'a> for CompletedCharGrid {
     type Line = CharGridLine<&'a CompletedCharGrid>;
     type Error = LineAtError;
-    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, LineAtError> {
+    fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, LineAtError> {
         self.line_list
             .get(ln_num.pred_count())
             .copied()
@@ -100,8 +100,8 @@ impl LineCount for CompletedCharGrid {
 
 /// An iterator that emits character cells from [`CompletedCharGrid`].
 pub struct CharIter<'a> {
-    ln_index: Ordinal,
-    col_index: Ordinal,
+    ln_index: LineNumber,
+    col_index: ColumnNumber,
     grid: &'a CompletedCharGrid,
 }
 
@@ -118,7 +118,7 @@ impl<'a> Iterator for CharIter<'a> {
                     column: self.col_index,
                 };
                 self.ln_index = self.ln_index.advance_by(1);
-                self.col_index = Ordinal::from_pred_count(0);
+                self.col_index = ColumnNumber::from_pred_count(0);
                 let offset_from_ln_start = line.slice().size();
                 let offset_from_doc_start = line.slice().offset() + line.slice().size();
                 let value = CharOrEol::EndOfLine(line.eol());
@@ -161,8 +161,8 @@ impl<'a> TryIterChar<'a> for CompletedCharGrid {
     type CharResultIter = CharIter<'a>;
     fn try_iter_char(&'a self) -> Self::CharResultIter {
         CharIter {
-            ln_index: Ordinal::from_pred_count(0),
-            col_index: Ordinal::from_pred_count(0),
+            ln_index: LineNumber::from_pred_count(0),
+            col_index: ColumnNumber::from_pred_count(0),
             grid: self,
         }
     }

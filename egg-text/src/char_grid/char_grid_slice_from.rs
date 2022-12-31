@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, LineAt, LineCount, Ordinal, SliceFrom};
+use crate::{CharAt, CharCoord, LineAt, LineCount, LineNumber, SliceFrom};
 use std::ops::Deref;
 
 /// Create a slice of char grid from a start coordinate.
@@ -37,7 +37,7 @@ where
     type Line = <BaseGridRef::Target as LineAt<'a>>::Line;
     type Error = <BaseGridRef::Target as LineAt<'a>>::Error;
 
-    fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
+    fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.line.advance_by(ln_num.pred_count());
         self.grid.line_at(ln_num)
     }

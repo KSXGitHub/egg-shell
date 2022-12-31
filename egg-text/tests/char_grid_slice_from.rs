@@ -1,5 +1,5 @@
 use egg_text::{
-    char_grid::lazy_char_grid, CharAt, CharCoord, LazyCharGrid, LineAt, Ordinal, SliceFrom,
+    char_grid::lazy_char_grid, CharAt, CharCoord, LazyCharGrid, LineAt, LineNumber, SliceFrom,
 };
 use pretty_assertions::assert_eq;
 
@@ -85,7 +85,7 @@ fn lazy_slice_from_line_at() {
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> line_at 1");
     let line = slice
-        .line_at(Ordinal::from_pred_count(0))
+        .line_at(LineNumber::from_pred_count(0))
         .expect("line_at 1");
 
     assert_eq!(

@@ -1,27 +1,121 @@
 use crate::Ordinal;
-use derive_more::Display;
+use derive_more::{DebugCustom, Display, From, Into};
+use std::num::NonZeroUsize;
+
+macro_rules! ln_col {
+    (
+        $(#[$top_attrs:meta])*
+        $name:ident
+
+        $(#[$from_pred_count_attrs:meta])*
+        $from_pred_count_name:ident
+
+        $(#[$value_attrs:meta])*
+        $value_name:ident
+
+        $(#[$pred_count_attrs:meta])*
+        $pred_count_name:ident
+
+        $(#[$advanced_by_attrs:meta])*
+        $advance_by_name:ident
+    ) => {
+        $(#[$top_attrs])*
+        #[derive(DebugCustom, Display, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, From, Into)]
+        #[debug(fmt = "{name} {_0}", name = stringify!($name))]
+        pub struct $name(Ordinal);
+
+        impl $name {
+            $(#[$from_pred_count_attrs])*
+            pub const fn $from_pred_count_name(pred_count: usize) -> Self {
+                $name(Ordinal::from_pred_count(pred_count))
+            }
+
+            $(#[$value_attrs])*
+            pub const fn $value_name(self) -> NonZeroUsize {
+                self.0.value()
+            }
+
+            $(#[$pred_count_attrs])*
+            pub const fn $pred_count_name(self) -> usize {
+                self.0.pred_count()
+            }
+
+            $(#[$advanced_by_attrs])*
+            pub const fn $advance_by_name(self, steps: usize) -> Self {
+                let $name(ordinal) = self;
+                $name(ordinal.advance_by(steps))
+            }
+        }
+    };
+}
+
+ln_col! {
+    /// Position of a line.
+    ///
+    /// The position of the first line is 1.
+    LineNumber
+
+    /// Create a line number from the number of preceding lines (pred_count).
+    ///
+    /// Line number is always equal to `pred_count + 1`, so `from_pred_count(0)` would return line 1.
+    from_pred_count
+
+    /// Get the value of the line number.
+    value
+
+    /// Number of preceding lines.
+    ///
+    /// This number is always equal `ln - 1`.
+    pred_count
+
+    /// Advance the line number.
+    advance_by
+}
+
+ln_col! {
+    /// Position of a character in a line.
+    ///
+    /// The position of the first character is 1.
+    ColumnNumber
+
+    /// Create a column number from the number of preceding columns (pred_count).
+    ///
+    /// Column number is always equal to `pred_count + 1`, so `from_pred_count(0)` would return column 1.
+    from_pred_count
+
+    /// Get the value of the column number.
+    value
+
+    /// Number of preceding characters in a line.
+    ///
+    /// This number is always equal `col - 1`.
+    pred_count
+
+    /// Advance the column number.
+    advance_by
+}
 
 /// Coordinate of a character.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq)]
 #[display(fmt = "{line}:{column}")]
 pub struct CharCoord {
     /// Line number of the character.
-    pub line: Ordinal,
+    pub line: LineNumber,
     /// Column number of the character.
-    pub column: Ordinal,
+    pub column: ColumnNumber,
 }
 
 impl CharCoord {
     /// Create a character coordinate.
-    pub const fn new(line: Ordinal, column: Ordinal) -> Self {
+    pub const fn new(line: LineNumber, column: ColumnNumber) -> Self {
         CharCoord { line, column }
     }
 
     /// Create a character coordinate from line and column predecessor counts.
     pub const fn from_pred_counts(ln_pred: usize, col_pred: usize) -> Self {
         Self::new(
-            Ordinal::from_pred_count(ln_pred),
-            Ordinal::from_pred_count(col_pred),
+            LineNumber::from_pred_count(ln_pred),
+            ColumnNumber::from_pred_count(col_pred),
         )
     }
 
