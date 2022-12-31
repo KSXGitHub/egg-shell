@@ -2,7 +2,7 @@ use super::GridCommon;
 use crate::{EndOfLine, TextSliceDef};
 use getset::CopyGetters;
 use std::{
-    fmt::{self, Debug, Formatter},
+    fmt::{self, Debug, Display, Formatter},
     ops::Deref,
 };
 
@@ -46,5 +46,18 @@ where
         let text = self.text_without_eol();
         let eol = self.eol;
         write!(f, "CharGridLine({text:?} {eol:?})")
+    }
+}
+
+impl<CharGridRef> Display for CharGridLine<CharGridRef>
+where
+    CharGridRef: Deref + Copy,
+    CharGridRef::Target: for<'r> GridCommon<'r>,
+    for<'r> <CharGridRef::Target as GridCommon<'r>>::Slice: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let text = self.text_without_eol();
+        let eol = self.eol;
+        write!(f, "{text}{eol}")
     }
 }
