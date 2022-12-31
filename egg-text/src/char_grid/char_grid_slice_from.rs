@@ -1,6 +1,8 @@
 use crate::{CharAt, CharCoord, LineAt, LineCount, LineNumber, SliceFrom};
 use std::ops::Deref;
 
+// TODO: this implementation is absolutely wrong, fix this
+
 /// Create a slice of char grid from a start coordinate.
 ///
 /// The resulting slice includes the start coordinate.
