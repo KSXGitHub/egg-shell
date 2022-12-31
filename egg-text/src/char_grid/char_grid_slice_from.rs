@@ -38,7 +38,7 @@ where
     type Error = <BaseGridRef::Target as LineAt<'a>>::Error;
 
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
-        let ln_num = self.start.column.advance_by(ln_num.pred_count());
+        let ln_num = self.start.line.advance_by(ln_num.pred_count());
         self.grid.line_at(ln_num)
     }
 }
