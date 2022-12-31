@@ -1,7 +1,7 @@
-use super::CharGridLine;
+use super::{CharGridLine, CharGridSliceFrom};
 use crate::{
     CharAt, CharCell, CharCoord, CharCount, CharOrEol, EndOfLine, LineAt, LineCount, Ordinal,
-    TextSliceDef, TryIterChar, TryIterLine,
+    SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -75,6 +75,14 @@ impl<'a> LineAt<'a> for CompletedCharGrid {
             .copied()
             .map(|(slice, eol)| CharGridLine::new(slice, eol, self))
             .ok_or(LineAtError::OutOfBound)
+    }
+}
+
+impl<'a> SliceFrom<'a> for CompletedCharGrid {
+    type Slice = CharGridSliceFrom<&'a CompletedCharGrid>;
+    type Error = Infallible;
+    fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
     }
 }
 

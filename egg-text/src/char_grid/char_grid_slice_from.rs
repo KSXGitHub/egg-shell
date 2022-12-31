@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, LineAt, LineCount, Ordinal};
+use crate::{CharAt, CharCoord, LineAt, LineCount, Ordinal, SliceFrom};
 use std::ops::Deref;
 
 /// Create a slice of char grid from a start coordinate.
@@ -40,6 +40,23 @@ where
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.column.advance_by(ln_num.pred_count());
         self.grid.line_at(ln_num)
+    }
+}
+
+impl<'a, BaseGridRef> SliceFrom<'a> for CharGridSliceFrom<BaseGridRef>
+where
+    BaseGridRef: Deref + 'a,
+    BaseGridRef::Target: SliceFrom<'a>,
+{
+    type Slice = <BaseGridRef::Target as SliceFrom<'a>>::Slice;
+    type Error = <BaseGridRef::Target as SliceFrom<'a>>::Error;
+
+    fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+        let start = self
+            .start
+            .advance_line(start.line.pred_count())
+            .advance_column(start.column.pred_count());
+        self.grid.slice_from(start)
     }
 }
 

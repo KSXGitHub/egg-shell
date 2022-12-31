@@ -1,11 +1,11 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
-    char_grid::CharGridLine, CharAt, CharCell, CharCoord, CharOrEol, LineAt, Ordinal, TryIterChar,
-    TryIterLine,
+    char_grid::{CharGridLine, CharGridSliceFrom},
+    CharAt, CharCell, CharCoord, CharOrEol, LineAt, Ordinal, SliceFrom, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
-use std::{cmp::Ordering, fmt::Debug};
+use std::{cmp::Ordering, convert::Infallible, fmt::Debug};
 
 /// Error type of [`CharAt`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
@@ -74,6 +74,14 @@ where
             return Ok(CharGridLine::new(*slice, *eol, self));
         }
         Err(LineAtError::OutOfBound)
+    }
+}
+
+impl<'a, SrcIter: 'a> SliceFrom<'a> for LazyCharGrid<SrcIter> {
+    type Slice = CharGridSliceFrom<&'a Self>;
+    type Error = Infallible;
+    fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
     }
 }
 

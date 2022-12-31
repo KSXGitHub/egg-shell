@@ -92,6 +92,16 @@ pub trait LineAt<'a> {
     fn line_at(&'a self, ln_num: Ordinal) -> Result<Self::Line, Self::Error>;
 }
 
+/// Get a slice from a start coordinate to the rest.
+pub trait SliceFrom<'a> {
+    /// Type of return value on success.
+    type Slice;
+    /// The associate error which is returned on failure.
+    type Error;
+    /// Get a slice from a start coordinate to the rest.
+    fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error>;
+}
+
 /// Get the number of character cells.
 pub trait CharCount {
     /// Get the number of character cells.
