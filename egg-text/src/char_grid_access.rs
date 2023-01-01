@@ -92,13 +92,13 @@ pub trait LineAt<LnNum> {
 }
 
 /// Get a slice from a start coordinate to the rest.
-pub trait SliceFrom<'a, Coord> {
+pub trait SliceFrom<Coord> {
     /// Type of return value on success.
     type Slice;
     /// The associate error which is returned on failure.
     type Error;
     /// Get a slice from a start coordinate to the rest.
-    fn slice_from(&'a self, start: Coord) -> Result<Self::Slice, Self::Error>;
+    fn slice_from(self, start: Coord) -> Result<Self::Slice, Self::Error>;
 }
 
 /// Get the number of character cells.

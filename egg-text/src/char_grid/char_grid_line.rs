@@ -79,14 +79,14 @@ where
     }
 }
 
-impl<'a, CharGridRef> SliceFrom<'a, ColumnNumber> for CharGridLine<CharGridRef>
+impl<'a, CharGridRef> SliceFrom<ColumnNumber> for &'a CharGridLine<CharGridRef>
 where
     CharGridRef: Copy + 'a,
 {
-    type Slice = CharGridSliceFrom<&'a Self, ColumnNumber>;
+    type Slice = CharGridSliceFrom<Self, ColumnNumber>;
     type Error = Infallible;
 
-    fn slice_from(&'a self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
