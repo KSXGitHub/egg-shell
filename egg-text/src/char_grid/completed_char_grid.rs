@@ -67,7 +67,7 @@ pub enum LineAtError {
 }
 
 impl<'a> LineAt<LineNumber> for &'a CompletedCharGrid {
-    type Line = CharGridLine<&'a CompletedCharGrid>;
+    type Line = CharGridLine<Self>;
     type Error = LineAtError;
     fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, LineAtError> {
         self.line_list
@@ -79,7 +79,7 @@ impl<'a> LineAt<LineNumber> for &'a CompletedCharGrid {
 }
 
 impl<'a> SliceFrom<CharCoord> for &'a CompletedCharGrid {
-    type Slice = CharGridSliceFrom<&'a CompletedCharGrid, CharCoord>;
+    type Slice = CharGridSliceFrom<Self, CharCoord>;
     type Error = Infallible;
     fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
@@ -191,7 +191,7 @@ impl<'a> Iterator for LineIter<'a> {
 }
 
 impl<'a> TryIterLine for &'a CompletedCharGrid {
-    type Line = CharGridLine<&'a CompletedCharGrid>;
+    type Line = CharGridLine<Self>;
     type Error = Infallible;
     type LineResultIter = LineIter<'a>;
     fn try_iter_line(self) -> Self::LineResultIter {
