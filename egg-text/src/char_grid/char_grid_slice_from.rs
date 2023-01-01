@@ -7,14 +7,14 @@ use std::ops::Deref;
 ///
 /// The resulting slice includes the start coordinate.
 #[derive(Debug, Clone, Copy)]
-pub struct CharGridSliceFrom<BaseGridRef> {
+pub struct CharGridSliceFrom<BaseGridRef, Coord> {
     /// Reference grid.
     pub grid: BaseGridRef,
     /// Start coordinate.
-    pub start: CharCoord,
+    pub start: Coord,
 }
 
-impl<'a, BaseGridRef> CharAt<'a, CharCoord> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> CharAt<'a, CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
     BaseGridRef: Deref + 'a,
     BaseGridRef::Target: CharAt<'a, CharCoord>,
@@ -31,7 +31,7 @@ where
     }
 }
 
-impl<'a, BaseGridRef> LineAt<'a, LineNumber> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> LineAt<'a, LineNumber> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
     BaseGridRef: Deref + 'a,
     BaseGridRef::Target: LineAt<'a, LineNumber>,
@@ -45,7 +45,7 @@ where
     }
 }
 
-impl<'a, BaseGridRef> SliceFrom<'a, CharCoord> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> SliceFrom<'a, CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
     BaseGridRef: Deref + 'a,
     BaseGridRef::Target: SliceFrom<'a, CharCoord>,
@@ -62,7 +62,7 @@ where
     }
 }
 
-impl<BaseGridRef> LineCount for CharGridSliceFrom<BaseGridRef>
+impl<BaseGridRef> LineCount for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
     BaseGridRef: Deref,
     BaseGridRef::Target: LineCount,
