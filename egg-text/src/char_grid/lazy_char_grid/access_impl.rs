@@ -59,13 +59,13 @@ pub enum LineAtError<IterError> {
     OutOfBound,
 }
 
-impl<'a, IterError, CharIter> LineAt<'a, LineNumber> for LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> LineAt<LineNumber> for &'a LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
-    type Line = CharGridLine<&'a Self>;
+    type Line = CharGridLine<Self>;
     type Error = LineAtError<IterError>;
-    fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, LineAtError<IterError>> {
+    fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, LineAtError<IterError>> {
         while self.data().loaded_line_list.len() <= ln_num.pred_count()
             && self.completion().is_incomplete()
         {
