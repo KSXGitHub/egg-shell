@@ -45,13 +45,13 @@ where
     }
 }
 
-impl<'a, BaseGridRef> SliceFrom<'a> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> SliceFrom<'a, CharCoord> for CharGridSliceFrom<BaseGridRef>
 where
     BaseGridRef: Deref + 'a,
-    BaseGridRef::Target: SliceFrom<'a>,
+    BaseGridRef::Target: SliceFrom<'a, CharCoord>,
 {
-    type Slice = <BaseGridRef::Target as SliceFrom<'a>>::Slice;
-    type Error = <BaseGridRef::Target as SliceFrom<'a>>::Error;
+    type Slice = <BaseGridRef::Target as SliceFrom<'a, CharCoord>>::Slice;
+    type Error = <BaseGridRef::Target as SliceFrom<'a, CharCoord>>::Error;
 
     fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
         let start = self

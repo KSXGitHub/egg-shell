@@ -78,7 +78,7 @@ where
     }
 }
 
-impl<'a, SrcIter: 'a> SliceFrom<'a> for LazyCharGrid<SrcIter> {
+impl<'a, SrcIter: 'a> SliceFrom<'a, CharCoord> for LazyCharGrid<SrcIter> {
     type Slice = CharGridSliceFrom<&'a Self>;
     type Error = Infallible;
     fn slice_from(&'a self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
