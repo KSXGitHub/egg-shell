@@ -14,13 +14,13 @@ pub struct CharGridSliceFrom<BaseGridRef> {
     pub start: CharCoord,
 }
 
-impl<'a, BaseGridRef> CharAt<'a> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> CharAt<'a, CharCoord> for CharGridSliceFrom<BaseGridRef>
 where
     BaseGridRef: Deref + 'a,
-    BaseGridRef::Target: CharAt<'a>,
+    BaseGridRef::Target: CharAt<'a, CharCoord>,
 {
-    type Char = <BaseGridRef::Target as CharAt<'a>>::Char;
-    type Error = <BaseGridRef::Target as CharAt<'a>>::Error;
+    type Char = <BaseGridRef::Target as CharAt<'a, CharCoord>>::Char;
+    type Error = <BaseGridRef::Target as CharAt<'a, CharCoord>>::Error;
 
     fn char_at(&'a self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
         let coord = self

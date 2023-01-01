@@ -36,7 +36,7 @@ pub enum CharAtError {
     ColumnOutOfBound,
 }
 
-impl<'a> CharAt<'a> for CompletedCharGrid {
+impl<'a> CharAt<'a, CharCoord> for CompletedCharGrid {
     type Char = CharCell<char>;
     type Error = CharAtError;
     fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {

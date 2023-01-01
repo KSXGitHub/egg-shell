@@ -21,7 +21,7 @@ pub enum CharAtError<IterError> {
     ColumnOutOfBound,
 }
 
-impl<'a, IterError, CharIter> CharAt<'a> for LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> CharAt<'a, CharCoord> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
