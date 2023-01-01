@@ -190,11 +190,11 @@ impl<'a> Iterator for LineIter<'a> {
     }
 }
 
-impl<'a> TryIterLine<'a> for CompletedCharGrid {
+impl<'a> TryIterLine for &'a CompletedCharGrid {
     type Line = CharGridLine<&'a CompletedCharGrid>;
     type Error = Infallible;
     type LineResultIter = LineIter<'a>;
-    fn try_iter_line(&'a self) -> Self::LineResultIter {
+    fn try_iter_line(self) -> Self::LineResultIter {
         LineIter {
             iter: self.line_list.iter(),
             grid: self,

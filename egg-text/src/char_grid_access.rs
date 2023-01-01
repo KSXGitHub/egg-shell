@@ -41,25 +41,25 @@ pub trait TryIterChar {
 }
 
 /// Iterate over each line.
-pub trait IterLine<'a>: TryIterLine<'a, Error = Infallible> {
+pub trait IterLine: TryIterLine<Error = Infallible> {
     /// Type of the resulting iterator.
     type LineIter: Iterator<Item = Self::Line>;
     /// Iterate over each line.
-    fn iter_line(&'a self) -> Self::LineIter;
+    fn iter_line(self) -> Self::LineIter;
 }
 
-impl<'a, Grid> IterLine<'a> for Grid
+impl<Grid> IterLine for Grid
 where
-    Grid: TryIterLine<'a, Error = Infallible>,
+    Grid: TryIterLine<Error = Infallible>,
 {
     type LineIter = iter::Map<Self::LineResultIter, IntoOk<Self::Line>>;
-    fn iter_line(&'a self) -> Self::LineIter {
+    fn iter_line(self) -> Self::LineIter {
         self.try_iter_line().map(into_ok)
     }
 }
 
 /// Iterate over each line.
-pub trait TryIterLine<'a> {
+pub trait TryIterLine {
     /// Type of item to be yielded on success.
     type Line;
     /// The associate error which is yielded on failure.
@@ -67,7 +67,7 @@ pub trait TryIterLine<'a> {
     /// Type of the resulting iterator.
     type LineResultIter: Iterator<Item = Result<Self::Line, Self::Error>>;
     /// Iterate over each line.
-    fn try_iter_line(&'a self) -> Self::LineResultIter;
+    fn try_iter_line(self) -> Self::LineResultIter;
 }
 
 /// Get a character cell by coordinate.
