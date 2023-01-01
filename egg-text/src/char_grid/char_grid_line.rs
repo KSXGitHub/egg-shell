@@ -4,7 +4,6 @@ use getset::CopyGetters;
 use std::{
     convert::Infallible,
     fmt::{self, Debug, Display, Formatter},
-    ops::Deref,
 };
 
 /// Represent a line in [`super::LazyCharGrid`] and [`super::CompletedCharGrid`].
@@ -26,10 +25,9 @@ impl<CharGridRef: Copy> CharGridLine<CharGridRef> {
     }
 
     /// Get text content of the slice without EOL.
-    pub fn text_without_eol<'a>(&'a self) -> <CharGridRef::Target as GridCommon>::Slice
+    pub fn text_without_eol(&self) -> CharGridRef::Slice
     where
-        CharGridRef: Deref,
-        CharGridRef::Target: GridCommon<'a>,
+        CharGridRef: GridCommon,
     {
         let start = self.slice.offset();
         let end = start + self.slice.size();
@@ -39,9 +37,8 @@ impl<CharGridRef: Copy> CharGridLine<CharGridRef> {
 
 impl<CharGridRef> Debug for CharGridLine<CharGridRef>
 where
-    CharGridRef: Deref + Copy,
-    CharGridRef::Target: for<'r> GridCommon<'r>,
-    for<'r> <CharGridRef::Target as GridCommon<'r>>::Slice: Debug,
+    CharGridRef: GridCommon + Copy,
+    CharGridRef::Slice: Debug,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let text = self.text_without_eol();
@@ -52,9 +49,8 @@ where
 
 impl<CharGridRef> Display for CharGridLine<CharGridRef>
 where
-    CharGridRef: Deref + Copy,
-    CharGridRef::Target: for<'r> GridCommon<'r>,
-    for<'r> <CharGridRef::Target as GridCommon<'r>>::Slice: Display,
+    CharGridRef: GridCommon + Copy,
+    CharGridRef::Slice: Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let text = self.text_without_eol();
