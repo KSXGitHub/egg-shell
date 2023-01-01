@@ -14,9 +14,9 @@ pub struct CharGridSliceFrom<BaseGridRef, Coord> {
     pub start: Coord,
 }
 
-impl<'a, BaseGridRef> CharAt<CharCoord> for &'a CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGridRef> CharAt<CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
-    BaseGridRef: CharAt<CharCoord> + Copy + 'a,
+    BaseGridRef: CharAt<CharCoord>,
 {
     type Char = BaseGridRef::Char;
     type Error = BaseGridRef::Error;
@@ -30,9 +30,9 @@ where
     }
 }
 
-impl<'a, BaseGridRef> LineAt<LineNumber> for &'a CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGridRef> LineAt<LineNumber> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
-    BaseGridRef: LineAt<LineNumber> + Copy + 'a,
+    BaseGridRef: LineAt<LineNumber>,
 {
     type Line = BaseGridRef::Line;
     type Error = BaseGridRef::Error;
@@ -43,9 +43,9 @@ where
     }
 }
 
-impl<'a, BaseGridRef> SliceFrom<CharCoord> for &'a CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGridRef> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
 where
-    BaseGridRef: SliceFrom<CharCoord> + Copy + 'a,
+    BaseGridRef: SliceFrom<CharCoord>,
 {
     type Slice = BaseGridRef::Slice;
     type Error = BaseGridRef::Error;

@@ -63,9 +63,9 @@ where
     }
 }
 
-impl<'a, CharGridRef> CharAt<ColumnNumber> for &'a CharGridLine<CharGridRef>
+impl<CharGridRef> CharAt<ColumnNumber> for CharGridLine<CharGridRef>
 where
-    CharGridRef: Copy + CharAt<CharCoord> + 'a,
+    CharGridRef: Copy + CharAt<CharCoord>,
 {
     type Char = CharGridRef::Char;
     type Error = CharGridRef::Error;
@@ -79,9 +79,9 @@ where
     }
 }
 
-impl<'a, CharGridRef> SliceFrom<ColumnNumber> for &'a CharGridLine<CharGridRef>
+impl<CharGridRef> SliceFrom<ColumnNumber> for CharGridLine<CharGridRef>
 where
-    CharGridRef: Copy + 'a,
+    CharGridRef: Copy,
 {
     type Slice = CharGridSliceFrom<Self, ColumnNumber>;
     type Error = Infallible;
