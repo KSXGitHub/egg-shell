@@ -35,8 +35,7 @@ fn lazy_slice_from_char_at() {
     eprintln!("create the slice");
     let slice = grid
         .slice_from(CharCoord::from_pred_counts(1, 3))
-        .expect("slice 2:4");
-    let slice = slice
+        .expect("slice 2:4")
         .slice_from(CharCoord::from_pred_counts(1, 2))
         .expect("slice 2:3");
 
@@ -76,8 +75,7 @@ fn lazy_slice_from_line_at() {
     eprintln!("create the slice");
     let slice = grid
         .slice_from(CharCoord::from_pred_counts(1, 3))
-        .expect("slice 2:4");
-    let slice = slice
+        .expect("slice 2:4")
         .slice_from(CharCoord::from_pred_counts(1, 2))
         .expect("slice 2:3");
 
