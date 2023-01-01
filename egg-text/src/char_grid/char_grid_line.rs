@@ -65,7 +65,7 @@ where
 
 impl<CharGridRef> CharAt<ColumnNumber> for CharGridLine<CharGridRef>
 where
-    CharGridRef: Copy + CharAt<CharCoord>,
+    CharGridRef: CharAt<CharCoord> + Copy,
 {
     type Char = CharGridRef::Char;
     type Error = CharGridRef::Error;
