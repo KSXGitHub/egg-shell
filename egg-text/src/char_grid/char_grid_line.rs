@@ -1,7 +1,8 @@
-use super::GridCommon;
-use crate::{CharAt, CharCoord, ColumnNumber, EndOfLine, TextSliceDef};
+use super::{CharGridSliceFrom, GridCommon};
+use crate::{CharAt, CharCoord, ColumnNumber, EndOfLine, SliceFrom, TextSliceDef};
 use getset::CopyGetters;
 use std::{
+    convert::Infallible,
     fmt::{self, Debug, Display, Formatter},
     ops::Deref,
 };
@@ -76,5 +77,17 @@ where
             .first_char_coord()
             .advance_column(col_num.pred_count());
         self.grid.char_at(coord)
+    }
+}
+
+impl<'a, CharGridRef> SliceFrom<'a, ColumnNumber> for CharGridLine<CharGridRef>
+where
+    CharGridRef: Copy + 'a,
+{
+    type Slice = CharGridSliceFrom<&'a Self, ColumnNumber>;
+    type Error = Infallible;
+
+    fn slice_from(&'a self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
     }
 }
