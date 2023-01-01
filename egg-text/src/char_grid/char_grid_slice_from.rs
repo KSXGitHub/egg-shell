@@ -16,7 +16,7 @@ pub struct CharGridSliceFrom<BaseGridRef, Coord> {
 
 impl<'a, BaseGridRef> CharAt<CharCoord> for &'a CharGridSliceFrom<BaseGridRef, CharCoord>
 where
-    BaseGridRef: Copy + CharAt<CharCoord> + 'a,
+    BaseGridRef: CharAt<CharCoord> + Copy + 'a,
 {
     type Char = BaseGridRef::Char;
     type Error = BaseGridRef::Error;
