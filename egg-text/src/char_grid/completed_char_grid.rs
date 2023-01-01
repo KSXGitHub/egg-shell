@@ -155,11 +155,11 @@ impl<'a> Iterator for CharIter<'a> {
     }
 }
 
-impl<'a> TryIterChar<'a> for CompletedCharGrid {
+impl<'a> TryIterChar for &'a CompletedCharGrid {
     type Char = CharCell<CharOrEol>;
     type Error = Infallible;
     type CharResultIter = CharIter<'a>;
-    fn try_iter_char(&'a self) -> Self::CharResultIter {
+    fn try_iter_char(self) -> Self::CharResultIter {
         CharIter {
             ln_index: LineNumber::from_pred_count(0),
             col_index: ColumnNumber::from_pred_count(0),

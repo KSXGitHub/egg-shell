@@ -149,7 +149,7 @@ where
     }
 }
 
-impl<'a, SrcIterError, SrcIter> TryIterChar<'a> for LazyCharGrid<SrcIter>
+impl<'a, SrcIterError, SrcIter> TryIterChar for &'a LazyCharGrid<SrcIter>
 where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
@@ -158,7 +158,7 @@ where
     type Error = LoadCharError<SrcIterError>;
     type CharResultIter = CharIter<'a, SrcIterError, SrcIter>;
 
-    fn try_iter_char(&'a self) -> Self::CharResultIter {
+    fn try_iter_char(self) -> Self::CharResultIter {
         CharIter {
             ln_index: LineNumber::from_pred_count(0),
             col_index: ColumnNumber::from_pred_count(0),

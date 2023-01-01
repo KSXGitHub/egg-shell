@@ -11,34 +11,33 @@ fn into_ok<X>(result: Result<X, Infallible>) -> X {
 }
 
 /// Iterate over each character.
-pub trait IterChar<'a>: TryIterChar<'a, Error = Infallible> {
+pub trait IterChar: TryIterChar<Error = Infallible> {
     /// Type of the resulting iterator.
-    type CharIter: IntoIterator<Item = Self::Char> + 'a;
+    type CharIter: IntoIterator<Item = Self::Char>;
     /// Iterate over each character.
-    fn iter_char(&'a self) -> Self::CharIter;
+    fn iter_char(self) -> Self::CharIter;
 }
 
-impl<'a, Grid> IterChar<'a> for Grid
+impl<Grid> IterChar for Grid
 where
-    Grid: TryIterChar<'a, Error = Infallible>,
-    Grid::Char: 'a,
+    Grid: TryIterChar<Error = Infallible>,
 {
     type CharIter = iter::Map<Self::CharResultIter, IntoOk<Self::Char>>;
-    fn iter_char(&'a self) -> Self::CharIter {
+    fn iter_char(self) -> Self::CharIter {
         self.try_iter_char().map(into_ok)
     }
 }
 
 /// Iterate over each character.
-pub trait TryIterChar<'a> {
+pub trait TryIterChar {
     /// Character type to be emitted on success.
     type Char;
     /// The associate error which is yielded on failure.
     type Error;
     /// Type of the resulting iterator.
-    type CharResultIter: Iterator<Item = Result<Self::Char, Self::Error>> + 'a;
+    type CharResultIter: Iterator<Item = Result<Self::Char, Self::Error>>;
     /// Iterate over each character.
-    fn try_iter_char(&'a self) -> Self::CharResultIter;
+    fn try_iter_char(self) -> Self::CharResultIter;
 }
 
 /// Iterate over each line.
