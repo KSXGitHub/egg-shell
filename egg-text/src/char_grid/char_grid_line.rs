@@ -1,5 +1,5 @@
 use super::GridCommon;
-use crate::{EndOfLine, TextSliceDef};
+use crate::{CharAt, CharCoord, ColumnNumber, EndOfLine, TextSliceDef};
 use getset::CopyGetters;
 use std::{
     fmt::{self, Debug, Display, Formatter},
@@ -59,5 +59,22 @@ where
         let text = self.text_without_eol();
         let eol = self.eol;
         write!(f, "{text}{eol}")
+    }
+}
+
+impl<'a, CharGridRef> CharAt<'a, ColumnNumber> for CharGridLine<CharGridRef>
+where
+    CharGridRef: Deref + Copy + 'a,
+    CharGridRef::Target: CharAt<'a, CharCoord>,
+{
+    type Char = <CharGridRef::Target as CharAt<'a, CharCoord>>::Char;
+    type Error = <CharGridRef::Target as CharAt<'a, CharCoord>>::Error;
+
+    fn char_at(&'a self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
+        let coord = self
+            .slice
+            .first_char_coord()
+            .advance_column(col_num.pred_count());
+        self.grid.char_at(coord)
     }
 }
