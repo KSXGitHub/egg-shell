@@ -45,7 +45,7 @@ where
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let text = self.text_without_eol();
         let eol = self.eol;
-        write!(f, "CharGridLine({text:?} {eol:?})")
+        write!(f, "CharGridLine {text:?} {eol:?}")
     }
 }
 
