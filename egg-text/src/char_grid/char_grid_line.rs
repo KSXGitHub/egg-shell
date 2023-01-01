@@ -63,15 +63,14 @@ where
     }
 }
 
-impl<'a, CharGridRef> CharAt<'a, ColumnNumber> for CharGridLine<CharGridRef>
+impl<'a, CharGridRef> CharAt<ColumnNumber> for &'a CharGridLine<CharGridRef>
 where
-    CharGridRef: Deref + Copy + 'a,
-    CharGridRef::Target: CharAt<'a, CharCoord>,
+    CharGridRef: Copy + CharAt<CharCoord> + 'a,
 {
-    type Char = <CharGridRef::Target as CharAt<'a, CharCoord>>::Char;
-    type Error = <CharGridRef::Target as CharAt<'a, CharCoord>>::Error;
+    type Char = CharGridRef::Char;
+    type Error = CharGridRef::Error;
 
-    fn char_at(&'a self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
+    fn char_at(self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
         let coord = self
             .slice
             .first_char_coord()

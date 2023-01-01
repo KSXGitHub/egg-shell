@@ -36,10 +36,10 @@ pub enum CharAtError {
     ColumnOutOfBound,
 }
 
-impl<'a> CharAt<'a, CharCoord> for CompletedCharGrid {
+impl<'a> CharAt<CharCoord> for &'a CompletedCharGrid {
     type Char = CharCell<char>;
     type Error = CharAtError;
-    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
+    fn char_at(self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;

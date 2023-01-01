@@ -72,13 +72,13 @@ pub trait TryIterLine<'a> {
 }
 
 /// Get a character cell by coordinate.
-pub trait CharAt<'a, Coord> {
+pub trait CharAt<Coord> {
     /// Character type to return on success.
     type Char;
     /// The associate error which is returned on failure.
     type Error;
     /// Get a character cell by coordinate.
-    fn char_at(&'a self, coord: Coord) -> Result<Self::Char, Self::Error>;
+    fn char_at(self, coord: Coord) -> Result<Self::Char, Self::Error>;
 }
 
 /// Get a line of character cells by coordinate.

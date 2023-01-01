@@ -21,14 +21,14 @@ pub enum CharAtError<IterError> {
     ColumnOutOfBound,
 }
 
-impl<'a, IterError, CharIter> CharAt<'a, CharCoord> for LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> CharAt<CharCoord> for &'a LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
     type Char = CharCell<char>;
     type Error = CharAtError<IterError>;
 
-    fn char_at(&'a self, coord: CharCoord) -> Result<CharCell<char>, CharAtError<IterError>> {
+    fn char_at(self, coord: CharCoord) -> Result<CharCell<char>, CharAtError<IterError>> {
         let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
