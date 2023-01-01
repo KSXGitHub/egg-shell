@@ -7,19 +7,19 @@ use std::ops::Deref;
 ///
 /// The resulting slice includes the start coordinate.
 #[derive(Debug, Clone, Copy)]
-pub struct CharGridSliceFrom<BaseGridRef, Coord> {
+pub struct CharGridSliceFrom<BaseGrid, Coord> {
     /// Reference grid.
-    pub grid: BaseGridRef,
+    pub grid: BaseGrid,
     /// Start coordinate.
     pub start: Coord,
 }
 
-impl<BaseGridRef> CharAt<CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGridRef: CharAt<CharCoord>,
+    BaseGrid: CharAt<CharCoord>,
 {
-    type Char = BaseGridRef::Char;
-    type Error = BaseGridRef::Error;
+    type Char = BaseGrid::Char;
+    type Error = BaseGrid::Error;
 
     fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
         let coord = self
@@ -30,12 +30,12 @@ where
     }
 }
 
-impl<BaseGridRef> LineAt<LineNumber> for CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGrid> LineAt<LineNumber> for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGridRef: LineAt<LineNumber>,
+    BaseGrid: LineAt<LineNumber>,
 {
-    type Line = BaseGridRef::Line;
-    type Error = BaseGridRef::Error;
+    type Line = BaseGrid::Line;
+    type Error = BaseGrid::Error;
 
     fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.line.advance_by(ln_num.pred_count());
@@ -43,12 +43,12 @@ where
     }
 }
 
-impl<BaseGridRef> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGridRef: SliceFrom<CharCoord>,
+    BaseGrid: SliceFrom<CharCoord>,
 {
-    type Slice = BaseGridRef::Slice;
-    type Error = BaseGridRef::Error;
+    type Slice = BaseGrid::Slice;
+    type Error = BaseGrid::Error;
 
     fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
         let start = self
@@ -59,10 +59,10 @@ where
     }
 }
 
-impl<BaseGridRef> LineCount for CharGridSliceFrom<BaseGridRef, CharCoord>
+impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGridRef: Deref,
-    BaseGridRef::Target: LineCount,
+    BaseGrid: Deref,
+    BaseGrid::Target: LineCount,
 {
     fn line_count(&self) -> usize {
         let total = self.grid.line_count();
