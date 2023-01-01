@@ -31,13 +31,13 @@ where
     }
 }
 
-impl<'a, BaseGridRef> LineAt<'a> for CharGridSliceFrom<BaseGridRef>
+impl<'a, BaseGridRef> LineAt<'a, LineNumber> for CharGridSliceFrom<BaseGridRef>
 where
     BaseGridRef: Deref + 'a,
-    BaseGridRef::Target: LineAt<'a>,
+    BaseGridRef::Target: LineAt<'a, LineNumber>,
 {
-    type Line = <BaseGridRef::Target as LineAt<'a>>::Line;
-    type Error = <BaseGridRef::Target as LineAt<'a>>::Error;
+    type Line = <BaseGridRef::Target as LineAt<'a, LineNumber>>::Line;
+    type Error = <BaseGridRef::Target as LineAt<'a, LineNumber>>::Error;
 
     fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.line.advance_by(ln_num.pred_count());

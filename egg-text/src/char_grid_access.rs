@@ -1,4 +1,4 @@
-use crate::{CharCoord, LineNumber};
+use crate::CharCoord;
 use std::{convert::Infallible, iter};
 
 fn from_infallible<X>(infallible: Infallible) -> X {
@@ -83,13 +83,13 @@ pub trait CharAt<'a, Coord> {
 }
 
 /// Get a line of character cells by coordinate.
-pub trait LineAt<'a> {
+pub trait LineAt<'a, LnNum> {
     /// Type of return value on success.
     type Line;
     /// The associate error which is returned on failure.
     type Error;
     /// Get a line of character cells by coordinate.
-    fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, Self::Error>;
+    fn line_at(&'a self, ln_num: LnNum) -> Result<Self::Line, Self::Error>;
 }
 
 /// Get a slice from a start coordinate to the rest.

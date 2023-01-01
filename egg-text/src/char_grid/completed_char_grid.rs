@@ -66,7 +66,7 @@ pub enum LineAtError {
     OutOfBound,
 }
 
-impl<'a> LineAt<'a> for CompletedCharGrid {
+impl<'a> LineAt<'a, LineNumber> for CompletedCharGrid {
     type Line = CharGridLine<&'a CompletedCharGrid>;
     type Error = LineAtError;
     fn line_at(&'a self, ln_num: LineNumber) -> Result<Self::Line, LineAtError> {

@@ -59,7 +59,7 @@ pub enum LineAtError<IterError> {
     OutOfBound,
 }
 
-impl<'a, IterError, CharIter> LineAt<'a> for LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> LineAt<'a, LineNumber> for LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
