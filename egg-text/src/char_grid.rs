@@ -10,3 +10,4 @@ pub use char_grid_line::*;
 pub use char_grid_slice_from::*;
 pub use completed_char_grid::CompletedCharGrid;
 pub use lazy_char_grid::LazyCharGrid;
+pub use prepend_line::PrependLine;
