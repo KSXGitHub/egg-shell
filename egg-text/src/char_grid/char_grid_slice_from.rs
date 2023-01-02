@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, LineAt, LineCount, LineNumber, SliceFrom};
+use crate::{CharAt, CharCoord, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
 use std::ops::Deref;
 
 // TODO: this implementation is absolutely wrong, fix this
@@ -12,6 +12,32 @@ pub struct CharGridSliceFrom<BaseGrid, Coord> {
     pub grid: BaseGrid,
     /// Start coordinate.
     pub start: Coord,
+}
+
+impl<BaseGrid> CharAt<ColumnNumber> for CharGridSliceFrom<BaseGrid, ColumnNumber>
+where
+    BaseGrid: CharAt<ColumnNumber>,
+{
+    type Char = BaseGrid::Char;
+    type Error = BaseGrid::Error;
+
+    fn char_at(self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
+        let col_num = self.start.advance_by(col_num.pred_count());
+        self.grid.char_at(col_num)
+    }
+}
+
+impl<BaseGrid> SliceFrom<ColumnNumber> for CharGridSliceFrom<BaseGrid, ColumnNumber>
+where
+    BaseGrid: SliceFrom<ColumnNumber>,
+{
+    type Slice = BaseGrid::Slice;
+    type Error = BaseGrid::Error;
+
+    fn slice_from(self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
+        let start = self.start.advance_by(start.pred_count());
+        self.grid.slice_from(start)
+    }
 }
 
 impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord>
