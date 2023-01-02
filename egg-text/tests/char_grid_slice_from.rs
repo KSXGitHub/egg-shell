@@ -62,10 +62,7 @@ fn lazy_slice_from_char_at() {
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
 
     assert_eq!(char.value(), &'a');
-    assert_eq!(
-        char.coord(),
-        CharCoord::from_pred_counts(1 + 1 + 1, 2 + 3 + 4),
-    );
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1 + 1, 2 + 3));
 }
 
 #[test]

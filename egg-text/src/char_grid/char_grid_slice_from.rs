@@ -58,10 +58,10 @@ where
     type Error = BaseGrid::Error;
 
     fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
-        let coord = self
-            .start
-            .advance_line(coord.line.pred_count())
-            .advance_column(coord.column.pred_count());
+        let coord = match coord.line.pred_count() {
+            0 => self.start.advance_column(coord.column.pred_count()),
+            n => self.start.advance_line(n),
+        };
         self.grid.char_at(coord)
     }
 }
