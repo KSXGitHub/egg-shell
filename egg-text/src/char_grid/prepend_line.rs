@@ -1,5 +1,7 @@
-use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber};
+use super::CharGridSliceFrom;
+use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
 use derive_more::{Display, Error};
+use std::convert::Infallible;
 
 /// Add a line to before a grid.
 #[derive(Debug, Clone, Copy)]
@@ -49,6 +51,14 @@ where
             None => Ok(self.head),
             Some(tail_ln_num) => self.tail.line_at(tail_ln_num),
         }
+    }
+}
+
+impl<Head, Tail> SliceFrom<CharCoord> for PrependLine<Head, Tail> {
+    type Slice = CharGridSliceFrom<Self, CharCoord>;
+    type Error = Infallible;
+    fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
     }
 }
 
