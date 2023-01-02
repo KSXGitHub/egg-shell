@@ -1,5 +1,4 @@
 use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
-use std::ops::Deref;
 
 // TODO: this implementation is absolutely wrong, fix this
 
@@ -98,8 +97,7 @@ where
 
 impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGrid: Deref,
-    BaseGrid::Target: LineCount,
+    BaseGrid: LineCount,
 {
     fn line_count(&self) -> usize {
         let total = self.grid.line_count();
