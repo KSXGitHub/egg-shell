@@ -51,8 +51,8 @@ fn lazy_slice_from_char_at() {
         "Hello,\nI ❤️ Rust 🦀,\r\nSo I use it to create a programming language,\n",
     );
 
-    assert_eq!(char.value(), &'u');
-    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1, 2 + 3));
+    assert_eq!(char.value(), &'I');
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1, 3));
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 2:5");
     let char = slice
@@ -61,8 +61,8 @@ fn lazy_slice_from_char_at() {
 
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
 
-    assert_eq!(char.value(), &'a');
-    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1 + 1, 2 + 3));
+    assert_eq!(char.value(), &' ');
+    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1 + 1, 3));
 }
 
 #[test]

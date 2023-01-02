@@ -1,6 +1,5 @@
 use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
-
-// TODO: this implementation is absolutely wrong, fix this
+use std::convert::Infallible;
 
 /// Create a slice of char grid from a start coordinate.
 ///
@@ -142,19 +141,11 @@ where
     }
 }
 
-impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord>
-where
-    BaseGrid: SliceFrom<CharCoord>,
-{
-    type Slice = BaseGrid::Slice;
-    type Error = BaseGrid::Error;
-
+impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord> {
+    type Slice = CharGridSliceFrom<Self, CharCoord>;
+    type Error = Infallible;
     fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
-        let start = self
-            .start
-            .advance_line(start.line.pred_count())
-            .advance_column(start.column.pred_count());
-        self.grid.slice_from(start)
+        Ok(CharGridSliceFrom { grid: self, start })
     }
 }
 
