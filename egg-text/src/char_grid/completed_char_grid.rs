@@ -78,6 +78,14 @@ impl<'a> LineAt<LineNumber> for &'a CompletedCharGrid {
     }
 }
 
+impl<'a> SliceFrom<LineNumber> for &'a CompletedCharGrid {
+    type Slice = CharGridSliceFrom<Self, LineNumber>;
+    type Error = Infallible;
+    fn slice_from(self, start: LineNumber) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
+
 impl<'a> SliceFrom<CharCoord> for &'a CompletedCharGrid {
     type Slice = CharGridSliceFrom<Self, CharCoord>;
     type Error = Infallible;

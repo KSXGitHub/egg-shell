@@ -78,6 +78,14 @@ where
     }
 }
 
+impl<'a, SrcIter: 'a> SliceFrom<LineNumber> for &'a LazyCharGrid<SrcIter> {
+    type Slice = CharGridSliceFrom<Self, LineNumber>;
+    type Error = Infallible;
+    fn slice_from(self, start: LineNumber) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
+
 impl<'a, SrcIter: 'a> SliceFrom<CharCoord> for &'a LazyCharGrid<SrcIter> {
     type Slice = CharGridSliceFrom<Self, CharCoord>;
     type Error = Infallible;
