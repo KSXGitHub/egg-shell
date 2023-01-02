@@ -18,6 +18,9 @@ macro_rules! ln_col {
 
         $(#[$advanced_by_attrs:meta])*
         $advance_by_name:ident
+
+        $(#[$try_retreat_by_attrs:meta])*
+        $try_retreat_by_name:ident
     ) => {
         $(#[$top_attrs])*
         #[derive(DebugCustom, Display, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, From, Into)]
@@ -45,6 +48,11 @@ macro_rules! ln_col {
                 let $name(ordinal) = self;
                 $name(ordinal.advance_by(steps))
             }
+
+            $(#[$try_retreat_by_attrs])*
+            pub fn $try_retreat_by_name(self, steps: usize) -> Option<Self> {
+                self.0.try_retreat_by(steps).map($name)
+            }
         }
     };
 }
@@ -70,6 +78,11 @@ ln_col! {
 
     /// Advance the line number.
     advance_by
+
+    /// Try retreat the line number.
+    ///
+    /// Return `None` if overflow occurred.
+    try_retreat_by
 }
 
 ln_col! {
@@ -93,6 +106,11 @@ ln_col! {
 
     /// Advance the column number.
     advance_by
+
+    /// Try retreat the line number.
+    ///
+    /// Return `None` if overflow occurred.
+    try_retreat_by
 }
 
 /// Coordinate of a character.
