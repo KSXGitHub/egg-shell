@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
+use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
 use std::ops::Deref;
 
 // TODO: this implementation is absolutely wrong, fix this
@@ -37,6 +37,17 @@ where
     fn slice_from(self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
         let start = self.start.advance_by(start.pred_count());
         self.grid.slice_from(start)
+    }
+}
+
+impl<BaseGrid> CharCount for CharGridSliceFrom<BaseGrid, ColumnNumber>
+where
+    BaseGrid: CharCount,
+{
+    fn char_count(&self) -> usize {
+        let total = self.grid.char_count();
+        let skipped = self.start.pred_count();
+        total - skipped
     }
 }
 
