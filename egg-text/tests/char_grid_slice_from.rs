@@ -1,3 +1,5 @@
+#![allow(clippy::identity_op)] // allow expressing 0 + n
+
 use egg_text::{
     char_grid::lazy_char_grid, CharAt, CharCoord, LazyCharGrid, LineAt, LineNumber, SliceFrom,
 };
@@ -51,8 +53,18 @@ fn lazy_slice_from_char_at() {
         "Hello,\nI ❤️ Rust 🦀,\r\nSo I use it to create a programming language,\n",
     );
 
-    assert_eq!(char.value(), &'I');
-    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1, 3));
+    let expected_coord = CharCoord::from_pred_counts(1 + 1 + 0, 1 + 2 + 0);
+    assert_eq!(
+        *char.value(),
+        SRC_TEXT
+            .lines()
+            .nth(expected_coord.line.pred_count())
+            .unwrap()
+            .chars()
+            .nth(expected_coord.column.pred_count())
+            .unwrap(),
+    );
+    assert_eq!(char.coord(), expected_coord);
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 2:5");
     let char = slice
@@ -61,8 +73,18 @@ fn lazy_slice_from_char_at() {
 
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
 
-    assert_eq!(char.value(), &' ');
-    assert_eq!(char.coord(), CharCoord::from_pred_counts(1 + 1 + 1, 3));
+    let expected_coord = CharCoord::from_pred_counts(1 + 1 + 1, 0 + 0 + 3);
+    assert_eq!(
+        *char.value(),
+        SRC_TEXT
+            .lines()
+            .nth(expected_coord.line.pred_count())
+            .unwrap()
+            .chars()
+            .nth(expected_coord.column.pred_count())
+            .unwrap(),
+    );
+    assert_eq!(char.coord(), expected_coord);
 }
 
 #[test]
