@@ -31,7 +31,7 @@ fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
 }
 
 #[test]
-fn lazy_slice_from_char_at() {
+fn lazy_slice_from_char_at_char_coord() {
     let grid = partially_loaded_grid();
 
     eprintln!("create the slice");
@@ -88,7 +88,7 @@ fn lazy_slice_from_char_at() {
 }
 
 #[test]
-fn lazy_slice_from_line_at() {
+fn lazy_slice_from_line_at_ln_num() {
     let grid = partially_loaded_grid();
 
     eprintln!("create the slice");
