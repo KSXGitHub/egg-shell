@@ -60,7 +60,7 @@ where
     fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
         let coord = match coord.line.pred_count() {
             0 => self.start.advance_column(coord.column.pred_count()),
-            n => self.start.advance_line(n),
+            _ => self.start.advance_line(coord.line.pred_count()),
         };
         self.grid.char_at(coord)
     }
