@@ -1,8 +1,8 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
     char_grid::{CharGridLine, CharGridSliceFrom},
-    CharAt, CharCell, CharCoord, CharOrEol, ColumnNumber, LineAt, LineNumber, Ordinal, SliceFrom,
-    TryIterChar, TryIterLine,
+    CharAt, CharCell, CharCoord, CharOrEol, ColNum, LineAt, LnNum, Ordinal, SliceFrom, TryIterChar,
+    TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -59,13 +59,13 @@ pub enum LineAtError<IterError> {
     OutOfBound,
 }
 
-impl<'a, IterError, CharIter> LineAt<LineNumber> for &'a LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> LineAt<LnNum> for &'a LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>> + 'a,
 {
     type Line = CharGridLine<Self>;
     type Error = LineAtError<IterError>;
-    fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, LineAtError<IterError>> {
+    fn line_at(self, ln_num: LnNum) -> Result<Self::Line, LineAtError<IterError>> {
         while self.data().loaded_line_list.len() <= ln_num.pred_count()
             && self.completion().is_incomplete()
         {
@@ -78,10 +78,10 @@ where
     }
 }
 
-impl<'a, SrcIter: 'a> SliceFrom<LineNumber> for &'a LazyCharGrid<SrcIter> {
-    type Slice = CharGridSliceFrom<Self, LineNumber>;
+impl<'a, SrcIter: 'a> SliceFrom<LnNum> for &'a LazyCharGrid<SrcIter> {
+    type Slice = CharGridSliceFrom<Self, LnNum>;
     type Error = Infallible;
-    fn slice_from(self, start: LineNumber) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnNum) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
@@ -100,8 +100,8 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    ln_index: LineNumber,
-    col_index: ColumnNumber,
+    ln_index: LnNum,
+    col_index: ColNum,
     grid: &'a LazyCharGrid<SrcIter>,
 }
 
@@ -126,7 +126,7 @@ where
                     column: self.col_index,
                 };
                 self.ln_index = self.ln_index.advance_by(1);
-                self.col_index = ColumnNumber::from_pred_count(0);
+                self.col_index = ColNum::from_pred_count(0);
                 let offset_from_ln_start = line.slice().size();
                 let offset_from_doc_start = line.slice().offset() + line.slice().size();
                 let value = CharOrEol::EndOfLine(line.eol());
@@ -168,8 +168,8 @@ where
 
     fn try_iter_char(self) -> Self::CharResultIter {
         CharIter {
-            ln_index: LineNumber::from_pred_count(0),
-            col_index: ColumnNumber::from_pred_count(0),
+            ln_index: LnNum::from_pred_count(0),
+            col_index: ColNum::from_pred_count(0),
             grid: self,
         }
     }
@@ -197,7 +197,7 @@ where
         self.index = index.advance_by(1);
         let line = self
             .grid
-            .line_at(LineNumber::from_pred_count(index.pred_count()));
+            .line_at(LnNum::from_pred_count(index.pred_count()));
         match line {
             Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
             Err(LineAtError::OutOfBound) => None,

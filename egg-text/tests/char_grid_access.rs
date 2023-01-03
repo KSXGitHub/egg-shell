@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
     CharAt, CharCoord, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid, LineAt,
-    LineNumber, Ordinal, TryIterChar, TryIterLine,
+    LnNum, Ordinal, TryIterChar, TryIterLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -153,9 +153,7 @@ fn lazy_line_at() {
     let grid = partially_loaded_grid();
 
     eprintln!("TEST 1");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(0))
-        .expect("line_at 1");
+    let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
@@ -166,9 +164,7 @@ fn lazy_line_at() {
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
 
     eprintln!("TEST 2");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(1))
-        .expect("line_at 2");
+    let line = grid.line_at(LnNum::from_pred_count(1)).expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
         "Hello,".chars().count().pipe(Ordinal::from_pred_count),
@@ -182,9 +178,7 @@ fn lazy_line_at() {
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
 
     eprintln!("TEST 4");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(3))
-        .expect("line_at 4");
+    let line = grid.line_at(LnNum::from_pred_count(3)).expect("line_at 4");
     assert_eq!(
         line.slice().first_char_pos(),
         SRC_TEXT
@@ -208,14 +202,12 @@ fn lazy_line_at() {
 
     eprintln!("TEST 5 (expect error)");
     let error = grid
-        .line_at(LineNumber::from_pred_count(4))
+        .line_at(LnNum::from_pred_count(4))
         .expect_err("line_at 5");
     assert_eq!(error, lazy_char_grid::LineAtError::OutOfBound);
 
     eprintln!("TEST 1 (again)");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(0))
-        .expect("line_at 1");
+    let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
@@ -349,9 +341,7 @@ fn completed_line_at() {
     let grid = completed_grid();
 
     eprintln!("TEST 1");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(0))
-        .expect("line_at 1");
+    let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
     assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
@@ -361,9 +351,7 @@ fn completed_line_at() {
     assert_eq!(line.text_without_eol(), "Hello,");
 
     eprintln!("TEST 2");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(1))
-        .expect("line_at 2");
+    let line = grid.line_at(LnNum::from_pred_count(1)).expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
         "Hello,".chars().count().pipe(Ordinal::from_pred_count),
@@ -376,9 +364,7 @@ fn completed_line_at() {
     assert_eq!(line.text_without_eol(), "I ❤️ Rust 🦀,");
 
     eprintln!("TEST 4");
-    let line = grid
-        .line_at(LineNumber::from_pred_count(3))
-        .expect("line_at 4");
+    let line = grid.line_at(LnNum::from_pred_count(3)).expect("line_at 4");
     assert_eq!(
         line.slice().first_char_pos(),
         SRC_TEXT
@@ -401,7 +387,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 5 (expect error)");
     let error = grid
-        .line_at(LineNumber::from_pred_count(4))
+        .line_at(LnNum::from_pred_count(4))
         .expect_err("line_at 5");
     assert_eq!(error, completed_char_grid::LineAtError::OutOfBound);
 }

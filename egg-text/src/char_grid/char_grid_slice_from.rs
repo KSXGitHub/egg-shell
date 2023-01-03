@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, CharCount, ColumnNumber, LineAt, LineCount, LineNumber, SliceFrom};
+use crate::{CharAt, CharCoord, CharCount, ColNum, LineAt, LineCount, LnNum, SliceFrom};
 use std::convert::Infallible;
 
 /// Create a slice of char grid from a start coordinate.
@@ -12,33 +12,33 @@ pub struct CharGridSliceFrom<BaseGrid, Coord> {
     pub start: Coord,
 }
 
-impl<BaseGrid> CharAt<ColumnNumber> for CharGridSliceFrom<BaseGrid, ColumnNumber>
+impl<BaseGrid> CharAt<ColNum> for CharGridSliceFrom<BaseGrid, ColNum>
 where
-    BaseGrid: CharAt<ColumnNumber>,
+    BaseGrid: CharAt<ColNum>,
 {
     type Char = BaseGrid::Char;
     type Error = BaseGrid::Error;
 
-    fn char_at(self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
+    fn char_at(self, col_num: ColNum) -> Result<Self::Char, Self::Error> {
         let col_num = self.start.advance_by(col_num.pred_count());
         self.grid.char_at(col_num)
     }
 }
 
-impl<BaseGrid> SliceFrom<ColumnNumber> for CharGridSliceFrom<BaseGrid, ColumnNumber>
+impl<BaseGrid> SliceFrom<ColNum> for CharGridSliceFrom<BaseGrid, ColNum>
 where
-    BaseGrid: SliceFrom<ColumnNumber>,
+    BaseGrid: SliceFrom<ColNum>,
 {
     type Slice = BaseGrid::Slice;
     type Error = BaseGrid::Error;
 
-    fn slice_from(self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: ColNum) -> Result<Self::Slice, Self::Error> {
         let start = self.start.advance_by(start.pred_count());
         self.grid.slice_from(start)
     }
 }
 
-impl<BaseGrid> CharCount for CharGridSliceFrom<BaseGrid, ColumnNumber>
+impl<BaseGrid> CharCount for CharGridSliceFrom<BaseGrid, ColNum>
 where
     BaseGrid: CharCount,
 {
@@ -49,7 +49,7 @@ where
     }
 }
 
-impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, LineNumber>
+impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, LnNum>
 where
     BaseGrid: CharAt<CharCoord>,
 {
@@ -62,33 +62,33 @@ where
     }
 }
 
-impl<BaseGrid> LineAt<LineNumber> for CharGridSliceFrom<BaseGrid, LineNumber>
+impl<BaseGrid> LineAt<LnNum> for CharGridSliceFrom<BaseGrid, LnNum>
 where
-    BaseGrid: LineAt<LineNumber>,
+    BaseGrid: LineAt<LnNum>,
 {
     type Line = BaseGrid::Line;
     type Error = BaseGrid::Error;
 
-    fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, Self::Error> {
+    fn line_at(self, ln_num: LnNum) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.advance_by(ln_num.pred_count());
         self.grid.line_at(ln_num)
     }
 }
 
-impl<BaseGrid> SliceFrom<LineNumber> for CharGridSliceFrom<BaseGrid, LineNumber>
+impl<BaseGrid> SliceFrom<LnNum> for CharGridSliceFrom<BaseGrid, LnNum>
 where
-    BaseGrid: SliceFrom<LineNumber>,
+    BaseGrid: SliceFrom<LnNum>,
 {
     type Slice = BaseGrid::Slice;
     type Error = BaseGrid::Error;
 
-    fn slice_from(self, start: LineNumber) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnNum) -> Result<Self::Slice, Self::Error> {
         let start = self.start.advance_by(start.pred_count());
         self.grid.slice_from(start)
     }
 }
 
-impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, LineNumber>
+impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, LnNum>
 where
     BaseGrid: SliceFrom<CharCoord>,
 {
@@ -101,7 +101,7 @@ where
     }
 }
 
-impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, LineNumber>
+impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, LnNum>
 where
     BaseGrid: CharCount,
 {
@@ -129,14 +129,14 @@ where
     }
 }
 
-impl<BaseGrid> LineAt<LineNumber> for CharGridSliceFrom<BaseGrid, CharCoord>
+impl<BaseGrid> LineAt<LnNum> for CharGridSliceFrom<BaseGrid, CharCoord>
 where
-    BaseGrid: LineAt<LineNumber>,
+    BaseGrid: LineAt<LnNum>,
 {
     type Line = BaseGrid::Line;
     type Error = BaseGrid::Error;
 
-    fn line_at(self, ln_num: LineNumber) -> Result<Self::Line, Self::Error> {
+    fn line_at(self, ln_num: LnNum) -> Result<Self::Line, Self::Error> {
         let ln_num = self.start.line.advance_by(ln_num.pred_count());
         self.grid.line_at(ln_num)
     }

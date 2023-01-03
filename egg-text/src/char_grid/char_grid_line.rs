@@ -1,5 +1,5 @@
 use super::{CharGridSliceFrom, GridCommon};
-use crate::{CharAt, CharCoord, ColumnNumber, EndOfLine, SliceFrom, TextSliceDef};
+use crate::{CharAt, CharCoord, ColNum, EndOfLine, SliceFrom, TextSliceDef};
 use getset::CopyGetters;
 use std::{
     convert::Infallible,
@@ -59,14 +59,14 @@ where
     }
 }
 
-impl<CharGridRef> CharAt<ColumnNumber> for CharGridLine<CharGridRef>
+impl<CharGridRef> CharAt<ColNum> for CharGridLine<CharGridRef>
 where
     CharGridRef: CharAt<CharCoord> + Copy,
 {
     type Char = CharGridRef::Char;
     type Error = CharGridRef::Error;
 
-    fn char_at(self, col_num: ColumnNumber) -> Result<Self::Char, Self::Error> {
+    fn char_at(self, col_num: ColNum) -> Result<Self::Char, Self::Error> {
         let coord = self
             .slice
             .first_char_coord()
@@ -75,14 +75,14 @@ where
     }
 }
 
-impl<CharGridRef> SliceFrom<ColumnNumber> for CharGridLine<CharGridRef>
+impl<CharGridRef> SliceFrom<ColNum> for CharGridLine<CharGridRef>
 where
     CharGridRef: Copy,
 {
-    type Slice = CharGridSliceFrom<Self, ColumnNumber>;
+    type Slice = CharGridSliceFrom<Self, ColNum>;
     type Error = Infallible;
 
-    fn slice_from(self, start: ColumnNumber) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: ColNum) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }

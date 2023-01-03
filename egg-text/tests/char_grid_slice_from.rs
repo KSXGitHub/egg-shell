@@ -1,7 +1,7 @@
 #![allow(clippy::identity_op)] // allow expressing 0 + n
 
 use egg_text::{
-    char_grid::lazy_char_grid, CharAt, CharCoord, LazyCharGrid, LineAt, LineNumber, SliceFrom,
+    char_grid::lazy_char_grid, CharAt, CharCoord, LazyCharGrid, LineAt, LnNum, SliceFrom,
 };
 use pretty_assertions::assert_eq;
 
@@ -118,9 +118,7 @@ fn lazy_slice_from_char_coord_line_at() {
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> line_at 1");
-    let line = slice
-        .line_at(LineNumber::from_pred_count(0))
-        .expect("line_at 1");
+    let line = slice.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
 
     assert_eq!(
         grid.data().loaded_text(),

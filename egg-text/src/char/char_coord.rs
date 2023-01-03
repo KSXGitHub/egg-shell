@@ -61,7 +61,7 @@ def_type! {
     /// Position of a line.
     ///
     /// The position of the first line is 1.
-    LineNumber
+    LnNum
 
     /// Create a line number from the number of preceding lines (pred_count).
     ///
@@ -89,7 +89,7 @@ def_type! {
     /// Position of a character in a line.
     ///
     /// The position of the first character is 1.
-    ColumnNumber
+    ColNum
 
     /// Create a column number from the number of preceding columns (pred_count).
     ///
@@ -118,22 +118,22 @@ def_type! {
 #[display(fmt = "{line}:{column}")]
 pub struct CharCoord {
     /// Line number of the character.
-    pub line: LineNumber,
+    pub line: LnNum,
     /// Column number of the character.
-    pub column: ColumnNumber,
+    pub column: ColNum,
 }
 
 impl CharCoord {
     /// Create a character coordinate.
-    pub const fn new(line: LineNumber, column: ColumnNumber) -> Self {
+    pub const fn new(line: LnNum, column: ColNum) -> Self {
         CharCoord { line, column }
     }
 
     /// Create a character coordinate from line and column predecessor counts.
     pub const fn from_pred_counts(ln_pred: usize, col_pred: usize) -> Self {
         Self::new(
-            LineNumber::from_pred_count(ln_pred),
-            ColumnNumber::from_pred_count(col_pred),
+            LnNum::from_pred_count(ln_pred),
+            ColNum::from_pred_count(col_pred),
         )
     }
 
