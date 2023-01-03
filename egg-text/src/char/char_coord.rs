@@ -149,3 +149,31 @@ impl LnCol {
         self
     }
 }
+
+def_type! {
+    /// Position of a character in a document.
+    ///
+    /// The position of the first character is 1.
+    CharPos
+
+    /// Create a character position from the number of preceding characters (pred_count).
+    ///
+    /// Character position is always equal to `pred_count + 1`, so `from_pred_count(0)` would return position 1.
+    from_pred_count
+
+    /// Get the value of the character position.
+    value
+
+    /// Number of preceding characters in a document.
+    ///
+    /// This number is always equal `pos - 1`.
+    pred_count
+
+    /// Advance the character position.
+    advance_by
+
+    /// Try retreat the character position.
+    ///
+    /// Return `None` if overflow occurred.
+    try_retreat_by
+}
