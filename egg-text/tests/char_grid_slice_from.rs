@@ -32,6 +32,22 @@ fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
 
 #[test]
 fn lazy_slice_from_char_coord_char_at() {
+    macro_rules! test_char {
+        ($char:expr, $expected_coord:expr) => {{
+            assert_eq!(
+                *$char.value(),
+                SRC_TEXT
+                    .lines()
+                    .nth($expected_coord.line.pred_count())
+                    .unwrap()
+                    .chars()
+                    .nth($expected_coord.column.pred_count())
+                    .unwrap(),
+            );
+            assert_eq!($char.coord(), $expected_coord);
+        }};
+    }
+
     let grid = partially_loaded_grid();
 
     eprintln!("create the slice");
@@ -58,17 +74,7 @@ fn lazy_slice_from_char_coord_char_at() {
         start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
         0 + start2.column.pred_count() + coord.column.pred_count(),
     );
-    assert_eq!(
-        *char.value(),
-        SRC_TEXT
-            .lines()
-            .nth(expected_coord.line.pred_count())
-            .unwrap()
-            .chars()
-            .nth(expected_coord.column.pred_count())
-            .unwrap(),
-    );
-    assert_eq!(char.coord(), expected_coord);
+    test_char!(char, expected_coord);
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 1:7");
     let coord = CharCoord::from_pred_counts(0, 6);
@@ -83,17 +89,7 @@ fn lazy_slice_from_char_coord_char_at() {
         start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
         0 + start2.column.pred_count() + coord.column.pred_count(),
     );
-    assert_eq!(
-        *char.value(),
-        SRC_TEXT
-            .lines()
-            .nth(expected_coord.line.pred_count())
-            .unwrap()
-            .chars()
-            .nth(expected_coord.column.pred_count())
-            .unwrap(),
-    );
-    assert_eq!(char.coord(), expected_coord);
+    test_char!(char, expected_coord);
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 2:5");
     let coord = CharCoord::from_pred_counts(1, 4);
@@ -105,17 +101,7 @@ fn lazy_slice_from_char_coord_char_at() {
         start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
         0 + 0 + coord.column.pred_count(),
     );
-    assert_eq!(
-        *char.value(),
-        SRC_TEXT
-            .lines()
-            .nth(expected_coord.line.pred_count())
-            .unwrap()
-            .chars()
-            .nth(expected_coord.column.pred_count())
-            .unwrap(),
-    );
-    assert_eq!(char.coord(), expected_coord);
+    test_char!(char, expected_coord);
 }
 
 #[test]
