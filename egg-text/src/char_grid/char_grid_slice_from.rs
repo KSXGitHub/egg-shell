@@ -122,7 +122,7 @@ where
     fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
         let CharGridSliceFrom { grid, start } = self;
         let coord = match coord.line.pred_count() {
-            0 => coord.advance_column(start.column.pred_count()),
+            0 => start.advance_column(coord.column.pred_count()),
             _ => coord.advance_line(start.line.pred_count()),
         };
         grid.char_at(coord)
