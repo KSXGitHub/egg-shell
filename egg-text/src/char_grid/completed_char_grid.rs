@@ -27,7 +27,7 @@ pub struct CompletedCharGrid {
 
 /// Error type of [`CharAt`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
-pub enum CharAtError {
+pub enum CharAtLnColError {
     /// The source iterator doesn't have enough lines to match the requested line index.
     #[display(fmt = "Line does not exist")]
     LineOutOfBound,
@@ -38,13 +38,13 @@ pub enum CharAtError {
 
 impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
     type Char = CharCell<char>;
-    type Error = CharAtError;
-    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtError> {
+    type Error = CharAtLnColError;
+    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtLnColError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
-            LineAtError::OutOfBound => CharAtError::LineOutOfBound,
+            LineAtError::OutOfBound => CharAtLnColError::LineOutOfBound,
         })?;
         if coord.column.pred_count() >= line.slice().char_count() {
-            return Err(CharAtError::ColumnOutOfBound);
+            return Err(CharAtLnColError::ColumnOutOfBound);
         }
         let char_pos = line
             .slice()

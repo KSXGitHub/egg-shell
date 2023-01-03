@@ -10,7 +10,7 @@ use std::{cmp::Ordering, convert::Infallible, fmt::Debug};
 
 /// Error type of [`CharAt`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
-pub enum CharAtError<IterError> {
+pub enum CharAtLnColError<IterError> {
     /// An error occurred while loading a character.
     LoadCharError(LoadCharError<IterError>),
     /// The source iterator doesn't have enough lines to match the requested line index.
@@ -26,15 +26,15 @@ where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
     type Char = CharCell<char>;
-    type Error = CharAtError<IterError>;
+    type Error = CharAtLnColError<IterError>;
 
-    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtError<IterError>> {
+    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtLnColError<IterError>> {
         let line = self.line_at(coord.line).map_err(|error| match error {
-            LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
-            LineAtError::OutOfBound => CharAtError::LineOutOfBound,
+            LineAtError::LoadCharError(error) => CharAtLnColError::LoadCharError(error),
+            LineAtError::OutOfBound => CharAtLnColError::LineOutOfBound,
         })?;
         if coord.column.pred_count() >= line.slice().char_count() {
-            return Err(CharAtError::ColumnOutOfBound);
+            return Err(CharAtLnColError::ColumnOutOfBound);
         }
         let char_pos = line
             .slice()

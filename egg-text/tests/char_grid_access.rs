@@ -63,7 +63,7 @@ fn lazy_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(0, 6))
         .expect_err("char_at 1:7");
-    assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(error, lazy_char_grid::CharAtLnColError::ColumnOutOfBound);
 
     eprintln!("TEST 2:1");
     let char = grid
@@ -93,7 +93,7 @@ fn lazy_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(1, 12))
         .expect_err("char_at 2:13");
-    assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(error, lazy_char_grid::CharAtLnColError::ColumnOutOfBound);
 
     eprintln!("TEST 4:1");
     let char = grid
@@ -129,13 +129,13 @@ fn lazy_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(3, 36))
         .expect_err("char_at 4:37");
-    assert_eq!(error, lazy_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(error, lazy_char_grid::CharAtLnColError::ColumnOutOfBound);
 
     eprintln!("TEST 5:1 (expect error)");
     let error = grid
         .char_at(LnCol::from_pred_counts(4, 0))
         .expect_err("char_at 5:1");
-    assert_eq!(error, lazy_char_grid::CharAtError::LineOutOfBound);
+    assert_eq!(error, lazy_char_grid::CharAtLnColError::LineOutOfBound);
 
     eprintln!("TEST 1:1 (again)");
     let char = grid
@@ -293,7 +293,10 @@ fn completed_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(0, 6))
         .expect_err("char_at 1:7");
-    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(
+        error,
+        completed_char_grid::CharAtLnColError::ColumnOutOfBound
+    );
 
     eprintln!("TEST 2:1");
     let char = grid
@@ -317,7 +320,10 @@ fn completed_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(1, 12))
         .expect_err("char_at 2:13");
-    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(
+        error,
+        completed_char_grid::CharAtLnColError::ColumnOutOfBound
+    );
 
     eprintln!("TEST 4:1");
     let char = grid
@@ -341,13 +347,16 @@ fn completed_char_at() {
     let error = grid
         .char_at(LnCol::from_pred_counts(3, 36))
         .expect_err("char_at 4:37");
-    assert_eq!(error, completed_char_grid::CharAtError::ColumnOutOfBound);
+    assert_eq!(
+        error,
+        completed_char_grid::CharAtLnColError::ColumnOutOfBound
+    );
 
     eprintln!("TEST 5:1 (expect error)");
     let error = grid
         .char_at(LnCol::from_pred_counts(4, 0))
         .expect_err("char_at 5:1");
-    assert_eq!(error, completed_char_grid::CharAtError::LineOutOfBound);
+    assert_eq!(error, completed_char_grid::CharAtLnColError::LineOutOfBound);
 }
 
 #[test]
