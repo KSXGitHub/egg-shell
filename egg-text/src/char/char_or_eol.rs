@@ -16,12 +16,14 @@ impl TryFrom<CharCell<CharOrEol>> for CharCell<char> {
     fn try_from(char_cell: CharCell<CharOrEol>) -> Result<Self, Self::Error> {
         let CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,
         } = char_cell;
         value.try_into().map(|value| CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,
@@ -35,12 +37,14 @@ impl TryFrom<CharCell<CharOrEol>> for CharCell<EndOfLine> {
     fn try_from(char_cell: CharCell<CharOrEol>) -> Result<Self, Self::Error> {
         let CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,
         } = char_cell;
         value.try_into().map(|value| CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,

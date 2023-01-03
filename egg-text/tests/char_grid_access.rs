@@ -1,7 +1,7 @@
 use egg_text::{
     char_grid::{completed_char_grid, lazy_char_grid},
-    CharAt, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid, LineAt, LnCol, LnNum,
-    Ordinal, TryIterChar, TryIterLine,
+    CharAt, CharPos, CompletedCharGrid, EndOfLine, IterChar, IterLine, LazyCharGrid, LineAt, LnCol,
+    LnNum, TryIterChar, TryIterLine,
 };
 use pipe_trait::Pipe;
 use pretty_assertions::assert_eq;
@@ -154,7 +154,7 @@ fn lazy_line_at() {
 
     eprintln!("TEST 1");
     let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
-    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(line.slice().first_char_pos(), CharPos::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
         LnCol::from_pred_counts(0, 0),
@@ -167,7 +167,7 @@ fn lazy_line_at() {
     let line = grid.line_at(LnNum::from_pred_count(1)).expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
-        "Hello,".chars().count().pipe(Ordinal::from_pred_count),
+        "Hello,".chars().count().pipe(CharPos::from_pred_count),
     );
     assert_eq!(
         line.slice().first_char_coord(),
@@ -187,7 +187,7 @@ fn lazy_line_at() {
             .map(str::chars)
             .map(Iterator::count)
             .sum::<usize>()
-            .pipe(Ordinal::from_pred_count),
+            .pipe(CharPos::from_pred_count),
     );
     assert_eq!(
         line.slice().first_char_coord(),
@@ -208,7 +208,7 @@ fn lazy_line_at() {
 
     eprintln!("TEST 1 (again)");
     let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
-    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(line.slice().first_char_pos(), CharPos::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
         LnCol::from_pred_counts(0, 0),
@@ -342,7 +342,7 @@ fn completed_line_at() {
 
     eprintln!("TEST 1");
     let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
-    assert_eq!(line.slice().first_char_pos(), Ordinal::from_pred_count(0));
+    assert_eq!(line.slice().first_char_pos(), CharPos::from_pred_count(0));
     assert_eq!(
         line.slice().first_char_coord(),
         LnCol::from_pred_counts(0, 0),
@@ -354,7 +354,7 @@ fn completed_line_at() {
     let line = grid.line_at(LnNum::from_pred_count(1)).expect("line_at 2");
     assert_eq!(
         line.slice().first_char_pos(),
-        "Hello,".chars().count().pipe(Ordinal::from_pred_count),
+        "Hello,".chars().count().pipe(CharPos::from_pred_count),
     );
     assert_eq!(
         line.slice().first_char_coord(),
@@ -373,7 +373,7 @@ fn completed_line_at() {
             .map(str::chars)
             .map(Iterator::count)
             .sum::<usize>()
-            .pipe(Ordinal::from_pred_count),
+            .pipe(CharPos::from_pred_count),
     );
     assert_eq!(
         line.slice().first_char_coord(),
