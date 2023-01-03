@@ -35,25 +35,29 @@ fn lazy_slice_from_char_coord_char_at() {
     let grid = partially_loaded_grid();
 
     eprintln!("create the slice");
+    let start1 = CharCoord::from_pred_counts(1, 3);
+    let start2 = CharCoord::from_pred_counts(1, 2);
     let slice = grid
-        .slice_from(CharCoord::from_pred_counts(1, 3))
+        .slice_from(start1)
         .expect("slice 2:4")
-        .slice_from(CharCoord::from_pred_counts(1, 2))
+        .slice_from(start2)
         .expect("slice 2:3");
 
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 1:1");
-    let char = slice
-        .char_at(CharCoord::from_pred_counts(0, 0))
-        .expect("char_at 1:1");
+    let coord = CharCoord::from_pred_counts(0, 0);
+    let char = slice.char_at(coord).expect("char_at 1:1");
 
     assert_eq!(
         grid.data().loaded_text(),
         "Hello,\nI ❤️ Rust 🦀,\r\nSo I use it to create a programming language,\n",
     );
 
-    let expected_coord = CharCoord::from_pred_counts(1 + 1 + 0, 0 + 2 + 0);
+    let expected_coord = CharCoord::from_pred_counts(
+        start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
+        0 + start2.column.pred_count() + coord.column.pred_count(),
+    );
     assert_eq!(
         *char.value(),
         SRC_TEXT
@@ -67,16 +71,18 @@ fn lazy_slice_from_char_coord_char_at() {
     assert_eq!(char.coord(), expected_coord);
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 1:7");
-    let char = slice
-        .char_at(CharCoord::from_pred_counts(0, 6))
-        .expect("char_at 1:7");
+    let coord = CharCoord::from_pred_counts(0, 6);
+    let char = slice.char_at(coord).expect("char_at 1:7");
 
     assert_eq!(
         grid.data().loaded_text(),
         "Hello,\nI ❤️ Rust 🦀,\r\nSo I use it to create a programming language,\n",
     );
 
-    let expected_coord = CharCoord::from_pred_counts(1 + 1 + 0, 0 + 2 + 6);
+    let expected_coord = CharCoord::from_pred_counts(
+        start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
+        0 + start2.column.pred_count() + coord.column.pred_count(),
+    );
     assert_eq!(
         *char.value(),
         SRC_TEXT
@@ -90,13 +96,15 @@ fn lazy_slice_from_char_coord_char_at() {
     assert_eq!(char.coord(), expected_coord);
 
     eprintln!("TEST slice 2:4 -> slice 2:3 -> char_at 2:5");
-    let char = slice
-        .char_at(CharCoord::from_pred_counts(1, 4))
-        .expect("char_at 2:5");
+    let coord = CharCoord::from_pred_counts(1, 4);
+    let char = slice.char_at(coord).expect("char_at 2:5");
 
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
 
-    let expected_coord = CharCoord::from_pred_counts(1 + 1 + 1, 0 + 0 + 4);
+    let expected_coord = CharCoord::from_pred_counts(
+        start1.line.pred_count() + start2.line.pred_count() + coord.line.pred_count(),
+        0 + 0 + coord.column.pred_count(),
+    );
     assert_eq!(
         *char.value(),
         SRC_TEXT
