@@ -96,7 +96,9 @@ impl<'a> SliceFrom<LnCol> for &'a CompletedCharGrid {
 
 impl CharCount for CompletedCharGrid {
     fn char_count(&self) -> usize {
-        self.char_list().len()
+        let non_eol = self.char_list().len();
+        let eol = self.line_list.len();
+        non_eol + eol
     }
 }
 
