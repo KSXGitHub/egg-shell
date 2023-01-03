@@ -120,11 +120,12 @@ where
     type Error = BaseGrid::Error;
 
     fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
+        let CharGridSliceFrom { grid, start } = self;
         let coord = match coord.line.pred_count() {
-            0 => self.start.advance_column(coord.column.pred_count()),
-            _ => self.start.advance_line(coord.line.pred_count()),
+            0 => coord.advance_column(start.column.pred_count()),
+            _ => coord.advance_line(start.line.pred_count()),
         };
-        self.grid.char_at(coord)
+        grid.char_at(coord)
     }
 }
 
