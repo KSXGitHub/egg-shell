@@ -2,7 +2,7 @@ use crate::Ordinal;
 use derive_more::{DebugCustom, Display, From, Into};
 use std::num::NonZeroUsize;
 
-macro_rules! ln_col {
+macro_rules! def_type {
     (
         $(#[$top_attrs:meta])*
         $name:ident
@@ -57,7 +57,7 @@ macro_rules! ln_col {
     };
 }
 
-ln_col! {
+def_type! {
     /// Position of a line.
     ///
     /// The position of the first line is 1.
@@ -85,7 +85,7 @@ ln_col! {
     try_retreat_by
 }
 
-ln_col! {
+def_type! {
     /// Position of a character in a line.
     ///
     /// The position of the first character is 1.
