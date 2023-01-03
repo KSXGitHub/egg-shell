@@ -1,4 +1,4 @@
-use crate::{CharCell, CharCoord, Ordinal};
+use crate::{CharCell, LnCol, Ordinal};
 use getset::CopyGetters;
 
 /// Information of a text slice.
@@ -10,7 +10,7 @@ pub struct TextSliceDef {
     /// Size of the text in the line.
     size: usize,
     /// Coordinate of the first character.
-    first_char_coord: CharCoord,
+    first_char_coord: LnCol,
     /// Position of the first character.
     first_char_pos: Ordinal,
     /// Number of characters in the slice.
@@ -25,7 +25,7 @@ pub struct ScanText<'a> {
     /// Source text for reference.
     pub src_text: &'a str,
     /// Coordinate of the first character of the slice.
-    pub first_char_coord: CharCoord,
+    pub first_char_coord: LnCol,
     /// Byte offset from the beginning of the source text
     /// to the first character of the slice.
     pub offset: usize,

@@ -1,4 +1,4 @@
-use egg_text::{text_slice::ScanText, CharCell, CharCoord};
+use egg_text::{text_slice::ScanText, CharCell, LnCol};
 use pretty_assertions::assert_eq;
 
 #[test]
@@ -8,7 +8,7 @@ fn char_offset() {
     ScanText::run(ScanText {
         char_list: &mut char_list,
         src_text,
-        first_char_coord: CharCoord::from_pred_counts(0, 0),
+        first_char_coord: LnCol::from_pred_counts(0, 0),
         offset: 0,
     });
     let mut received = Vec::new();

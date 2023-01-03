@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCoord, CharCount, ColNum, LineAt, LineCount, LnNum, SliceFrom};
+use crate::{CharAt, CharCount, ColNum, LineAt, LineCount, LnCol, LnNum, SliceFrom};
 use std::convert::Infallible;
 
 /// Create a slice of char grid from a start coordinate.
@@ -49,14 +49,14 @@ where
     }
 }
 
-impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, LnNum>
+impl<BaseGrid> CharAt<LnCol> for CharGridSliceFrom<BaseGrid, LnNum>
 where
-    BaseGrid: CharAt<CharCoord>,
+    BaseGrid: CharAt<LnCol>,
 {
     type Char = BaseGrid::Char;
     type Error = BaseGrid::Error;
 
-    fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
+    fn char_at(self, coord: LnCol) -> Result<Self::Char, Self::Error> {
         let coord = coord.advance_line(self.start.pred_count());
         self.grid.char_at(coord)
     }
@@ -88,14 +88,14 @@ where
     }
 }
 
-impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, LnNum>
+impl<BaseGrid> SliceFrom<LnCol> for CharGridSliceFrom<BaseGrid, LnNum>
 where
-    BaseGrid: SliceFrom<CharCoord>,
+    BaseGrid: SliceFrom<LnCol>,
 {
     type Slice = BaseGrid::Slice;
     type Error = BaseGrid::Error;
 
-    fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnCol) -> Result<Self::Slice, Self::Error> {
         let start = start.advance_column(self.start.pred_count());
         self.grid.slice_from(start)
     }
@@ -112,14 +112,14 @@ where
     }
 }
 
-impl<BaseGrid> CharAt<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord>
+impl<BaseGrid> CharAt<LnCol> for CharGridSliceFrom<BaseGrid, LnCol>
 where
-    BaseGrid: CharAt<CharCoord>,
+    BaseGrid: CharAt<LnCol>,
 {
     type Char = BaseGrid::Char;
     type Error = BaseGrid::Error;
 
-    fn char_at(self, coord: CharCoord) -> Result<Self::Char, Self::Error> {
+    fn char_at(self, coord: LnCol) -> Result<Self::Char, Self::Error> {
         let CharGridSliceFrom { grid, start } = self;
         let coord = match coord.line.pred_count() {
             0 => start.advance_column(coord.column.pred_count()),
@@ -129,7 +129,7 @@ where
     }
 }
 
-impl<BaseGrid> LineAt<LnNum> for CharGridSliceFrom<BaseGrid, CharCoord>
+impl<BaseGrid> LineAt<LnNum> for CharGridSliceFrom<BaseGrid, LnCol>
 where
     BaseGrid: LineAt<LnNum>,
 {
@@ -142,15 +142,15 @@ where
     }
 }
 
-impl<BaseGrid> SliceFrom<CharCoord> for CharGridSliceFrom<BaseGrid, CharCoord> {
-    type Slice = CharGridSliceFrom<Self, CharCoord>;
+impl<BaseGrid> SliceFrom<LnCol> for CharGridSliceFrom<BaseGrid, LnCol> {
+    type Slice = CharGridSliceFrom<Self, LnCol>;
     type Error = Infallible;
-    fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnCol) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
 
-impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, CharCoord>
+impl<BaseGrid> LineCount for CharGridSliceFrom<BaseGrid, LnCol>
 where
     BaseGrid: LineCount,
 {

@@ -1,6 +1,6 @@
 use super::{CharGridLine, CharGridSliceFrom};
 use crate::{
-    CharAt, CharCell, CharCoord, CharCount, CharOrEol, ColNum, EndOfLine, LineAt, LineCount, LnNum,
+    CharAt, CharCell, CharCount, CharOrEol, ColNum, EndOfLine, LineAt, LineCount, LnCol, LnNum,
     SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
@@ -36,10 +36,10 @@ pub enum CharAtError {
     ColumnOutOfBound,
 }
 
-impl<'a> CharAt<CharCoord> for &'a CompletedCharGrid {
+impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
     type Char = CharCell<char>;
     type Error = CharAtError;
-    fn char_at(self, coord: CharCoord) -> Result<CharCell<char>, CharAtError> {
+    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
         })?;
@@ -86,10 +86,10 @@ impl<'a> SliceFrom<LnNum> for &'a CompletedCharGrid {
     }
 }
 
-impl<'a> SliceFrom<CharCoord> for &'a CompletedCharGrid {
-    type Slice = CharGridSliceFrom<Self, CharCoord>;
+impl<'a> SliceFrom<LnCol> for &'a CompletedCharGrid {
+    type Slice = CharGridSliceFrom<Self, LnCol>;
     type Error = Infallible;
-    fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnCol) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
@@ -121,7 +121,7 @@ impl<'a> Iterator for CharIter<'a> {
         match self.col_index.pred_count().cmp(&line.slice().char_count()) {
             Ordering::Greater => panic!("Column index should never be greater than line count"),
             Ordering::Equal => {
-                let coord = CharCoord {
+                let coord = LnCol {
                     line: self.ln_index,
                     column: self.col_index,
                 };

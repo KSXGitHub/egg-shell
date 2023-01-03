@@ -113,20 +113,20 @@ def_type! {
     try_retreat_by
 }
 
-/// Coordinate of a character.
+/// Line number and column number of a character.
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq)]
 #[display(fmt = "{line}:{column}")]
-pub struct CharCoord {
+pub struct LnCol {
     /// Line number of the character.
     pub line: LnNum,
     /// Column number of the character.
     pub column: ColNum,
 }
 
-impl CharCoord {
+impl LnCol {
     /// Create a character coordinate.
     pub const fn new(line: LnNum, column: ColNum) -> Self {
-        CharCoord { line, column }
+        LnCol { line, column }
     }
 
     /// Create a character coordinate from line and column predecessor counts.

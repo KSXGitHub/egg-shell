@@ -1,7 +1,7 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
     char_grid::{CharGridLine, CharGridSliceFrom},
-    CharAt, CharCell, CharCoord, CharOrEol, ColNum, LineAt, LnNum, Ordinal, SliceFrom, TryIterChar,
+    CharAt, CharCell, CharOrEol, ColNum, LineAt, LnCol, LnNum, Ordinal, SliceFrom, TryIterChar,
     TryIterLine,
 };
 use derive_more::{Display, Error};
@@ -21,14 +21,14 @@ pub enum CharAtError<IterError> {
     ColumnOutOfBound,
 }
 
-impl<'a, IterError, CharIter> CharAt<CharCoord> for &'a LazyCharGrid<CharIter>
+impl<'a, IterError, CharIter> CharAt<LnCol> for &'a LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
 {
     type Char = CharCell<char>;
     type Error = CharAtError<IterError>;
 
-    fn char_at(self, coord: CharCoord) -> Result<CharCell<char>, CharAtError<IterError>> {
+    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtError<IterError>> {
         let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::LoadCharError(error) => CharAtError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtError::LineOutOfBound,
@@ -86,10 +86,10 @@ impl<'a, SrcIter: 'a> SliceFrom<LnNum> for &'a LazyCharGrid<SrcIter> {
     }
 }
 
-impl<'a, SrcIter: 'a> SliceFrom<CharCoord> for &'a LazyCharGrid<SrcIter> {
-    type Slice = CharGridSliceFrom<Self, CharCoord>;
+impl<'a, SrcIter: 'a> SliceFrom<LnCol> for &'a LazyCharGrid<SrcIter> {
+    type Slice = CharGridSliceFrom<Self, LnCol>;
     type Error = Infallible;
-    fn slice_from(self, start: CharCoord) -> Result<Self::Slice, Self::Error> {
+    fn slice_from(self, start: LnCol) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
@@ -121,7 +121,7 @@ where
         match self.col_index.pred_count().cmp(&line.slice().char_count()) {
             Ordering::Greater => panic!("Column index should never be greater than line count"),
             Ordering::Equal => {
-                let coord = CharCoord {
+                let coord = LnCol {
                     line: self.ln_index,
                     column: self.col_index,
                 };

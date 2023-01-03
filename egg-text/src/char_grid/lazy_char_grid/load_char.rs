@@ -1,5 +1,5 @@
 use super::{LazyCharGridData, LoadingProgress};
-use crate::{text_slice::ScanText, CharCoord, EndOfLine, TextSliceDef};
+use crate::{text_slice::ScanText, EndOfLine, LnCol, TextSliceDef};
 use assert_cmp::debug_assert_op;
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -50,7 +50,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             let line_slice_def = ScanText::run(ScanText {
                 char_list: loaded_char_list,
                 src_text: line_src_text,
-                first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
+                first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset
             });
             loaded_line_list.push((line_slice_def, EndOfLine::EOF));
@@ -78,7 +78,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             let line_slice_def = ScanText::run(ScanText {
                 char_list: loaded_char_list,
                 src_text: line_src_text,
-                first_char_coord: CharCoord::from_pred_counts(loaded_line_list.len(), 0),
+                first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset,
             });
             loaded_line_list.push((line_slice_def, eol));

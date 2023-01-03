@@ -1,5 +1,5 @@
 use super::{CharGridSliceFrom, GridCommon};
-use crate::{CharAt, CharCoord, ColNum, EndOfLine, SliceFrom, TextSliceDef};
+use crate::{CharAt, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef};
 use getset::CopyGetters;
 use std::{
     convert::Infallible,
@@ -61,7 +61,7 @@ where
 
 impl<CharGridRef> CharAt<ColNum> for CharGridLine<CharGridRef>
 where
-    CharGridRef: CharAt<CharCoord> + Copy,
+    CharGridRef: CharAt<LnCol> + Copy,
 {
     type Char = CharGridRef::Char;
     type Error = CharGridRef::Error;
