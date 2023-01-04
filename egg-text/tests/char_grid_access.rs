@@ -102,7 +102,7 @@ fn lazy_char_at() {
     assert_eq!(char.coord(), LnCol::from_pred_counts(3, 0));
     assert_eq!(
         char.pos(),
-        CharPos::from_pred_count(6 + 1 + 13 + 1 + 44 + 1), // TODO: fix off-by-one error
+        CharPos::from_pred_count(6 + 1 + 12 + 1 + 45 + 1),
     );
     assert_eq!(char.offset_from_ln_start(), 0);
     assert_eq!(char.offset_from_doc_start(), 74);
@@ -117,7 +117,7 @@ fn lazy_char_at() {
     assert_eq!(char.coord(), LnCol::from_pred_counts(3, 35));
     assert_eq!(
         char.pos(),
-        CharPos::from_pred_count(6 + 1 + 13 + 1 + 44 + 1 + 35), // TODO: fix off-by-one error
+        CharPos::from_pred_count(6 + 1 + 12 + 1 + 45 + 1 + 35),
     );
     assert_eq!(char.offset_from_ln_start(), 35);
     assert_eq!(char.offset_from_doc_start(), 109);
