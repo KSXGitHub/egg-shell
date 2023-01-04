@@ -247,7 +247,10 @@ fn lazy_try_iter_char() {
     let mut acc = String::new();
     for (index, char) in partially_loaded_grid().try_iter_char().enumerate() {
         let char = char.unwrap_or_else(|error| panic!("attempt at index {index} failed: {error}"));
-        dbg!(char);
+        let expected_char_pos = CharPos::from_pred_count(index);
+        let received_char_pos = char.pos();
+        eprintln!("{char:?}; expecting {expected_char_pos:?}, received {received_char_pos:?}");
+        assert_eq!(received_char_pos, expected_char_pos);
         acc += char.to_string().as_str();
     }
     eprintln!("ACTUAL:\n{acc}\n");
