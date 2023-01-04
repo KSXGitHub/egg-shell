@@ -182,9 +182,12 @@ fn lazy_line_at() {
     let ln_count = 1;
     assert_eq!(
         line.slice().first_char_pos(),
-        "Hello,"
-            .chars()
-            .count()
+        SRC_TEXT
+            .lines()
+            .take(ln_count)
+            .map(str::chars)
+            .map(Iterator::count)
+            .sum::<usize>()
             .pipe(CharPos::from_pred_count)
             .advance_by(ln_count),
     );
