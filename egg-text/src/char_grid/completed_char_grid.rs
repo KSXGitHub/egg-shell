@@ -74,8 +74,7 @@ impl<'a> LineAt<LnNum> for &'a CompletedCharGrid {
     fn line_at(self, ln_num: LnNum) -> Result<Self::Line, LineAtError> {
         self.line_list
             .get(ln_num.pred_count())
-            .copied()
-            .map(|(slice, eol)| CharGridLine::new(slice, eol, self))
+            .map(|&(slice, eol)| CharGridLine::new(slice, eol, self))
             .ok_or(LineAtError::OutOfBound)
     }
 }
@@ -197,8 +196,7 @@ impl<'a> Iterator for LineIter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         self.iter
             .next()
-            .copied()
-            .map(|(slice, eol)| CharGridLine::new(slice, eol, self.grid))
+            .map(|&(slice, eol)| CharGridLine::new(slice, eol, self.grid))
             .map(Ok)
     }
 
