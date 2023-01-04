@@ -129,13 +129,8 @@ impl<'a> Iterator for CharIter<'a> {
                     line: self.ln_index,
                     column: self.col_index,
                 };
-                let eol_count = coord.line.pred_count(); // number of newlines from doc start
                 let col_count = coord.column.pred_count(); // number of columns from line start
-                let pos = line
-                    .slice()
-                    .first_char_pos()
-                    .advance_by(eol_count)
-                    .advance_by(col_count);
+                let pos = line.slice().first_char_pos().advance_by(col_count);
                 self.ln_index = self.ln_index.advance_by(1);
                 self.col_index = ColNum::from_pred_count(0);
                 let offset_from_ln_start = line.slice().size();
