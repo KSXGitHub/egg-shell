@@ -172,6 +172,8 @@ where
     type CharResultIter = CharIter<'a, SrcIterError, SrcIter>;
 
     fn try_iter_char(self) -> Self::CharResultIter {
+        // Q: Why not just iterate over existing self.data.char_list?
+        // A: data.char_list is very expensive in term of memory, it is to be removed in the future.
         CharIter {
             ln_index: LnNum::from_pred_count(0),
             col_index: ColNum::from_pred_count(0),
