@@ -45,6 +45,8 @@ where
             .get(char_pos.pred_count())
             .copied()
             .expect("char_pos should be within the range of char_list")
+            .pipe(Self::Char::try_from)
+            .expect("resulting char should not be an EOL")
             .pipe(Ok)
     }
 }

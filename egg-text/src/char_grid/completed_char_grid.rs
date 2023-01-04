@@ -19,7 +19,7 @@ pub struct CompletedCharGrid {
     pub(super) text: String,
     /// List of character cells.
     #[getset(get = "pub")]
-    pub(super) char_list: Vec<CharCell<char>>,
+    pub(super) char_list: Vec<CharCell<CharOrEol>>,
     /// List of lines.
     #[getset(get = "pub")]
     pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
@@ -54,6 +54,8 @@ impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
             .get(char_pos.pred_count())
             .copied()
             .expect("char_pos should be within the range of char_list")
+            .pipe(Self::Char::try_from)
+            .expect("resulting char should not be an EOL")
             .pipe(Ok)
     }
 }

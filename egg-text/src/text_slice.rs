@@ -1,4 +1,4 @@
-use crate::{CharCell, CharPos, LnCol};
+use crate::{CharCell, CharOrEol, CharPos, LnCol};
 use getset::CopyGetters;
 
 /// Information of a text slice.
@@ -21,7 +21,7 @@ pub struct TextSliceDef {
 #[must_use = "call the `run` method to scan the text"]
 pub struct ScanText<'a> {
     /// Character list to append to.
-    pub char_list: &'a mut Vec<CharCell<char>>,
+    pub char_list: &'a mut Vec<CharCell<CharOrEol>>,
     /// Source text for reference.
     pub src_text: &'a str,
     /// Coordinate of the first character of the slice.
@@ -49,7 +49,7 @@ impl<'a> ScanText<'a> {
                 pos: first_char_pos.advance_by(col_add),
                 offset_from_doc_start: offset + offset_from_ln_start,
                 offset_from_ln_start,
-                value,
+                value: CharOrEol::Char(value),
             });
             offset_from_ln_start += value.len_utf8();
         }
