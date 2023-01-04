@@ -1,6 +1,9 @@
 use crate::Ordinal;
-use derive_more::{DebugCustom, Display, From, Into};
-use std::num::NonZeroUsize;
+use derive_more::{Display, From, Into};
+use std::{
+    fmt::{self, Debug, Formatter},
+    num::NonZeroUsize,
+};
 
 macro_rules! def_type {
     (
@@ -23,8 +26,7 @@ macro_rules! def_type {
         $try_retreat_by_name:ident
     ) => {
         $(#[$top_attrs])*
-        #[derive(DebugCustom, Display, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, From, Into)]
-        #[debug(fmt = "{name} {_0}", name = stringify!($name))]
+        #[derive(Display, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, From, Into)]
         pub struct $name(Ordinal);
 
         impl $name {
@@ -52,6 +54,14 @@ macro_rules! def_type {
             $(#[$try_retreat_by_attrs])*
             pub fn $try_retreat_by_name(self, steps: usize) -> Option<Self> {
                 self.0.try_retreat_by(steps).map($name)
+            }
+        }
+
+        impl Debug for $name {
+            fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+                let value = self.value();
+                let name = stringify!($name);
+                write!(f, "{name} {value}")
             }
         }
     };
