@@ -44,7 +44,7 @@ pub struct LazyCharGridData<CharIter> {
     pub(super) loaded_text: String,
     /// List of loaded character cells.
     #[getset(get = "pub")]
-    pub(super) loaded_char_list: Vec<CharCell<CharOrEol>>,
+    pub(super) loaded_char_list: Vec<CharCell<CharOrEol>>, // TODO: reduce memory cost by storing only big characters.
     /// List of loaded line coordinates.
     #[getset(get = "pub")]
     pub(super) loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,

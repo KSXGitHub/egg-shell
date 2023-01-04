@@ -19,7 +19,7 @@ pub struct CompletedCharGrid {
     pub(super) text: String,
     /// List of character cells.
     #[getset(get = "pub")]
-    pub(super) char_list: Vec<CharCell<CharOrEol>>,
+    pub(super) char_list: Vec<CharCell<CharOrEol>>, // TODO: reduce memory cost by storing only big characters.
     /// List of lines.
     #[getset(get = "pub")]
     pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
