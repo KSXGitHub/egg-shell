@@ -51,7 +51,8 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 char_list: loaded_char_list,
                 src_text: line_src_text,
                 first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
-                offset: line_offset
+                offset: line_offset,
+                eol: EndOfLine::EOF
             });
             loaded_line_list.push((line_slice_def, EndOfLine::EOF));
             loaded_char_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
@@ -80,6 +81,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 src_text: line_src_text,
                 first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
                 offset: line_offset,
+                eol,
             });
             loaded_line_list.push((line_slice_def, eol));
             *loaded_char_count += 1;

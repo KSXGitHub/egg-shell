@@ -1,4 +1,4 @@
-use egg_text::{text_slice::ScanText, CharCell, CharOrEol, LnCol};
+use egg_text::{text_slice::ScanText, CharCell, CharOrEol, EndOfLine, LnCol};
 use pretty_assertions::assert_eq;
 
 #[test]
@@ -10,6 +10,7 @@ fn char_offset() {
         src_text,
         first_char_coord: LnCol::from_pred_counts(0, 0),
         offset: 0,
+        eol: EndOfLine::EOF,
     });
     let mut received = Vec::new();
     for char_cell in char_list.iter().copied() {
@@ -41,6 +42,7 @@ fn char_offset() {
         ("I Love ❤️ Rust", " 🦀!"),
         ("I Love ❤️ Rust ", "🦀!"),
         ("I Love ❤️ Rust 🦀", "!"),
+        ("I Love ❤️ Rust 🦀!", ""),
     ];
     assert_eq!(received, expected);
 }

@@ -1,4 +1,4 @@
-use crate::{CharCell, CharOrEol, CharPos, LnCol};
+use crate::{CharCell, CharOrEol, CharPos, EndOfLine, LnCol};
 use getset::CopyGetters;
 
 /// Information of a text slice.
@@ -29,6 +29,8 @@ pub struct ScanText<'a> {
     /// Byte offset from the beginning of the source text
     /// to the first character of the slice.
     pub offset: usize,
+    /// Type of end of line string.
+    pub eol: EndOfLine,
 }
 
 impl<'a> ScanText<'a> {
@@ -39,6 +41,7 @@ impl<'a> ScanText<'a> {
             src_text,
             first_char_coord,
             offset,
+            eol,
         } = self;
         let first_char_pos = CharPos::from_pred_count(char_list.len());
         let initial_char_count = char_list.len();
@@ -59,6 +62,13 @@ impl<'a> ScanText<'a> {
         }
         let size = src_text.len();
         let char_count = char_list.len() - initial_char_count;
+        char_list.push(CharCell {
+            coord,
+            pos,
+            offset_from_doc_start: offset + offset_from_ln_start,
+            offset_from_ln_start,
+            value: CharOrEol::EndOfLine(eol),
+        });
         TextSliceDef {
             offset,
             first_char_coord,
