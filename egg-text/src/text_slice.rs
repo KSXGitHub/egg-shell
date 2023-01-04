@@ -43,22 +43,28 @@ impl<'a> ScanText<'a> {
         let first_char_pos = CharPos::from_pred_count(char_list.len());
         let initial_char_count = char_list.len();
         let mut offset_from_ln_start = 0;
-        for (col_add, value) in src_text.chars().enumerate() {
+        let mut coord = first_char_coord;
+        let mut pos = first_char_pos;
+        for value in src_text.chars() {
             char_list.push(CharCell {
-                coord: first_char_coord.advance_column(col_add),
-                pos: first_char_pos.advance_by(col_add),
+                coord,
+                pos,
                 offset_from_doc_start: offset + offset_from_ln_start,
                 offset_from_ln_start,
                 value: CharOrEol::Char(value),
             });
             offset_from_ln_start += value.len_utf8();
+            coord = coord.advance_column(1);
+            pos = pos.advance_by(1);
         }
+        let size = src_text.len();
+        let char_count = char_list.len() - initial_char_count;
         TextSliceDef {
             offset,
             first_char_coord,
             first_char_pos,
-            size: src_text.len(),
-            char_count: char_list.len() - initial_char_count,
+            size,
+            char_count,
         }
     }
 }
