@@ -1,7 +1,7 @@
 use super::{CharGridLine, CharGridSliceFrom};
 use crate::{
-    CharAt, CharCell, CharCount, CharOrEol, ColNum, EndOfLine, LineAt, LineCount, LnCol, LnNum,
-    SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
+    CharAt, CharCell, CharCount, CharOrEol, CharPos, ColNum, EndOfLine, LineAt, LineCount, LnCol,
+    LnNum, SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -57,6 +57,25 @@ impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
             .pipe(Self::Char::try_from)
             .expect("resulting char should not be an EOL")
             .pipe(Ok)
+    }
+}
+
+/// Error type of [`CharAt<CharPos>`] for [`CompletedCharGrid`].
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum CharAtCharPosError {
+    /// The grid doesn't have enough characters to match the requested index.
+    #[display(fmt = "Character position does not exist")]
+    OutOfBound,
+}
+
+impl<'a> CharAt<CharPos> for &'a CompletedCharGrid {
+    type Char = CharCell<CharOrEol>;
+    type Error = CharAtCharPosError;
+    fn char_at(self, pos: CharPos) -> Result<Self::Char, CharAtCharPosError> {
+        self.char_list()
+            .get(pos.pred_count())
+            .copied()
+            .ok_or(CharAtCharPosError::OutOfBound)
     }
 }
 
