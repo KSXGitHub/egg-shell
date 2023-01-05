@@ -162,10 +162,9 @@ impl<'a> Iterator for CharIter<'a> {
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
-        let non_eol_count = self.grid.char_list.len();
-        let eol_count = self.grid.line_list.len();
-        let size = non_eol_count + eol_count;
-        (size, Some(size))
+        let max = self.grid.text.len();
+        let min = max / std::mem::size_of::<char>();
+        (min, Some(max))
     }
 }
 
