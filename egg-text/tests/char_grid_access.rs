@@ -385,6 +385,34 @@ fn completed_char_at_ln_col() {
 }
 
 #[test]
+fn completed_char_at_char_pos() {
+    let grid = completed_grid();
+    let char_count = dbg!(grid.char_count());
+
+    eprintln!("TEST positive case");
+    for (index, expected) in (0..char_count).zip(grid.iter_char()) {
+        let char_pos = dbg!(CharPos::from_pred_count(index));
+        let received = grid.char_at(char_pos).expect("get char");
+        assert_eq!(received.to_string(), expected.to_string());
+        assert_eq!(received.coord(), expected.coord());
+        assert_eq!(received.pos(), expected.pos());
+        assert_eq!(
+            received.offset_from_ln_start(),
+            expected.offset_from_ln_start(),
+        );
+        assert_eq!(
+            received.offset_from_doc_start(),
+            expected.offset_from_doc_start(),
+        );
+    }
+
+    eprintln!("TEST out of bound");
+    let char_pos = dbg!(CharPos::from_pred_count(char_count));
+    let error = grid.char_at(char_pos).expect_err("should be out of bound");
+    assert_eq!(error, completed_char_grid::CharAtCharPosError::OutOfBound);
+}
+
+#[test]
 fn completed_line_at() {
     let grid = completed_grid();
 
