@@ -8,7 +8,7 @@ use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 use std::{cmp::Ordering, convert::Infallible, fmt::Debug};
 
-/// Error type of [`CharAt`] for [`LazyCharGrid`].
+/// Error type of [`CharAt<LnCol>`] for [`LazyCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum CharAtLnColError<IterError> {
     /// An error occurred while loading a character.
