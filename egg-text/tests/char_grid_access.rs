@@ -281,7 +281,7 @@ fn completed_grid() -> CompletedCharGrid {
 }
 
 #[test]
-fn completed_char_at() {
+fn completed_char_at_ln_col() {
     let grid = completed_grid();
 
     eprintln!("TEST 1:1");
