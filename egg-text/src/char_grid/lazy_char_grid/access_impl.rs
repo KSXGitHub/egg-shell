@@ -1,8 +1,8 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
     char_grid::{CharGridLine, CharGridSliceFrom},
-    CharAt, CharCell, CharOrEol, ColNum, LineAt, LnCol, LnNum, Ordinal, SliceFrom, TryIterChar,
-    TryIterLine,
+    CharAt, CharCell, CharOrEol, CharPos, ColNum, LineAt, LnCol, LnNum, Ordinal, SliceFrom,
+    TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -48,6 +48,36 @@ where
             .pipe(Self::Char::try_from)
             .expect("resulting char should not be an EOL")
             .pipe(Ok)
+    }
+}
+
+/// Error type of [`CharAt<CharPos>`] for [`LazyCharGrid`].
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum CharAtCharPosError<IterError> {
+    /// An error occurred while loading a character.
+    LoadCharError(LoadCharError<IterError>),
+    /// The grid doesn't have enough characters to match the requested index.
+    #[display(fmt = "Character position does not exist")]
+    OutOfBound,
+}
+
+impl<'a, IterError, CharIter> CharAt<CharPos> for &'a LazyCharGrid<CharIter>
+where
+    CharIter: Iterator<Item = Result<char, IterError>>,
+{
+    type Char = CharCell<CharOrEol>;
+    type Error = CharAtCharPosError<IterError>;
+
+    fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
+        while self.completion().is_incomplete() && pos.pred_count() < self.loaded_char_count() {
+            self.load_char()
+                .map_err(CharAtCharPosError::LoadCharError)?;
+        }
+        self.data()
+            .loaded_char_list()
+            .get(pos.pred_count())
+            .copied()
+            .ok_or(CharAtCharPosError::OutOfBound)
     }
 }
 
