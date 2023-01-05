@@ -390,6 +390,7 @@ fn completed_char_at_char_pos() {
     let char_count = dbg!(grid.char_count());
 
     eprintln!("TEST positive case");
+    let mut acc = String::new();
     for (index, expected) in (0..char_count).zip(grid.iter_char()) {
         let char_pos = dbg!(CharPos::from_pred_count(index));
         let received = grid.char_at(char_pos).expect("get char");
@@ -404,7 +405,11 @@ fn completed_char_at_char_pos() {
             received.offset_from_doc_start(),
             expected.offset_from_doc_start(),
         );
+        acc += received.to_string().as_str();
     }
+
+    eprintln!("TEST accumulation");
+    assert_eq!(acc, SRC_TEXT);
 
     eprintln!("TEST out of bound");
     let char_pos = dbg!(CharPos::from_pred_count(char_count));
