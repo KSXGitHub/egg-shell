@@ -25,7 +25,7 @@ pub struct CompletedCharGrid {
     pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
 }
 
-/// Error type of [`CharAt`] for [`CompletedCharGrid`].
+/// Error type of [`CharAt<LnCol>`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
 pub enum CharAtLnColError {
     /// The source iterator doesn't have enough lines to match the requested line index.
