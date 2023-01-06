@@ -126,6 +126,14 @@ impl<'a, SrcIter: 'a> SliceFrom<LnCol> for &'a LazyCharGrid<SrcIter> {
     }
 }
 
+impl<'a, SrcIter: 'a> SliceFrom<CharPos> for &'a LazyCharGrid<SrcIter> {
+    type Slice = CharGridSliceFrom<Self, CharPos>;
+    type Error = Infallible;
+    fn slice_from(self, start: CharPos) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
+
 /// An iterator that emits instances of [`CharCell`] from [`LazyCharGrid`].
 pub struct CharIter<'a, SrcIterError, SrcIter>
 where
