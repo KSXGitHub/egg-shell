@@ -69,7 +69,7 @@ where
     type Error = CharAtCharPosError<IterError>;
 
     fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
-        while self.completion().is_incomplete() && pos.pred_count() < self.loaded_char_count() {
+        while self.completion().is_incomplete() && pos.pred_count() >= self.loaded_char_count() {
             self.load_char()
                 .map_err(CharAtCharPosError::LoadCharError)?;
         }
