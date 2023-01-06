@@ -1,5 +1,6 @@
 use super::{CharGridSliceFrom, GridCommon};
 use crate::{CharAt, CharPos, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef};
+use derive_more::{Display, Error};
 use getset::CopyGetters;
 use std::{
     convert::Infallible,
@@ -75,16 +76,31 @@ where
     }
 }
 
+/// Error type of [`CharAt<CharPos>`] on [`CharGridLine`].
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum ChatAtCharPosError<GridError> {
+    /// Error propagated from [`CharAt`] on the grid.
+    GridError(GridError),
+    /// The requested index is greater than the bound of the line.
+    #[display(fmt = "Character position does not exist")]
+    OutOfBound,
+}
+
 impl<CharGridRef> CharAt<CharPos> for CharGridLine<CharGridRef>
 where
     CharGridRef: CharAt<CharPos> + Copy,
 {
     type Char = CharGridRef::Char;
-    type Error = CharGridRef::Error;
+    type Error = ChatAtCharPosError<CharGridRef::Error>;
 
     fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
+        if pos.pred_count() > self.slice().char_count() {
+            return Err(ChatAtCharPosError::OutOfBound);
+        }
         let pos = self.slice.first_char_pos().advance_by(pos.pred_count());
-        self.grid.char_at(pos)
+        self.grid
+            .char_at(pos)
+            .map_err(ChatAtCharPosError::GridError)
     }
 }
 
