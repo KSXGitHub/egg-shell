@@ -114,6 +114,14 @@ impl<'a> SliceFrom<LnCol> for &'a CompletedCharGrid {
     }
 }
 
+impl<'a> SliceFrom<CharPos> for &'a CompletedCharGrid {
+    type Slice = CharGridSliceFrom<Self, CharPos>;
+    type Error = Infallible;
+    fn slice_from(self, start: CharPos) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
+
 impl CharCount for CompletedCharGrid {
     fn char_count(&self) -> usize {
         let non_eol = self.char_list().len();
