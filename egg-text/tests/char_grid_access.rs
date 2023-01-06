@@ -32,7 +32,7 @@ fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
 }
 
 #[test]
-fn lazy_char_at() {
+fn lazy_char_at_ln_col() {
     let grid = partially_loaded_grid();
 
     eprintln!("TEST 1:1");
