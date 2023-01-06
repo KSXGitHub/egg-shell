@@ -1,4 +1,4 @@
-use crate::{CharAt, CharCount, ColNum, LineAt, LineCount, LnCol, LnNum, SliceFrom};
+use crate::{CharAt, CharCount, CharPos, ColNum, LineAt, LineCount, LnCol, LnNum, SliceFrom};
 use std::convert::Infallible;
 
 /// Create a slice of char grid from a start coordinate.
@@ -158,5 +158,31 @@ where
         let total = self.grid.line_count();
         let skipped = self.start.column.pred_count();
         total - skipped
+    }
+}
+
+impl<BaseGrid> CharAt<CharPos> for CharGridSliceFrom<BaseGrid, CharPos>
+where
+    BaseGrid: CharAt<CharPos>,
+{
+    type Char = BaseGrid::Char;
+    type Error = BaseGrid::Error;
+
+    fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
+        let pos = self.start.advance_by(pos.pred_count());
+        self.grid.char_at(pos)
+    }
+}
+
+impl<BaseGrid> SliceFrom<CharPos> for CharGridSliceFrom<BaseGrid, CharPos>
+where
+    BaseGrid: SliceFrom<CharPos>,
+{
+    type Slice = BaseGrid::Slice;
+    type Error = BaseGrid::Error;
+
+    fn slice_from(self, start: CharPos) -> Result<Self::Slice, Self::Error> {
+        let start = self.start.advance_by(start.pred_count());
+        self.grid.slice_from(start)
     }
 }
