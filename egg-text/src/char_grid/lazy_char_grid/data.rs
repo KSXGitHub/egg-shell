@@ -36,9 +36,6 @@ pub enum CompletionStatus {
 /// Inner data of [`LazyCharGrid`](super::LazyCharGrid).
 #[derive(CopyGetters, Getters)]
 pub struct LazyCharGridData<CharIter> {
-    /// Total number of loaded characters.
-    #[getset(get_copy = "pub")]
-    pub(super) loaded_char_count: usize,
     /// Loaded text so far.
     #[getset(get = "pub")]
     pub(super) loaded_text: String,

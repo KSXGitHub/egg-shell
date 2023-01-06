@@ -50,7 +50,6 @@ impl<CharIter> LazyCharGrid<CharIter> {
             prev_line_offset: 0,
         });
         let data = LazyCharGridData {
-            loaded_char_count: 0,
             loaded_text: String::with_capacity(capacity),
             loaded_char_list: Vec::with_capacity(capacity),
             loaded_line_list: Vec::new(),
@@ -68,7 +67,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
 
     /// Total number of loaded characters.
     pub fn loaded_char_count(&self) -> usize {
-        self.data().loaded_char_count()
+        self.data().loaded_char_list().len()
     }
 
     /// Number of lines.
@@ -89,7 +88,7 @@ impl<CharIter> LazyCharGrid<CharIter> {
     /// * `None` means that the grid isn't yet completed.
     pub fn total_char_count(&self) -> Option<usize> {
         match self.completion() {
-            CompletionStatus::Complete => Some(self.data().loaded_char_count),
+            CompletionStatus::Complete => Some(self.loaded_char_count()),
             CompletionStatus::Incomplete => None,
         }
     }
@@ -132,7 +131,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
         self.load_all()?;
         let data = self.data.into_inner();
         Ok(CompletedCharGrid {
-            char_count: data.loaded_char_count,
+            char_count: data.loaded_char_list.len(),
             text: data.loaded_text,
             char_list: data.loaded_char_list,
             line_list: data.loaded_line_list,

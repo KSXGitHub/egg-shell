@@ -29,7 +29,6 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
     /// Add another character to the grid.
     pub(super) fn load_char(&mut self) -> Result<LoadCharReport, LoadCharError<IterError>> {
         let LazyCharGridData {
-            loaded_char_count,
             loaded_text,
             loaded_char_list,
             loaded_line_list,
@@ -84,7 +83,6 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 eol,
             });
             loaded_line_list.push((line_slice_def, eol));
-            *loaded_char_count += 1;
             *prev_non_lf = None;
             *prev_line_offset = loaded_text.len();
             Ok(LoadCharReport::Line {
@@ -96,7 +94,6 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
                 dbg!(loaded_text);
                 return Err(LoadCharError::IllPlacedCarriageReturn { followed_by: char });
             }
-            *loaded_char_count += 1;
             *prev_non_lf = Some(char);
             char.pipe(LoadCharReport::Char).pipe(Ok)
         }

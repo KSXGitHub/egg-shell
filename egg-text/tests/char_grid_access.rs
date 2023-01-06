@@ -45,7 +45,7 @@ fn lazy_char_at_ln_col() {
     assert_eq!(char.offset_from_doc_start(), 0);
     assert_eq!(char.value(), &'H');
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
-    assert_eq!(grid.loaded_char_count(), 10); // preloaded from partially_loaded_grid
+    assert_eq!(grid.loaded_char_count(), 7); // preloaded from partially_loaded_grid
 
     eprintln!("TEST 1:5");
     let char = grid
@@ -57,7 +57,7 @@ fn lazy_char_at_ln_col() {
     assert_eq!(char.offset_from_doc_start(), "Hell".len());
     assert_eq!(char.value(), &'o');
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
-    assert_eq!(grid.loaded_char_count(), 10); // preloaded from partially_loaded_grid
+    assert_eq!(grid.loaded_char_count(), 7); // preloaded from partially_loaded_grid
 
     eprintln!("TEST 1:7 (expect error)");
     let error = grid
@@ -75,7 +75,7 @@ fn lazy_char_at_ln_col() {
     assert_eq!(char.offset_from_doc_start(), "Hello,\n".len());
     assert_eq!(char.value(), &'I');
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
-    assert_eq!(grid.loaded_char_count(), 21);
+    assert_eq!(grid.loaded_char_count(), 20);
 
     eprintln!("TEST 2:3");
     let char = grid
@@ -87,7 +87,7 @@ fn lazy_char_at_ln_col() {
     assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
     assert_eq!(char.value(), &'❤');
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
-    assert_eq!(grid.loaded_char_count(), 21);
+    assert_eq!(grid.loaded_char_count(), 20);
 
     eprintln!("TEST 2:13 (expect error)");
     let error = grid
