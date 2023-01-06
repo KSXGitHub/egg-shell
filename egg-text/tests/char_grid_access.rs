@@ -192,6 +192,19 @@ fn lazy_char_at_char_pos() {
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
     assert_eq!(grid.loaded_char_count(), 7); // preloaded from partially_loaded_grid
 
+    eprintln!("TEST (6)");
+    let char = grid
+        .char_at(CharPos::from_pred_count(6))
+        .expect("char_at (6)");
+    assert_eq!(char.coord(), LnCol::from_pred_counts(0, 6));
+    assert_eq!(char.pos(), CharPos::from_pred_count(6));
+    assert_eq!(char.offset_from_ln_start(), 6);
+    assert_eq!(char.offset_from_doc_start(), "Hello,".len());
+    assert_eq!(char.value().to_string(), "\n");
+    assert!(matches!(char.value(), CharOrEol::EndOfLine(EndOfLine::LF)));
+    assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤");
+    assert_eq!(grid.loaded_char_count(), 7);
+
     eprintln!("TEST (6 + 1)");
     let char = grid
         .char_at(CharPos::from_pred_count(6 + 1))
@@ -215,6 +228,22 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
     assert_eq!(char.value().to_string(), "❤");
     assert!(matches!(char.value(), CharOrEol::Char('❤')));
+    assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
+    assert_eq!(grid.loaded_char_count(), 20);
+
+    eprintln!("TEST (6 + 1 + 12)");
+    let char = grid
+        .char_at(CharPos::from_pred_count(6 + 1 + 12))
+        .expect("char_at (6 + 1 + 12)");
+    assert_eq!(char.coord(), LnCol::from_pred_counts(1, 12));
+    assert_eq!(char.pos(), CharPos::from_pred_count(6 + 1 + 12));
+    assert_eq!(char.offset_from_ln_start(), 19);
+    assert_eq!(char.offset_from_doc_start(), "Hello,\nI ❤️ Rust 🦀,".len());
+    assert_eq!(char.value().to_string(), "\r\n");
+    assert!(matches!(
+        char.value(),
+        CharOrEol::EndOfLine(EndOfLine::CRLF),
+    ));
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
     assert_eq!(grid.loaded_char_count(), 20);
 
