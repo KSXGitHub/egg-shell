@@ -175,6 +175,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 0);
     assert_eq!(char.offset_from_doc_start(), 0);
     assert_eq!(char.value().to_string(), "H");
+    assert!(matches!(char.value(), CharOrEol::Char('H')));
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
     assert_eq!(grid.loaded_char_count(), 7); // preloaded from partially_loaded_grid
 
@@ -187,6 +188,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 4);
     assert_eq!(char.offset_from_doc_start(), "Hell".len());
     assert_eq!(char.value().to_string(), "o");
+    assert!(matches!(char.value(), CharOrEol::Char('o')));
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤"); // preloaded from partially_loaded_grid
     assert_eq!(grid.loaded_char_count(), 7); // preloaded from partially_loaded_grid
 
@@ -199,6 +201,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 0);
     assert_eq!(char.offset_from_doc_start(), "Hello,\n".len());
     assert_eq!(char.value().to_string(), "I");
+    assert!(matches!(char.value(), CharOrEol::Char('I')));
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
     assert_eq!(grid.loaded_char_count(), 20);
 
@@ -211,6 +214,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 2);
     assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
     assert_eq!(char.value().to_string(), "❤");
+    assert!(matches!(char.value(), CharOrEol::Char('❤')));
     assert_eq!(grid.data().loaded_text(), "Hello,\nI ❤️ Rust 🦀,\r\n");
     assert_eq!(grid.loaded_char_count(), 20);
 
@@ -226,6 +230,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 0);
     assert_eq!(char.offset_from_doc_start(), 74);
     assert_eq!(char.value().to_string(), "T");
+    assert!(matches!(char.value(), CharOrEol::Char('T')));
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
@@ -241,6 +246,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 35);
     assert_eq!(char.offset_from_doc_start(), 109);
     assert_eq!(char.value().to_string(), "🥚");
+    assert!(matches!(char.value(), CharOrEol::Char('🥚')));
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
@@ -277,6 +283,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 0);
     assert_eq!(char.offset_from_doc_start(), 0);
     assert_eq!(char.value().to_string(), "H");
+    assert!(matches!(char.value(), CharOrEol::Char('H')));
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 
@@ -289,6 +296,7 @@ fn lazy_char_at_char_pos() {
     assert_eq!(char.offset_from_ln_start(), 2);
     assert_eq!(char.offset_from_doc_start(), "Hello,\nI ".len());
     assert_eq!(char.value().to_string(), "❤");
+    assert!(matches!(char.value(), CharOrEol::Char('❤')));
     assert_eq!(grid.data().loaded_text(), SRC_TEXT);
     assert_eq!(grid.loaded_char_count(), SRC_TEXT.chars().count());
 }
