@@ -115,3 +115,15 @@ where
         Ok(CharGridSliceFrom { grid: self, start })
     }
 }
+
+impl<CharGridRef> SliceFrom<CharPos> for CharGridLine<CharGridRef>
+where
+    CharGridRef: Copy,
+{
+    type Slice = CharGridSliceFrom<Self, CharPos>;
+    type Error = Infallible;
+
+    fn slice_from(self, start: CharPos) -> Result<Self::Slice, Self::Error> {
+        Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
