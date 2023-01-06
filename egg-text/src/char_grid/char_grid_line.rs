@@ -1,5 +1,5 @@
 use super::{CharGridSliceFrom, GridCommon};
-use crate::{CharAt, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef};
+use crate::{CharAt, CharPos, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef};
 use getset::CopyGetters;
 use std::{
     convert::Infallible,
@@ -72,6 +72,19 @@ where
             .first_char_coord()
             .advance_column(col_num.pred_count());
         self.grid.char_at(coord)
+    }
+}
+
+impl<CharGridRef> CharAt<CharPos> for CharGridLine<CharGridRef>
+where
+    CharGridRef: CharAt<CharPos> + Copy,
+{
+    type Char = CharGridRef::Char;
+    type Error = CharGridRef::Error;
+
+    fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
+        let pos = self.slice.first_char_pos().advance_by(pos.pred_count());
+        self.grid.char_at(pos)
     }
 }
 
