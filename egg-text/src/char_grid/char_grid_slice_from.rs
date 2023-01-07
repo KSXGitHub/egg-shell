@@ -280,6 +280,7 @@ where
     }
 }
 
+/// Character iterator of [`CharGridSliceFrom<_, LnCol>`].
 pub struct LnColCharIter<GridRef>
 where
     GridRef: CharAt<LnCol> + Copy,
