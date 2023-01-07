@@ -1,6 +1,6 @@
 use crate::{
-    CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, LineAt, LineCount, LnCol, LnNum,
-    LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
+    CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, LineAt, LineCount, LnCol,
+    LnColOutOfBound, LnNum, LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -277,6 +277,56 @@ where
         let total = self.grid.line_count();
         let skipped = self.start.column.pred_count();
         total - skipped
+    }
+}
+
+pub struct LnColCharIter<GridRef>
+where
+    GridRef: CharAt<LnCol> + Copy,
+    GridRef::Error: TryInto<LnColOutOfBound>,
+{
+    coord: LnCol,
+    grid: GridRef,
+}
+
+impl<GridRef> Iterator for LnColCharIter<GridRef>
+where
+    GridRef: CharAt<LnCol> + Copy,
+    GridRef::Error: TryInto<LnColOutOfBound>,
+{
+    type Item = Result<GridRef::Char, <GridRef::Error as TryInto<LnColOutOfBound>>::Error>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.grid.char_at(self.coord).map_err(TryInto::try_into) {
+            Ok(item) => {
+                self.coord = self.coord.advance_column(1);
+                Some(Ok(item))
+            }
+            Err(Ok(LnColOutOfBound::ColumnOutOfBound)) => {
+                let ln_pred_count = self.coord.line.pred_count() + 1;
+                self.coord = LnCol::from_pred_counts(ln_pred_count, 0);
+                self.next()
+            }
+            Err(Ok(LnColOutOfBound::LineOutOfBound)) => None,
+            Err(Err(error)) => Some(Err(error)),
+        }
+    }
+}
+
+impl<BaseGridRef> TryIterChar for CharGridSliceFrom<BaseGridRef, LnCol>
+where
+    BaseGridRef: CharAt<LnCol> + Copy,
+    BaseGridRef::Error: TryInto<LnColOutOfBound>,
+{
+    type Char = BaseGridRef::Char;
+    type Error = <BaseGridRef::Error as TryInto<LnColOutOfBound>>::Error;
+    type CharResultIter = LnColCharIter<BaseGridRef>;
+
+    fn try_iter_char(self) -> Self::CharResultIter {
+        LnColCharIter {
+            coord: self.start,
+            grid: self.grid,
+        }
     }
 }
 
