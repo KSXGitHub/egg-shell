@@ -190,6 +190,17 @@ where
     }
 }
 
+impl<BaseGrid> CharCount for CharGridSliceFrom<BaseGrid, CharPos>
+where
+    BaseGrid: CharCount,
+{
+    fn char_count(&self) -> usize {
+        let total = self.grid.char_count();
+        let skipped = self.start.pred_count();
+        total - skipped
+    }
+}
+
 pub struct CharPosCharIter<GridRef>
 where
     GridRef: CharAt<CharPos> + Copy,
