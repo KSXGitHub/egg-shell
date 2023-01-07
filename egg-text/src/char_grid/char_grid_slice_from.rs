@@ -242,6 +242,7 @@ where
     }
 }
 
+/// Character iterator of [`CharGridSliceFrom<_, CharPos>`].
 pub struct CharPosCharIter<GridRef>
 where
     GridRef: CharAt<CharPos> + Copy,
