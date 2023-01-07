@@ -1,7 +1,7 @@
 use super::{CharGridLine, CharGridSliceFrom};
 use crate::{
-    CharAt, CharCell, CharCount, CharOrEol, CharPos, ColNum, EndOfLine, LineAt, LineCount, LnCol,
-    LnNum, SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
+    CharAt, CharCell, CharCount, CharOrEol, CharPos, CharPosOutOfBound, ColNum, EndOfLine, LineAt,
+    LineCount, LnCol, LnColOutOfBound, LnNum, SliceFrom, TextSliceDef, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use getset::{CopyGetters, Getters};
@@ -36,6 +36,16 @@ pub enum CharAtLnColError {
     ColumnOutOfBound,
 }
 
+impl TryFrom<CharAtLnColError> for LnColOutOfBound {
+    type Error = Infallible;
+    fn try_from(value: CharAtLnColError) -> Result<LnColOutOfBound, Infallible> {
+        Ok(match value {
+            CharAtLnColError::LineOutOfBound => LnColOutOfBound::LineOutOfBound,
+            CharAtLnColError::ColumnOutOfBound => LnColOutOfBound::ColumnOutOfBound,
+        })
+    }
+}
+
 impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
     type Char = CharCell<char>;
     type Error = CharAtLnColError;
@@ -66,6 +76,15 @@ pub enum CharAtCharPosError {
     /// The grid doesn't have enough characters to match the requested index.
     #[display(fmt = "Character position does not exist")]
     OutOfBound,
+}
+
+impl TryFrom<CharAtCharPosError> for CharPosOutOfBound {
+    type Error = Infallible;
+    fn try_from(value: CharAtCharPosError) -> Result<CharPosOutOfBound, Infallible> {
+        Ok(match value {
+            CharAtCharPosError::OutOfBound => CharPosOutOfBound,
+        })
+    }
 }
 
 impl<'a> CharAt<CharPos> for &'a CompletedCharGrid {

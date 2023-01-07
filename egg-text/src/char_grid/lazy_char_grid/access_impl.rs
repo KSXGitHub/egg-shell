@@ -1,8 +1,8 @@
 use super::{LazyCharGrid, LoadCharError};
 use crate::{
     char_grid::{CharGridLine, CharGridSliceFrom},
-    CharAt, CharCell, CharOrEol, CharPos, ColNum, LineAt, LnCol, LnNum, Ordinal, SliceFrom,
-    TryIterChar, TryIterLine,
+    CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound, ColNum, LineAt, LnCol,
+    LnColOutOfBound, LnNum, LnNumOutOfBound, Ordinal, SliceFrom, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -19,6 +19,17 @@ pub enum CharAtLnColError<IterError> {
     /// The line doesn't have enough characters to match the requested column index.
     #[display(fmt = "Column does not exist")]
     ColumnOutOfBound,
+}
+
+impl<IterError> TryFrom<CharAtLnColError<IterError>> for LnColOutOfBound {
+    type Error = LoadCharError<IterError>;
+    fn try_from(value: CharAtLnColError<IterError>) -> Result<Self, Self::Error> {
+        match value {
+            CharAtLnColError::LoadCharError(error) => Err(error),
+            CharAtLnColError::LineOutOfBound => Ok(LnColOutOfBound::LineOutOfBound),
+            CharAtLnColError::ColumnOutOfBound => Ok(LnColOutOfBound::ColumnOutOfBound),
+        }
+    }
 }
 
 impl<'a, IterError, CharIter> CharAt<LnCol> for &'a LazyCharGrid<CharIter>
@@ -61,6 +72,16 @@ pub enum CharAtCharPosError<IterError> {
     OutOfBound,
 }
 
+impl<IterError> TryFrom<CharAtCharPosError<IterError>> for CharPosOutOfBound {
+    type Error = LoadCharError<IterError>;
+    fn try_from(value: CharAtCharPosError<IterError>) -> Result<Self, Self::Error> {
+        match value {
+            CharAtCharPosError::LoadCharError(error) => Err(error),
+            CharAtCharPosError::OutOfBound => Ok(CharPosOutOfBound),
+        }
+    }
+}
+
 impl<'a, IterError, CharIter> CharAt<CharPos> for &'a LazyCharGrid<CharIter>
 where
     CharIter: Iterator<Item = Result<char, IterError>>,
@@ -89,6 +110,16 @@ pub enum LineAtError<IterError> {
     /// The source iterator doesn't have enough lines to match the requested index.
     #[display(fmt = "Line does not exist")]
     OutOfBound,
+}
+
+impl<IterError> TryFrom<LineAtError<IterError>> for LnNumOutOfBound {
+    type Error = LoadCharError<IterError>;
+    fn try_from(value: LineAtError<IterError>) -> Result<Self, Self::Error> {
+        match value {
+            LineAtError::LoadCharError(error) => Err(error),
+            LineAtError::OutOfBound => Ok(LnNumOutOfBound),
+        }
+    }
 }
 
 impl<'a, IterError, CharIter> LineAt<LnNum> for &'a LazyCharGrid<CharIter>

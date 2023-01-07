@@ -1,5 +1,7 @@
 use super::{CharGridSliceFrom, GridCommon};
-use crate::{CharAt, CharPos, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef};
+use crate::{
+    CharAt, CharPos, CharPosOutOfBound, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef,
+};
 use derive_more::{Display, Error};
 use getset::CopyGetters;
 use std::{
@@ -84,6 +86,16 @@ pub enum ChatAtCharPosError<GridError> {
     /// The requested index is greater than the bound of the line.
     #[display(fmt = "Character position does not exist")]
     OutOfBound,
+}
+
+impl<GridError> TryFrom<ChatAtCharPosError<GridError>> for CharPosOutOfBound {
+    type Error = GridError;
+    fn try_from(value: ChatAtCharPosError<GridError>) -> Result<Self, Self::Error> {
+        match value {
+            ChatAtCharPosError::GridError(error) => Err(error),
+            ChatAtCharPosError::OutOfBound => Ok(CharPosOutOfBound),
+        }
+    }
 }
 
 impl<CharGridRef> CharAt<CharPos> for CharGridLine<CharGridRef>
