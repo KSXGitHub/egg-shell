@@ -1,6 +1,6 @@
 use crate::{
-    CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, LineAt, LineCount, LnCol,
-    LnColOutOfBound, LnNum, LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
+    CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, ColNumOutOfBound, LineAt, LineCount,
+    LnCol, LnColOutOfBound, LnNum, LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
 };
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -51,6 +51,51 @@ where
         let total = self.grid.char_count();
         let skipped = self.start.pred_count();
         total - skipped
+    }
+}
+
+/// Character iterator of [`CharGridSliceFrom<_, ColNum>`]
+pub struct ColNumCharIter<GridRef>
+where
+    GridRef: CharAt<ColNum> + Copy,
+    GridRef::Error: TryInto<ColNumOutOfBound>,
+{
+    grid: GridRef,
+    col_num: ColNum,
+}
+
+impl<GridRef> Iterator for ColNumCharIter<GridRef>
+where
+    GridRef: CharAt<ColNum> + Copy,
+    GridRef::Error: TryInto<ColNumOutOfBound>,
+{
+    type Item = Result<GridRef::Char, <GridRef::Error as TryInto<ColNumOutOfBound>>::Error>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let item = match self.grid.char_at(self.col_num).map_err(TryInto::try_into) {
+            Ok(char) => Ok(char),
+            Err(Ok(ColNumOutOfBound)) => return None,
+            Err(Err(error)) => Err(error),
+        };
+        self.col_num = self.col_num.advance_by(1);
+        Some(item)
+    }
+}
+
+impl<BaseGridRef> TryIterChar for CharGridSliceFrom<BaseGridRef, ColNum>
+where
+    BaseGridRef: CharAt<ColNum> + Copy,
+    BaseGridRef::Error: TryInto<ColNumOutOfBound>,
+{
+    type Char = BaseGridRef::Char;
+    type Error = <BaseGridRef::Error as TryInto<ColNumOutOfBound>>::Error;
+    type CharResultIter = ColNumCharIter<BaseGridRef>;
+
+    fn try_iter_char(self) -> Self::CharResultIter {
+        ColNumCharIter {
+            grid: self.grid,
+            col_num: self.start,
+        }
     }
 }
 
