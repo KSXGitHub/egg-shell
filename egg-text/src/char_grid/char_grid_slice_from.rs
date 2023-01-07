@@ -2,6 +2,8 @@ use crate::{
     CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, LineAt, LineCount, LnCol, LnNum,
     LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
 };
+use derive_more::{Display, Error};
+use pipe_trait::Pipe;
 use std::convert::Infallible;
 
 /// Create a slice of char grid from a start coordinate.
@@ -112,6 +114,79 @@ where
         let total = self.grid.char_count();
         let skipped = self.start.pred_count();
         total - skipped
+    }
+}
+
+/// Error type of [`TryIterChar`] on [`CharGridSliceFrom<_, LnNum>`].
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
+pub enum LnNumIterCharError<IterLineError, IterColumnError> {
+    AtLine(IterLineError),
+    AtColumn(IterColumnError),
+}
+
+/// Character iterator of [`CharGridSliceFrom<_, LnNum>`].
+pub struct LnNumCharIter<GridRef>
+where
+    GridRef: LineAt<LnNum> + Copy,
+    GridRef::Error: TryInto<LnNumOutOfBound>,
+    GridRef::Line: TryIterChar + Copy,
+{
+    ln_iter: <CharGridSliceFrom<GridRef, LnNum> as TryIterLine>::LineResultIter,
+    col_iter: Option<<GridRef::Line as TryIterChar>::CharResultIter>,
+}
+
+impl<GridRef> Iterator for LnNumCharIter<GridRef>
+where
+    GridRef: LineAt<LnNum> + Copy,
+    GridRef::Error: TryInto<LnNumOutOfBound>,
+    GridRef::Line: TryIterChar + Copy,
+{
+    type Item = Result<
+        <GridRef::Line as TryIterChar>::Char,
+        LnNumIterCharError<
+            <GridRef::Error as TryInto<LnNumOutOfBound>>::Error,
+            <GridRef::Line as TryIterChar>::Error,
+        >,
+    >;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(col_iter) = &mut self.col_iter {
+            let Some(col_item) = col_iter.next() else {
+                self.col_iter = None;
+                return self.next();
+            };
+
+            col_item.map_err(LnNumIterCharError::AtColumn).pipe(Some)
+        } else {
+            match self.ln_iter.next()? {
+                Err(error) => error.pipe(LnNumIterCharError::AtLine).pipe(Err).pipe(Some),
+                Ok(ln_item) => {
+                    self.col_iter = Some(ln_item.try_iter_char());
+                    self.next()
+                }
+            }
+        }
+    }
+}
+
+impl<BaseGridRef> TryIterChar for CharGridSliceFrom<BaseGridRef, LnNum>
+where
+    BaseGridRef: LineAt<LnNum> + Copy,
+    BaseGridRef::Error: TryInto<LnNumOutOfBound>,
+    BaseGridRef::Line: TryIterChar + Copy,
+{
+    type Char = <BaseGridRef::Line as TryIterChar>::Char;
+    type Error = LnNumIterCharError<
+        <BaseGridRef::Error as TryInto<LnNumOutOfBound>>::Error,
+        <BaseGridRef::Line as TryIterChar>::Error,
+    >;
+    type CharResultIter = LnNumCharIter<BaseGridRef>;
+
+    fn try_iter_char(self) -> Self::CharResultIter {
+        LnNumCharIter {
+            ln_iter: self.try_iter_line(),
+            col_iter: None,
+        }
     }
 }
 
