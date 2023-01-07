@@ -1,6 +1,6 @@
 use crate::{
     CharAt, CharCount, CharPos, CharPosOutOfBound, ColNum, LineAt, LineCount, LnCol, LnNum,
-    SliceFrom, TryIterChar,
+    LnNumOutOfBound, SliceFrom, TryIterChar, TryIterLine,
 };
 use std::convert::Infallible;
 
@@ -112,6 +112,47 @@ where
         let total = self.grid.char_count();
         let skipped = self.start.pred_count();
         total - skipped
+    }
+}
+
+/// Line iterator of [`CharGridSliceFrom<_, LnNum>`].
+pub struct LnNumLineIter<GridRef> {
+    ln_num: LnNum,
+    grid: GridRef,
+}
+
+impl<GridRef> Iterator for LnNumLineIter<GridRef>
+where
+    GridRef: LineAt<LnNum> + Copy,
+    GridRef::Error: TryInto<LnNumOutOfBound>,
+{
+    type Item = Result<GridRef::Line, <GridRef::Error as TryInto<LnNumOutOfBound>>::Error>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let item = match self.grid.line_at(self.ln_num).map_err(TryInto::try_into) {
+            Ok(line) => Ok(line),
+            Err(Ok(LnNumOutOfBound)) => return None,
+            Err(Err(error)) => Err(error),
+        };
+        self.ln_num = self.ln_num.advance_by(1);
+        Some(item)
+    }
+}
+
+impl<BaseGridRef> TryIterLine for CharGridSliceFrom<BaseGridRef, LnNum>
+where
+    BaseGridRef: LineAt<LnNum> + Copy,
+    BaseGridRef::Error: TryInto<LnNumOutOfBound>,
+{
+    type Line = BaseGridRef::Line;
+    type Error = <BaseGridRef::Error as TryInto<LnNumOutOfBound>>::Error;
+    type LineResultIter = LnNumLineIter<BaseGridRef>;
+
+    fn try_iter_line(self) -> Self::LineResultIter {
+        LnNumLineIter {
+            ln_num: self.start,
+            grid: self.grid,
+        }
     }
 }
 
