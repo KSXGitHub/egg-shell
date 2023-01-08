@@ -19,3 +19,6 @@ impl<'a> LineAt<LnNum> for &'a CompletedCharGrid {
             .ok_or(LineAtError::OutOfBound)
     }
 }
+
+#[cfg(test)]
+mod test;

@@ -75,3 +75,6 @@ impl<'a> TryIterChar for &'a CompletedCharGrid {
         }
     }
 }
+
+#[cfg(test)]
+mod test;

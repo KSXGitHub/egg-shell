@@ -48,3 +48,6 @@ impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
             .pipe(Ok)
     }
 }
+
+#[cfg(test)]
+mod test;

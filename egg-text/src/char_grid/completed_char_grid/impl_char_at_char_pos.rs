@@ -29,3 +29,6 @@ impl<'a> CharAt<CharPos> for &'a CompletedCharGrid {
             .ok_or(CharAtCharPosError::OutOfBound)
     }
 }
+
+#[cfg(test)]
+mod test;

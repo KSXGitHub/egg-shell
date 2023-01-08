@@ -33,3 +33,6 @@ impl<'a> TryIterLine for &'a CompletedCharGrid {
         }
     }
 }
+
+#[cfg(test)]
+mod test;
