@@ -11,4 +11,4 @@ pub use impl_line_at_ln_num::*;
 pub use impl_try_iter_char::*;
 pub use impl_try_iter_line::*;
 
-use super::{LazyCharGrid, LoadCharError};
+use super::LoadCharError;

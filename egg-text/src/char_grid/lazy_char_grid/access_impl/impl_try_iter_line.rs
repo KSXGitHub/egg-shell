@@ -1,5 +1,5 @@
-use super::{LazyCharGrid, LineAtError, LoadCharError};
-use crate::{char_grid::CharGridLine, LineAt, LnNum, Ordinal, TryIterLine};
+use super::{LineAtError, LoadCharError};
+use crate::{char_grid::CharGridLine, LazyCharGrid, LineAt, LnNum, Ordinal, TryIterLine};
 
 /// An iterator that emits instances of [`CharGridLine`] from [`LazyCharGrid`].
 pub struct LineIter<'a, SrcIterError, SrcIter>

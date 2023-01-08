@@ -1,5 +1,4 @@
-use super::LazyCharGrid;
-use crate::{char_grid::CharGridSliceFrom, CharPos, LnCol, LnNum, SliceFrom};
+use crate::{char_grid::CharGridSliceFrom, CharPos, LazyCharGrid, LnCol, LnNum, SliceFrom};
 use std::convert::Infallible;
 
 impl<'a, SrcIter: 'a> SliceFrom<LnNum> for &'a LazyCharGrid<SrcIter> {

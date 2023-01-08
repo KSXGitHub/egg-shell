@@ -1,5 +1,5 @@
-use super::{LazyCharGrid, LoadCharError};
-use crate::{char_grid::CharGridLine, LineAt, LnNum, LnNumOutOfBound};
+use super::LoadCharError;
+use crate::{char_grid::CharGridLine, LazyCharGrid, LineAt, LnNum, LnNumOutOfBound};
 use derive_more::{Display, Error};
 use std::fmt::Debug;
 

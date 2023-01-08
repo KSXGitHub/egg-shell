@@ -1,5 +1,5 @@
-use super::{LazyCharGrid, LineAtError, LoadCharError};
-use crate::{CharAt, CharCell, LineAt, LnCol, LnColOutOfBound};
+use super::{LineAtError, LoadCharError};
+use crate::{CharAt, CharCell, LazyCharGrid, LineAt, LnCol, LnColOutOfBound};
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
 use std::fmt::Debug;
