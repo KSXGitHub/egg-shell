@@ -78,3 +78,6 @@ impl<'a> ScanText<'a> {
         }
     }
 }
+
+#[cfg(test)]
+mod test;

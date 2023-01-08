@@ -1,4 +1,5 @@
-use egg_text::{text_slice::ScanText, CharCell, CharOrEol, EndOfLine, LnCol};
+use super::ScanText;
+use crate::{CharCell, CharOrEol, EndOfLine, LnCol};
 use pretty_assertions::assert_eq;
 
 #[test]
