@@ -41,3 +41,6 @@ where
         Err(LineAtError::OutOfBound)
     }
 }
+
+#[cfg(test)]
+mod test;

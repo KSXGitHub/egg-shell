@@ -57,3 +57,6 @@ where
             .pipe(Ok)
     }
 }
+
+#[cfg(test)]
+mod test;

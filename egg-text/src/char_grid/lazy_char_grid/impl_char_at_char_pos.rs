@@ -42,3 +42,6 @@ where
             .ok_or(CharAtCharPosError::OutOfBound)
     }
 }
+
+#[cfg(test)]
+mod test;
