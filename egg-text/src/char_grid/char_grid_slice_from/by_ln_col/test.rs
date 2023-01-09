@@ -1,6 +1,6 @@
 #![allow(clippy::identity_op)] // allow expressing 0 + n
 
-use egg_text::{char_grid::lazy_char_grid, CharAt, LazyCharGrid, LineAt, LnCol, LnNum, SliceFrom};
+use crate::{char_grid::lazy_char_grid, CharAt, LazyCharGrid, LineAt, LnCol, LnNum, SliceFrom};
 use pretty_assertions::assert_eq;
 
 const SRC_TEXT: &str = concat! {
