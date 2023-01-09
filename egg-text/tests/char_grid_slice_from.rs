@@ -29,7 +29,7 @@ fn partially_loaded_grid() -> lazy_char_grid::LazyCharGridFromStr<'static> {
 }
 
 #[test]
-fn lazy_slice_from_char_coord_char_at() {
+fn lazy_slice_from_ln_col_char_at() {
     macro_rules! test_char {
         ($char:expr, $expected_coord:expr) => {{
             assert_eq!(
@@ -103,7 +103,7 @@ fn lazy_slice_from_char_coord_char_at() {
 }
 
 #[test]
-fn lazy_slice_from_char_coord_line_at() {
+fn lazy_slice_from_ln_col_line_at() {
     let grid = partially_loaded_grid();
 
     eprintln!("create the slice");
