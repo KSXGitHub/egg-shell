@@ -23,6 +23,16 @@ impl<'a, CharIter> InnerTextSlice<'a, CharIter> {
     {
         act(&self.data.loaded_text[self.start..self.end])
     }
+
+    /// Return the length of the slice.
+    pub const fn len(&self) -> usize {
+        self.end - self.start
+    }
+
+    /// Whether the slice is empty.
+    pub const fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 impl<'a, CharIter> Display for InnerTextSlice<'a, CharIter> {

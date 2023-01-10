@@ -1,8 +1,8 @@
 use super::LineAtError;
-use crate::{CharAt, CharCell, CompletedCharGrid, LineAt, LnCol, LnColOutOfBound};
+use crate::{CharAt, CharCell, CharOrEol, CompletedCharGrid, LineAt, LnCol, LnColOutOfBound};
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
-use std::convert::Infallible;
+use std::{cmp::Ordering, convert::Infallible};
 
 /// Error type of [`CharAt<LnCol>`] for [`CompletedCharGrid`].
 #[derive(Debug, Display, Clone, Copy, PartialEq, Eq, Error)]
@@ -26,26 +26,39 @@ impl TryFrom<CharAtLnColError> for LnColOutOfBound {
 }
 
 impl<'a> CharAt<LnCol> for &'a CompletedCharGrid {
-    type Char = CharCell<char>;
+    type Char = CharCell<CharOrEol>;
     type Error = CharAtLnColError;
-    fn char_at(self, coord: LnCol) -> Result<CharCell<char>, CharAtLnColError> {
+    fn char_at(self, coord: LnCol) -> Result<Self::Char, CharAtLnColError> {
         let line = self.line_at(coord.line).map_err(|error| match error {
             LineAtError::OutOfBound => CharAtLnColError::LineOutOfBound,
         })?;
-        if coord.column.pred_count() >= line.slice().char_count() {
-            return Err(CharAtLnColError::ColumnOutOfBound);
+        match coord.column.pred_count().cmp(&line.slice().char_count()) {
+            Ordering::Greater => Err(CharAtLnColError::ColumnOutOfBound),
+            Ordering::Equal => {
+                let ln_size = line.text_without_eol().len();
+                let slice = line.slice();
+                Ok(CharCell {
+                    coord,
+                    offset_from_ln_start: ln_size,
+                    offset_from_doc_start: slice.offset() + ln_size,
+                    pos: slice.first_char_pos().advance_by(slice.char_count()),
+                    value: CharOrEol::EndOfLine(line.eol()),
+                })
+            }
+            Ordering::Less => {
+                let char_pos = line
+                    .slice()
+                    .first_char_pos()
+                    .advance_by(coord.column.pred_count());
+                self.char_list()
+                    .get(char_pos.pred_count())
+                    .copied()
+                    .expect("char_pos should be within the range of char_list")
+                    .pipe(Self::Char::try_from)
+                    .expect("resulting char should not be an EOL")
+                    .pipe(Ok)
+            }
         }
-        let char_pos = line
-            .slice()
-            .first_char_pos()
-            .advance_by(coord.column.pred_count());
-        self.char_list()
-            .get(char_pos.pred_count())
-            .copied()
-            .expect("char_pos should be within the range of char_list")
-            .pipe(Self::Char::try_from)
-            .expect("resulting char should not be an EOL")
-            .pipe(Ok)
     }
 }
 

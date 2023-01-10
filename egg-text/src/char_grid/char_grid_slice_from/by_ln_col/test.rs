@@ -33,14 +33,15 @@ fn lazy_slice_from_ln_col_char_at() {
     macro_rules! test_char {
         ($char:expr, $expected_coord:expr) => {{
             assert_eq!(
-                *$char.value(),
+                $char.value().to_string(),
                 SRC_TEXT
                     .lines()
                     .nth($expected_coord.line.pred_count())
                     .unwrap()
                     .chars()
                     .nth($expected_coord.column.pred_count())
-                    .unwrap(),
+                    .unwrap()
+                    .to_string(),
             );
             assert_eq!($char.coord(), $expected_coord);
         }};
