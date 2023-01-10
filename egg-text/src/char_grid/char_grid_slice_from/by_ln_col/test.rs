@@ -1,6 +1,8 @@
 #![allow(clippy::identity_op)] // allow expressing 0 + n
 
-use crate::{char_grid::lazy_char_grid, CharAt, LazyCharGrid, LineAt, LnCol, LnNum, SliceFrom};
+use crate::{
+    char_grid::lazy_char_grid, CharAt, LazyCharGrid, LineAt, LnCol, LnNum, SliceFrom, TryIterChar,
+};
 use pretty_assertions::assert_eq;
 
 const SRC_TEXT: &str = concat! {
@@ -127,4 +129,42 @@ fn lazy_slice_from_ln_col_line_at() {
         line.to_string(),
         "So I use it to create a programming language,\n",
     );
+}
+
+#[test]
+fn lazy_slice_from_ln_col_try_iter_char() {
+    let grid = partially_loaded_grid();
+
+    eprintln!("create the slice");
+    let slice = grid
+        .slice_from(LnCol::from_pred_counts(1, 3))
+        .expect("slice 2:4")
+        .slice_from(LnCol::from_pred_counts(1, 2))
+        .expect("slice 2:3");
+
+    let mut acc = String::new();
+    for char_result in slice.try_iter_char() {
+        let char = char_result.expect("get char");
+        let pos = char.pos();
+        let string = char.to_string();
+        eprintln!("char = {char:?}; pos = {pos:?}");
+        assert_eq!(
+            grid.char_at(char.coord())
+                .expect("grid.char_at ln_col")
+                .to_string(),
+            string,
+        );
+        assert_eq!(
+            grid.char_at(pos).expect("grid.char_at pos").to_string(),
+            string,
+        );
+        acc += &string;
+    }
+
+    eprintln!("ACCUMULATION:\n{acc}\n");
+    let offset = slice
+        .char_at(LnCol::from_pred_counts(0, 0))
+        .expect("char_at 1:1")
+        .offset_from_doc_start;
+    assert_eq!(acc, SRC_TEXT[offset..]);
 }
