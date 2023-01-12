@@ -1,4 +1,4 @@
-use crate::CharCoord;
+use crate::{CharPos, LnCol};
 use getset::{CopyGetters, Getters};
 use std::fmt::{self, Debug, Display, Formatter};
 
@@ -7,7 +7,10 @@ use std::fmt::{self, Debug, Display, Formatter};
 pub struct CharCell<Char> {
     /// Character coordinate.
     #[getset(get_copy = "pub")]
-    pub(crate) coord: CharCoord,
+    pub(crate) coord: LnCol,
+    /// Character position.
+    #[getset(get_copy = "pub")]
+    pub(crate) pos: CharPos,
     /// Byte offset from the start of the line.
     #[getset(get_copy = "pub")]
     pub(crate) offset_from_ln_start: usize,
@@ -27,6 +30,7 @@ impl<Char> CharCell<Char> {
     {
         let CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,
@@ -34,6 +38,7 @@ impl<Char> CharCell<Char> {
         let value = function(value);
         CharCell {
             coord,
+            pos,
             offset_from_ln_start,
             offset_from_doc_start,
             value,

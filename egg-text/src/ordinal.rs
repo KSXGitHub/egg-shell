@@ -41,6 +41,15 @@ impl Ordinal {
         self.pred_count += steps;
         self
     }
+
+    /// Try retreat the cardinal by a number of steps.
+    ///
+    /// Return `None` if overflow occurred.
+    pub fn try_retreat_by(self, steps: usize) -> Option<Self> {
+        self.pred_count
+            .checked_sub(steps)
+            .map(Ordinal::from_pred_count)
+    }
 }
 
 /// Display the value of the ordinal as a string.
