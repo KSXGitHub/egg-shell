@@ -2,7 +2,7 @@ use super::{CharCell, EndOfLine};
 use derive_more::{Display, From, TryInto};
 
 /// Either a non-EOL character or and EOL sequence.
-#[derive(Debug, Display, Clone, Copy, From, TryInto)]
+#[derive(Debug, Display, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum CharOrEol {
     /// Non-EOL character.
     Char(char),
