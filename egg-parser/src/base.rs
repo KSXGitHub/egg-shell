@@ -40,6 +40,7 @@ pub trait Parse<Input> {
     type Error;
     /// Parse an input.
     fn parse(
+        self,
         parent_stack: Self::Stack,
         input: Input,
     ) -> ParseResult<Input, Self::Output, Self::Stack, Self::Error>;
