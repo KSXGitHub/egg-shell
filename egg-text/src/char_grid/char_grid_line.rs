@@ -1,6 +1,7 @@
 use super::{CharGridSliceFrom, GridCommon};
 use crate::{
     CharAt, CharPos, CharPosOutOfBound, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef,
+    TryIterChar,
 };
 use derive_more::{Display, Error};
 use getset::CopyGetters;
@@ -137,5 +138,47 @@ where
 
     fn slice_from(self, start: CharPos) -> Result<Self::Slice, Self::Error> {
         Ok(CharGridSliceFrom { grid: self, start })
+    }
+}
+
+/// Character iterator of [`CharGridLine`].
+pub struct CharIter<CharGridRef>
+where
+    CharGridRef: CharAt<CharPos> + Copy,
+{
+    index: usize,
+    line: CharGridLine<CharGridRef>,
+}
+
+impl<CharGridRef> Iterator for CharIter<CharGridRef>
+where
+    CharGridRef: CharAt<CharPos> + Copy,
+{
+    type Item = Result<CharGridRef::Char, CharGridRef::Error>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let CharIter { index, line } = self;
+        let CharGridLine { slice, grid, .. } = *line;
+        if *index >= slice.char_count() {
+            return None;
+        }
+        let pos = slice.first_char_pos().advance_by(*index);
+        Some(grid.char_at(pos))
+    }
+}
+
+impl<CharGridRef> TryIterChar for CharGridLine<CharGridRef>
+where
+    CharGridRef: CharAt<CharPos> + Copy,
+{
+    type Char = CharGridRef::Char;
+    type Error = CharGridRef::Error;
+    type CharResultIter = CharIter<CharGridRef>;
+
+    fn try_iter_char(self) -> Self::CharResultIter {
+        CharIter {
+            index: 0,
+            line: self,
+        }
     }
 }
