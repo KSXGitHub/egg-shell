@@ -51,3 +51,15 @@ impl TryFrom<CharCell<CharOrEol>> for CharCell<EndOfLine> {
         })
     }
 }
+
+impl PartialEq<str> for CharOrEol {
+    fn eq(&self, other: &str) -> bool {
+        let char = match *self {
+            CharOrEol::Char(char) => char,
+            CharOrEol::EndOfLine(eol) => return eol.as_ref() == other,
+        };
+
+        let mut chars = other.chars();
+        chars.next() == Some(char) && chars.next().is_none()
+    }
+}
