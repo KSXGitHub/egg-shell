@@ -63,3 +63,20 @@ impl PartialEq<str> for CharOrEol {
         chars.next() == Some(char) && chars.next().is_none()
     }
 }
+
+impl<'a> PartialEq<&'a str> for CharOrEol {
+    fn eq(&self, other: &&'a str) -> bool {
+        PartialEq::<str>::eq(self, *other)
+    }
+}
+
+impl PartialEq<CharOrEol> for str {
+    fn eq(&self, other: &CharOrEol) -> bool {
+        PartialEq::<str>::eq(other, self)
+    }
+}
+impl<'a> PartialEq<CharOrEol> for &'a str {
+    fn eq(&self, other: &CharOrEol) -> bool {
+        PartialEq::<str>::eq(other, self)
+    }
+}
