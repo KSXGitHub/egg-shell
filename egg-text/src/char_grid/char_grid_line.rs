@@ -159,7 +159,7 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         let CharIter { index, line } = self;
         let CharGridLine { slice, grid, .. } = *line;
-        if *index >= slice.char_count() {
+        if *index > slice.char_count() {
             return None;
         }
         let pos = slice.first_char_pos().advance_by(*index);
