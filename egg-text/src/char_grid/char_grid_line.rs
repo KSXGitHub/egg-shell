@@ -163,6 +163,7 @@ where
             return None;
         }
         let pos = slice.first_char_pos().advance_by(*index);
+        *index += 1;
         Some(grid.char_at(pos))
     }
 }
