@@ -19,11 +19,10 @@ pub enum CharFatalError<CharAtError, SliceFromError> {
     SliceFrom(SliceFromError),
 }
 
-impl<Input> Parse<Input> for Char
+impl<Input, Stack> Parse<Input, Stack> for Char
 where
     Input: CharAt<CharPos, Char = CharCell<CharOrEol>> + SliceFrom<CharPos, Slice = Input> + Copy,
 {
-    type Stack = ();
     type Failure = CharFailure;
     type FatalError =
         CharFatalError<<Input as CharAt<CharPos>>::Error, <Input as SliceFrom<CharPos>>::Error>;
@@ -31,9 +30,9 @@ where
 
     fn parse(
         self,
-        stack: Self::Stack,
+        stack: Stack,
         input: Input,
-    ) -> ParseResult<Input, Self::Output, Self::Stack, Self::Failure, Self::FatalError> {
+    ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
         let output = input
             .char_at(CharPos::from_pred_count(0))
             .map_err(CharFatalError::CharAt)?;

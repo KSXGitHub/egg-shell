@@ -7,9 +7,7 @@ pub type ParseResult<Input, Output, Stack, Failure, FatalError> =
     Result<Response<Input, Output, Stack, Failure>, FatalError>;
 
 /// Parse an input.
-pub trait Parse<Input> {
-    /// Stack to pass between parsers.
-    type Stack;
+pub trait Parse<Input, Stack> {
     /// Parsing result.
     ///
     /// The parser should return this value.
@@ -25,7 +23,7 @@ pub trait Parse<Input> {
     /// Parse an input.
     fn parse(
         self,
-        parent_stack: Self::Stack,
+        parent_stack: Stack,
         input: Input,
-    ) -> ParseResult<Input, Self::Output, Self::Stack, Self::Failure, Self::FatalError>;
+    ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError>;
 }
