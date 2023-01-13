@@ -1,7 +1,7 @@
 use super::{VarChar, VarCharFatalError};
-use crate::{Parse, ParseResult, Response};
+use crate::{Parse, ParseResult, Response, VarCharFailure};
 use derive_more::{Display, Error};
-use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
+use egg_text::{CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound, SliceFrom};
 use pipe_trait::Pipe;
 
 /// Parse a character constant.
@@ -11,6 +11,8 @@ pub struct ConstChar(pub char);
 /// Failure type of [`ConstChar`].
 #[derive(Debug, Clone, Copy)]
 pub enum ConstCharFailure {
+    /// Input is empty.
+    EmptyInput,
     /// Not the right character.
     Mismatch(CharCell<CharOrEol>),
 }
@@ -27,10 +29,11 @@ pub enum ConstCharFatalError<CharAtError, SliceFromError> {
 impl<Input, Stack> Parse<Input, Stack> for ConstChar
 where
     Input: CharAt<CharPos, Char = CharCell<CharOrEol>> + SliceFrom<CharPos, Slice = Input> + Copy,
+    <Input as CharAt<CharPos>>::Error: TryInto<CharPosOutOfBound>,
 {
     type Failure = ConstCharFailure;
     type FatalError = ConstCharFatalError<
-        <Input as CharAt<CharPos>>::Error,
+        <<Input as CharAt<CharPos>>::Error as TryInto<CharPosOutOfBound>>::Error,
         <Input as SliceFrom<CharPos>>::Error,
     >;
     type Output = CharCell<CharOrEol>;
@@ -46,7 +49,11 @@ where
         })?;
         let response = match response {
             Response::Success(output) => output,
-            Response::Failure(error) => match error {},
+            Response::Failure(VarCharFailure::EmptyInput) => {
+                return ConstCharFailure::EmptyInput
+                    .pipe(Response::Failure)
+                    .into_ok()
+            }
         };
         if response.output.value() != &CharOrEol::Char(self.0) {
             response
