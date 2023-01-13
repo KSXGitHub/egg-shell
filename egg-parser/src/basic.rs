@@ -1,11 +1,16 @@
 use crate::{Parse, ParseResult, Response};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 
+/// Parse a character.
 pub struct Char(pub char);
 
+/// Error type of [`Char`].
 pub enum CharError<CharAtError, SliceFromError> {
+    /// Not the right character.
     Mismatch(CharCell<CharOrEol>),
+    /// Error from [`CharAt`].
     CharAt(CharAtError),
+    /// Error from [`SliceFrom`].
     SliceFrom(SliceFromError),
 }
 
