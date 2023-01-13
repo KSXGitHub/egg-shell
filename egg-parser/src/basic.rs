@@ -46,10 +46,11 @@ where
         let remaining = input
             .slice_from(CharPos::from_pred_count(1))
             .map_err(CharFatalError::SliceFrom)?;
-        Ok(Response::Success(ResponseValue {
-            stack,
-            output,
-            remaining,
-        }))
+        ResponseValue::builder()
+            .with_stack(stack)
+            .with_output(output)
+            .with_remaining(remaining)
+            .into_success()
+            .into_ok()
     }
 }

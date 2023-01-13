@@ -25,6 +25,62 @@ impl<Input, Output, Stack> ResponseValue<Input, Output, Stack> {
     pub fn into_tuple(self) -> (Stack, Output, Input) {
         (self.stack, self.output, self.remaining)
     }
+
+    /// Convert into a [`Response::Success`].
+    pub const fn into_success<Failure>(self) -> Response<Input, Output, Stack, Failure> {
+        Response::Success(self)
+    }
+
+    /// Replace [`ResponseValue::remaining`].
+    pub fn with_remaining<NewInput>(
+        self,
+        remaining: NewInput,
+    ) -> ResponseValue<NewInput, Output, Stack> {
+        let ResponseValue { stack, output, .. } = self;
+        ResponseValue {
+            stack,
+            output,
+            remaining,
+        }
+    }
+
+    /// Replace [`ResponseValue::stack`].
+    pub fn with_stack<NewStack>(self, stack: NewStack) -> ResponseValue<Input, Output, NewStack> {
+        let ResponseValue {
+            output, remaining, ..
+        } = self;
+        ResponseValue {
+            stack,
+            output,
+            remaining,
+        }
+    }
+
+    /// Replace [`ResponseValue::output`].
+    pub fn with_output<NewOutput>(
+        self,
+        output: NewOutput,
+    ) -> ResponseValue<Input, NewOutput, Stack> {
+        let ResponseValue {
+            stack, remaining, ..
+        } = self;
+        ResponseValue {
+            stack,
+            output,
+            remaining,
+        }
+    }
+}
+
+impl ResponseValue<(), (), ()> {
+    /// Start a builder pattern.
+    pub const fn builder() -> Self {
+        ResponseValue {
+            stack: (),
+            output: (),
+            remaining: (),
+        }
+    }
 }
 
 /// Response of [`Parse::parse`].
@@ -34,4 +90,11 @@ pub enum Response<Input, Output, Stack, Failure> {
     Success(ResponseValue<Input, Output, Stack>),
     /// Error when parsing fails.
     Failure(Failure),
+}
+
+impl<Input, Output, Stack, Failure> Response<Input, Output, Stack, Failure> {
+    /// Convert into a [`Result::Ok`].
+    pub const fn into_ok<FatalError>(self) -> Result<Self, FatalError> {
+        Ok(self)
+    }
 }
