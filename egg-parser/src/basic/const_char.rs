@@ -1,4 +1,5 @@
 use crate::{Parse, ParseResult, Response, ResponseValue};
+use derive_more::{Display, Error};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 use pipe_trait::Pipe;
 
@@ -14,7 +15,7 @@ pub enum ConstCharFailure {
 }
 
 /// Error type of [`ConstChar`].
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Display, Clone, Copy, Error)]
 pub enum ConstCharFatalError<CharAtError, SliceFromError> {
     /// Error from [`CharAt`].
     CharAt(CharAtError),
