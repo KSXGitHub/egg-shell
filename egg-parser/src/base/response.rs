@@ -98,3 +98,10 @@ impl<Input, Output, Stack, Failure> Response<Input, Output, Stack, Failure> {
         Ok(self)
     }
 }
+
+impl Response<(), (), (), ()> {
+    /// Start a builder pattern.
+    pub const fn builder() -> ResponseValue<(), (), ()> {
+        ResponseValue::builder()
+    }
+}

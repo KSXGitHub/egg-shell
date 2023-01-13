@@ -1,4 +1,4 @@
-use crate::{Parse, ParseResult, Response, ResponseValue};
+use crate::{Parse, ParseResult, Response};
 use derive_more::{Display, Error};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 use pipe_trait::Pipe;
@@ -51,7 +51,7 @@ where
         let remaining = input
             .slice_from(CharPos::from_pred_count(1))
             .map_err(ConstCharFatalError::SliceFrom)?;
-        ResponseValue::builder()
+        Response::builder()
             .with_stack(stack)
             .with_output(output)
             .with_remaining(remaining)
