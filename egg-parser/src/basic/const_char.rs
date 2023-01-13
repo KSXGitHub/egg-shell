@@ -3,15 +3,18 @@ use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 use pipe_trait::Pipe;
 
 /// Parse a character.
+#[derive(Debug, Clone, Copy)]
 pub struct ConstChar(pub char);
 
 /// Failure type of [`ConstChar`].
+#[derive(Debug, Clone, Copy)]
 pub enum ConstCharFailure {
     /// Not the right character.
     Mismatch(CharCell<CharOrEol>),
 }
 
 /// Error type of [`ConstChar`].
+#[derive(Debug, Clone, Copy)]
 pub enum ConstCharFatalError<CharAtError, SliceFromError> {
     /// Error from [`CharAt`].
     CharAt(CharAtError),
