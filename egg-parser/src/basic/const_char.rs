@@ -1,3 +1,4 @@
+use super::{VarChar, VarCharFatalError};
 use crate::{Parse, ParseResult, Response};
 use derive_more::{Display, Error};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
@@ -39,23 +40,22 @@ where
         stack: Stack,
         input: Input,
     ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
-        let output = input
-            .char_at(CharPos::from_pred_count(0))
-            .map_err(ConstCharFatalError::CharAt)?;
-        if output.value() != &CharOrEol::Char(self.0) {
-            return output
+        let response = VarChar.parse(stack, input).map_err(|error| match error {
+            VarCharFatalError::CharAt(error) => ConstCharFatalError::CharAt(error),
+            VarCharFatalError::SliceFrom(error) => ConstCharFatalError::SliceFrom(error),
+        })?;
+        let response = match response {
+            Response::Success(output) => output,
+            Response::Failure(error) => match error {},
+        };
+        if response.output.value() != &CharOrEol::Char(self.0) {
+            response
+                .output
                 .pipe(ConstCharFailure::Mismatch)
                 .pipe(Response::Failure)
-                .pipe(Ok);
+                .pipe(Ok)
+        } else {
+            response.into_success().into_ok()
         }
-        let remaining = input
-            .slice_from(CharPos::from_pred_count(1))
-            .map_err(ConstCharFatalError::SliceFrom)?;
-        Response::builder()
-            .with_stack(stack)
-            .with_output(output)
-            .with_remaining(remaining)
-            .into_success()
-            .into_ok()
     }
 }
