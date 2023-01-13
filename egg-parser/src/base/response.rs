@@ -97,6 +97,11 @@ impl<Input, Output, Stack, Failure> Response<Input, Output, Stack, Failure> {
     pub const fn into_ok<FatalError>(self) -> Result<Self, FatalError> {
         Ok(self)
     }
+
+    /// Create an [`Result::Ok`] of [`Response::Failure`].
+    pub const fn failure_ok<FatalError>(failure: Failure) -> Result<Self, FatalError> {
+        Response::Failure(failure).into_ok()
+    }
 }
 
 impl Response<(), (), (), ()> {

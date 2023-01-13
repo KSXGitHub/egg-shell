@@ -43,9 +43,7 @@ where
             .map_err(TryInto::try_into);
         let output = match char {
             Ok(char) => char,
-            Err(Ok(CharPosOutOfBound)) => {
-                return VarCharFailure::EmptyInput.pipe(Response::Failure).into_ok()
-            }
+            Err(Ok(CharPosOutOfBound)) => return Response::failure_ok(VarCharFailure::EmptyInput),
             Err(Err(error)) => return error.pipe(VarCharFatalError::CharAt).pipe(Err),
         };
         let remaining = input

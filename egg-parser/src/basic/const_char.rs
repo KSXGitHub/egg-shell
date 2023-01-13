@@ -50,9 +50,7 @@ where
         let response = match response {
             Response::Success(output) => output,
             Response::Failure(VarCharFailure::EmptyInput) => {
-                return ConstCharFailure::EmptyInput
-                    .pipe(Response::Failure)
-                    .into_ok()
+                return Response::failure_ok(ConstCharFailure::EmptyInput)
             }
         };
         if response.output.value() != &CharOrEol::Char(self.0) {
