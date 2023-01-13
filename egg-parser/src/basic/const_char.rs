@@ -3,7 +3,7 @@ use derive_more::{Display, Error};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 use pipe_trait::Pipe;
 
-/// Parse a character.
+/// Parse a character constant.
 #[derive(Debug, Clone, Copy)]
 pub struct ConstChar(pub char);
 
