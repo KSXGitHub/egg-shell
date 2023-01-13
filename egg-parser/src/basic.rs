@@ -1,4 +1,4 @@
-use crate::{Parse, ParseResult, Response};
+use crate::{Parse, ParseResult, Response, ResponseValue};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, SliceFrom};
 use pipe_trait::Pipe;
 
@@ -38,12 +38,15 @@ where
             .char_at(CharPos::from_pred_count(0))
             .map_err(CharFatalError::CharAt)?;
         if output.value() != &CharOrEol::Char(self.0) {
-            return output.pipe(CharFailure::Mismatch).pipe(Err).pipe(Ok);
+            return output
+                .pipe(CharFailure::Mismatch)
+                .pipe(Response::Failure)
+                .pipe(Ok);
         }
         let remaining = input
             .slice_from(CharPos::from_pred_count(1))
             .map_err(CharFatalError::SliceFrom)?;
-        Ok(Ok(Response {
+        Ok(Response::Success(ResponseValue {
             stack,
             output,
             remaining,
