@@ -1,3 +1,3 @@
-mod single_char;
+mod const_char;
 
-pub use single_char::*;
+pub use const_char::*;
