@@ -1,4 +1,4 @@
-/// Success value of [`Parse::parse`].
+/// Success value of [`Parse::parse`](super::Parse::parse).
 #[derive(Debug, Clone, Copy)]
 pub struct ResponseValue<Input, Output, Stack> {
     /// Stack from parent parsers.
@@ -83,7 +83,7 @@ impl ResponseValue<(), (), ()> {
     }
 }
 
-/// Response of [`Parse::parse`].
+/// Response of [`Parse::parse`](super::Parse::parse).
 #[derive(Debug, Clone, Copy)]
 pub enum Response<Input, Output, Stack, Failure> {
     /// Value when parsing succeeds.
