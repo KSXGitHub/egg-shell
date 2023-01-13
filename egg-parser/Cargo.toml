@@ -6,3 +6,4 @@ rust-version = "1.66"
 
 [dependencies]
 egg-text = { version = "0.0.0", path = "../egg-text" }
+pipe-trait = "0.4.0"
