@@ -4,9 +4,11 @@ use egg_text::{CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound, SliceFro
 use pipe_trait::Pipe;
 
 /// Parse a single character.
+#[derive(Debug, Clone, Copy)]
 pub struct VarChar;
 
 /// Failure type of [`VarChar`].
+#[derive(Debug, Clone, Copy)]
 pub enum VarCharFailure {
     /// Input is empty.
     EmptyInput,
