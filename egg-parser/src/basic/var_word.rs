@@ -46,7 +46,7 @@ where
         stack: Stack,
         input: Input,
     ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
-        let mut output: Self::Output = Vec::new();
+        let mut output = Vec::new();
 
         loop {
             let pos = CharPos::from_pred_count(output.len());
