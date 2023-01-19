@@ -1,14 +1,12 @@
+mod end_of_word;
+
+pub use end_of_word::*;
+
 use crate::{Parse, ParseResult, Response};
 use derive_more::{Constructor, Display, Error};
 use egg_text::{CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound, SliceFrom};
 use pipe_trait::Pipe;
 use std::convert::Infallible;
-
-/// Check if a character is the end of a word.
-pub trait IsEndOfWord: Copy {
-    /// Check if a character is the end of a word.
-    fn is_end_of_word(self, char: CharOrEol) -> bool;
-}
 
 /// Parse a word.
 #[derive(Debug, Clone, Copy, Constructor)]
