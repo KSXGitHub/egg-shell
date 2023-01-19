@@ -47,9 +47,9 @@ where
         input: Input,
     ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
         let mut output: Self::Output = Vec::new();
-        let mut pos = CharPos::from_pred_count(0);
 
         loop {
+            let pos = CharPos::from_pred_count(output.len());
             let char = input.char_at(pos).map_err(TryInto::try_into);
             let char = match char {
                 Ok(char) => char,
@@ -60,9 +60,9 @@ where
                 break;
             }
             output.push(char);
-            pos = pos.advance_by(1);
         }
 
+        let pos = CharPos::from_pred_count(output.len());
         let remaining = input
             .slice_from(pos)
             .map_err(VarWordFatalError::SliceFrom)?;
