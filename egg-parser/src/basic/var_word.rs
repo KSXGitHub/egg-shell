@@ -4,7 +4,10 @@ pub use end_of_word::*;
 
 use crate::{Parse, ParseResult, Response};
 use derive_more::{Constructor, Display, Error};
-use egg_text::{CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound, SliceFrom};
+use egg_text::{
+    char_grid::PartiallyClonedCharGrid, CharAt, CharCell, CharOrEol, CharPos, CharPosOutOfBound,
+    SliceFrom,
+};
 use pipe_trait::Pipe;
 use std::convert::Infallible;
 
@@ -37,17 +40,17 @@ where
         <<Input as CharAt<CharPos>>::Error as TryInto<CharPosOutOfBound>>::Error,
         <Input as SliceFrom<CharPos>>::Error,
     >;
-    type Output = Vec<CharCell<CharOrEol>>; // TODO: Create a grid type to replace this
+    type Output = PartiallyClonedCharGrid;
 
     fn parse(
         self,
         stack: Stack,
         input: Input,
     ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
-        let mut output = Vec::new();
+        let mut output = PartiallyClonedCharGrid::default();
 
         loop {
-            let pos = CharPos::from_pred_count(output.len());
+            let pos = CharPos::from_pred_count(output.char_count());
             let char = input.char_at(pos).map_err(TryInto::try_into);
             let char = match char {
                 Ok(char) => char,
@@ -60,7 +63,7 @@ where
             output.push(char);
         }
 
-        let pos = CharPos::from_pred_count(output.len());
+        let pos = CharPos::from_pred_count(output.char_count());
         let remaining = input
             .slice_from(pos)
             .map_err(VarWordFatalError::SliceFrom)?;
