@@ -4,10 +4,12 @@ mod push;
 pub use line::*;
 
 use crate::{CharCell, CharOrEol};
+use derive_more::Display;
 use getset::{CopyGetters, Getters};
 
 /// A grid that is a clone of a section of another grid.
-#[derive(Default, Clone, CopyGetters, Getters)]
+#[derive(Display, Default, Clone, CopyGetters, Getters)]
+#[display(fmt = "{text}")]
 pub struct PartiallyClonedCharGrid {
     /// Number of characters.
     #[getset(get_copy = "pub")]
