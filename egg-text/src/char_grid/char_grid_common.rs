@@ -1,4 +1,4 @@
-use super::{lazy_char_grid, CompletedCharGrid, LazyCharGrid};
+use super::{lazy_char_grid, CompletedCharGrid, LazyCharGrid, PartiallyClonedCharGrid};
 
 /// Shared behavior of grid structs for private uses.
 pub trait GridCommon {
@@ -21,5 +21,13 @@ impl<'a> GridCommon for &'a CompletedCharGrid {
 
     fn inner_text_slice(self, start: usize, end: usize) -> Self::Slice {
         &self.text[start..end]
+    }
+}
+
+impl<'a> GridCommon for &'a PartiallyClonedCharGrid {
+    type Slice = &'a str;
+
+    fn inner_text_slice(self, start: usize, end: usize) -> Self::Slice {
+        &self.text()[start..end]
     }
 }
