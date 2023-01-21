@@ -3,7 +3,7 @@ pub mod char_grid_line;
 pub mod char_grid_slice_from;
 pub mod completed_char_grid;
 pub mod lazy_char_grid;
-mod partially_cloned_char_grid;
+pub mod partially_cloned_char_grid;
 
 use char_grid_common::*;
 pub use char_grid_line::CharGridLine;
