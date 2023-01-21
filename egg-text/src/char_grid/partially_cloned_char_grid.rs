@@ -7,7 +7,7 @@ pub struct PartiallyClonedCharGridLineDef {
     pub char_count: usize,
 }
 
-#[derive(Clone, CopyGetters, Getters)]
+#[derive(Default, Clone, CopyGetters, Getters)]
 pub struct PartiallyClonedCharGrid {
     #[getset(get_copy = "pub")]
     char_count: usize,
