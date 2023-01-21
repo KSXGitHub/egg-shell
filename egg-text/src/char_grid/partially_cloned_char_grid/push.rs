@@ -2,6 +2,7 @@ use super::{PartiallyClonedCharGrid, PartiallyClonedCharGridLineDef};
 use crate::{CharCell, CharOrEol};
 
 impl PartiallyClonedCharGrid {
+    /// Add a character to the grid.
     pub fn push(&mut self, char: CharCell<CharOrEol>) {
         self.char_count += 1;
         self.char_list.push(char);
