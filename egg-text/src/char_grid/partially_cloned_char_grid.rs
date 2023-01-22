@@ -20,7 +20,7 @@ pub struct PartiallyClonedCharGrid {
     /// List of character cells.
     #[getset(get = "pub")]
     char_list: Vec<CharCell<CharOrEol>>, // TODO: reduce memory cost by storing only big characters.
-    /// List of lines.
+    /// List of EOL markers.
     #[getset(get = "pub")]
-    line_list: Vec<PartiallyClonedCharGridLineDef>,
+    eol_list: Vec<PartiallyClonedCharGridEol>,
 }
