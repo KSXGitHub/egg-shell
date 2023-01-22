@@ -9,12 +9,10 @@ impl PartiallyClonedCharGrid {
                 self.text.push(char);
             }
             CharOrEol::EndOfLine(eol) => {
-                let start_offset = self.text.len();
-                let start_index = self.char_count;
-                self.eol_list.push(PartiallyClonedCharGridEol {
-                    start_offset,
-                    start_index,
-                });
+                let offset = self.text.len();
+                let index = self.char_count;
+                self.eol_list
+                    .push(PartiallyClonedCharGridEol { offset, index });
                 self.text.push_str(eol.as_ref());
             }
         }
