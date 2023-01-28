@@ -40,9 +40,6 @@ where
             LineAtError::LoadCharError(error) => CharAtLnColError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtLnColError::LineOutOfBound,
         })?;
-        // if coord.column.pred_count() >= line.slice().char_count() {
-        //     return Err(CharAtLnColError::ColumnOutOfBound);
-        // }
         match coord.column.pred_count().cmp(&line.slice().char_count()) {
             Ordering::Greater => Err(CharAtLnColError::ColumnOutOfBound),
             Ordering::Equal => {
