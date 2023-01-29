@@ -21,8 +21,7 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.index;
         self.index = index.advance_by(1);
-        let line = self.grid.line_at(index);
-        match line {
+        match self.grid.line_at(index) {
             Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
             Err(LineAtError::OutOfBound) => None,
             Ok(line) => Some(Ok(line)),
