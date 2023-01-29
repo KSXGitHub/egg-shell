@@ -1,5 +1,5 @@
 use super::{LineAtError, LoadCharError};
-use crate::{char_grid::CharGridLine, LazyCharGrid, LineAt, LnNum, Ordinal, TryIterLine};
+use crate::{char_grid::CharGridLine, LazyCharGrid, LineAt, LnNum, TryIterLine};
 
 /// An iterator that emits instances of [`CharGridLine`] from [`LazyCharGrid`].
 pub struct LineIter<'a, SrcIterError, SrcIter>
@@ -7,7 +7,7 @@ where
     SrcIterError: 'a,
     SrcIter: Iterator<Item = Result<char, SrcIterError>> + 'a,
 {
-    index: Ordinal,
+    index: LnNum,
     grid: &'a LazyCharGrid<SrcIter>,
 }
 
@@ -21,9 +21,7 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         let index = self.index;
         self.index = index.advance_by(1);
-        let line = self
-            .grid
-            .line_at(LnNum::from_pred_count(index.pred_count()));
+        let line = self.grid.line_at(index);
         match line {
             Err(LineAtError::LoadCharError(error)) => Some(Err(error)),
             Err(LineAtError::OutOfBound) => None,
@@ -43,7 +41,7 @@ where
 
     fn try_iter_line(self) -> Self::LineResultIter {
         LineIter {
-            index: Ordinal::from_pred_count(0),
+            index: LnNum::from_pred_count(0),
             grid: self,
         }
     }
