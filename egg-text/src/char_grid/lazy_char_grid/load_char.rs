@@ -1,5 +1,5 @@
 use super::{LazyCharGridData, LoadingProgress};
-use crate::{text_slice::ScanText, EndOfLine, LnCol, TextSliceDef};
+use crate::{char_grid::CharGridLineTemplate, text_slice::ScanText, EndOfLine, LnCol};
 use assert_cmp::debug_assert_op;
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
@@ -10,7 +10,7 @@ pub enum LoadCharReport {
     /// The grid is completed.
     Document,
     /// Complete a line.
-    Line { def: TextSliceDef, eol: EndOfLine },
+    Line(CharGridLineTemplate),
     /// Get another character.
     Char(char),
 }
@@ -31,7 +31,7 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
         let LazyCharGridData {
             loaded_text,
             loaded_char_list,
-            loaded_line_list,
+            loaded_eol_list,
             completion_progress,
         } = self;
 
@@ -46,16 +46,16 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
         let Some(char) = src_char_iter.next() else {
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..];
-            let line_slice_def = ScanText::run(ScanText {
+            let (start, end) = ScanText::run(ScanText {
                 char_list: loaded_char_list,
                 src_text: line_src_text,
-                first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
+                first_char_coord: LnCol::from_pred_counts(loaded_eol_list.len(), 0),
                 offset: line_offset,
                 eol: EndOfLine::EOF
             });
-            loaded_line_list.push((line_slice_def, EndOfLine::EOF));
+            // loaded_eol_list.push((end, EndOfLine::EOF)); // TODO: should this line be removed?
             loaded_char_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
-            loaded_line_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
+            loaded_eol_list.shrink_to_fit(); // The list is final (no more changes), it is safe to shrink to free some memory
             *completion_progress = None;
             return Ok(LoadCharReport::Document);
         };
@@ -75,20 +75,25 @@ impl<IterError, CharIter: Iterator<Item = Result<char, IterError>>> LazyCharGrid
             };
             let line_offset = *prev_line_offset;
             let line_src_text = &loaded_text[line_offset..eol_offset];
-            let line_slice_def = ScanText::run(ScanText {
+            let first_char_coord = LnCol::from_pred_counts(loaded_eol_list.len(), 0);
+            let (start, end) = ScanText::run(ScanText {
                 char_list: loaded_char_list,
                 src_text: line_src_text,
-                first_char_coord: LnCol::from_pred_counts(loaded_line_list.len(), 0),
+                first_char_coord,
                 offset: line_offset,
                 eol,
             });
-            loaded_line_list.push((line_slice_def, eol));
+            loaded_eol_list.push((end, eol));
             *prev_non_lf = None;
             *prev_line_offset = loaded_text.len();
-            Ok(LoadCharReport::Line {
-                def: line_slice_def,
+            let template = CharGridLineTemplate {
+                first_char_coord,
+                start,
+                end,
                 eol,
-            })
+                grid: (),
+            };
+            template.pipe(LoadCharReport::Line).pipe(Ok)
         } else {
             if *prev_non_lf == Some('\r') {
                 dbg!(loaded_text);

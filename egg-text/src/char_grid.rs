@@ -6,7 +6,7 @@ pub mod lazy_char_grid;
 pub mod partially_cloned_char_grid;
 
 use char_grid_common::*;
-pub use char_grid_line::CharGridLine;
+pub use char_grid_line::{CharGridLine, CharGridLineTemplate};
 pub use char_grid_slice_from::CharGridSliceFrom;
 pub use completed_char_grid::CompletedCharGrid;
 pub use lazy_char_grid::LazyCharGrid;

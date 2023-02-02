@@ -10,6 +10,6 @@ pub use char_grid::{CompletedCharGrid, LazyCharGrid};
 pub use char_grid_access::*;
 pub use char_grid_error::*;
 pub use ordinal::{AsOrdinalIndexed, Ordinal, OrdinalIndexed};
-pub use text_slice::TextSliceDef;
+pub use text_slice::TextSliceSep;
 
 pub use parking_lot;

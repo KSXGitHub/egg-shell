@@ -40,24 +40,19 @@ where
             LineAtError::LoadCharError(error) => CharAtLnColError::LoadCharError(error),
             LineAtError::OutOfBound => CharAtLnColError::LineOutOfBound,
         })?;
-        match coord.column.pred_count().cmp(&line.slice().char_count()) {
+        match coord.column.pred_count().cmp(&line.char_count_wo_eol()) {
             Ordering::Greater => Err(CharAtLnColError::ColumnOutOfBound),
             Ordering::Equal => {
-                let ln_size = line.text_without_eol().len();
-                let slice = line.slice();
                 Ok(CharCell {
                     coord,
-                    offset_from_ln_start: ln_size,
-                    offset_from_doc_start: slice.offset() + ln_size,
-                    pos: slice.first_char_pos().advance_by(slice.char_count()),
+                    offset_from_ln_start: line.size_wo_eol(),
+                    offset_from_doc_start: line.end().offset(),
+                    pos: line.start().index().advance_by(line.char_count_wo_eol()),
                     value: CharOrEol::EndOfLine(line.eol()),
-                })
+                }) // TODO: replace this with CharGridLine::eol_cell
             }
             Ordering::Less => {
-                let char_pos = line
-                    .slice()
-                    .first_char_pos()
-                    .advance_by(coord.column.pred_count());
+                let char_pos = line.start().index().advance_by(coord.column.pred_count());
                 self.data()
                     .loaded_char_list()
                     .get(char_pos.pred_count())

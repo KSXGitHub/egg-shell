@@ -1,9 +1,10 @@
-use crate::{char_grid::CharGridLine, CompletedCharGrid, EndOfLine, TextSliceDef, TryIterLine};
-use std::{convert::Infallible, slice};
+use super::LineAtError;
+use crate::{char_grid::CharGridLine, CompletedCharGrid, LineAt, LnNum, TryIterLine};
+use std::convert::Infallible;
 
 /// An iterator that emits lines from a [`CompletedCharGrid`].
 pub struct LineIter<'a> {
-    iter: slice::Iter<'a, (TextSliceDef, EndOfLine)>,
+    index: LnNum,
     grid: &'a CompletedCharGrid,
 }
 
@@ -11,14 +12,12 @@ impl<'a> Iterator for LineIter<'a> {
     type Item = Result<CharGridLine<&'a CompletedCharGrid>, Infallible>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.iter
-            .next()
-            .map(|&(slice, eol)| CharGridLine::new(slice, eol, self.grid))
-            .map(Ok)
-    }
-
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        self.iter.size_hint()
+        let index = self.index;
+        self.index = index.advance_by(1);
+        match self.grid.line_at(index) {
+            Err(LineAtError::OutOfBound) => None,
+            Ok(line) => Some(Ok(line)),
+        }
     }
 }
 
@@ -28,7 +27,7 @@ impl<'a> TryIterLine for &'a CompletedCharGrid {
     type LineResultIter = LineIter<'a>;
     fn try_iter_line(self) -> Self::LineResultIter {
         LineIter {
-            iter: self.line_list.iter(),
+            index: LnNum::from_pred_count(0),
             grid: self,
         }
     }

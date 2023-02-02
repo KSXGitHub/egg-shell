@@ -25,11 +25,8 @@ fn completed_line_at() {
 
     eprintln!("TEST 1");
     let line = grid.line_at(LnNum::from_pred_count(0)).expect("line_at 1");
-    assert_eq!(line.slice().first_char_pos(), CharPos::from_pred_count(0));
-    assert_eq!(
-        line.slice().first_char_coord(),
-        LnCol::from_pred_counts(0, 0),
-    );
+    assert_eq!(line.start().index(), CharPos::from_pred_count(0));
+    assert_eq!(line.first_char_coord(), LnCol::from_pred_counts(0, 0),);
     assert_eq!(line.eol(), EndOfLine::LF);
     assert_eq!(line.text_without_eol(), "Hello,");
 
@@ -37,7 +34,7 @@ fn completed_line_at() {
     let line = grid.line_at(LnNum::from_pred_count(1)).expect("line_at 2");
     let ln_count = 1;
     assert_eq!(
-        line.slice().first_char_pos(),
+        line.start().index(),
         SRC_TEXT
             .lines()
             .take(ln_count)
@@ -47,10 +44,7 @@ fn completed_line_at() {
             .pipe(CharPos::from_pred_count)
             .advance_by(ln_count),
     );
-    assert_eq!(
-        line.slice().first_char_coord(),
-        LnCol::from_pred_counts(1, 0),
-    );
+    assert_eq!(line.first_char_coord(), LnCol::from_pred_counts(1, 0),);
     assert_eq!(line.eol(), EndOfLine::CRLF);
     assert_eq!(line.text_without_eol(), "I ❤️ Rust 🦀,");
 
@@ -58,7 +52,7 @@ fn completed_line_at() {
     let line = grid.line_at(LnNum::from_pred_count(3)).expect("line_at 4");
     let ln_count = 3;
     assert_eq!(
-        line.slice().first_char_pos(),
+        line.start().index(),
         SRC_TEXT
             .lines()
             .take(ln_count)
@@ -68,10 +62,7 @@ fn completed_line_at() {
             .pipe(CharPos::from_pred_count)
             .advance_by(ln_count),
     );
-    assert_eq!(
-        line.slice().first_char_coord(),
-        LnCol::from_pred_counts(3, 0),
-    );
+    assert_eq!(line.first_char_coord(), LnCol::from_pred_counts(3, 0),);
     assert_eq!(line.eol(), EndOfLine::EOF);
     assert_eq!(
         line.text_without_eol(),

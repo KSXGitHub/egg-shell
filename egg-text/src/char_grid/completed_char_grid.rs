@@ -12,7 +12,7 @@ pub use impl_line_at_ln_num::*;
 pub use impl_try_iter_char::*;
 pub use impl_try_iter_line::*;
 
-use crate::{CharCell, CharOrEol, EndOfLine, TextSliceDef};
+use crate::{CharCell, CharOrEol, EndOfLine, TextSliceSep};
 use getset::{CopyGetters, Getters};
 
 /// Character grid with all characters loaded.
@@ -29,5 +29,5 @@ pub struct CompletedCharGrid {
     pub(super) char_list: Vec<CharCell<CharOrEol>>, // TODO: reduce memory cost by storing only big characters.
     /// List of lines.
     #[getset(get = "pub")]
-    pub(super) line_list: Vec<(TextSliceDef, EndOfLine)>,
+    pub(super) eol_list: Vec<(TextSliceSep, EndOfLine)>,
 }

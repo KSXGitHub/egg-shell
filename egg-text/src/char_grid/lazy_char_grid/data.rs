@@ -1,4 +1,4 @@
-use crate::{CharCell, CharOrEol, EndOfLine, TextSliceDef};
+use crate::{CharCell, CharOrEol, EndOfLine, TextSliceSep};
 use derive_more::IsVariant;
 use getset::{CopyGetters, Getters};
 use std::fmt::Debug;
@@ -44,7 +44,7 @@ pub struct LazyCharGridData<CharIter> {
     pub(super) loaded_char_list: Vec<CharCell<CharOrEol>>, // TODO: reduce memory cost by storing only big characters.
     /// List of loaded line coordinates.
     #[getset(get = "pub")]
-    pub(super) loaded_line_list: Vec<(TextSliceDef, EndOfLine)>,
+    pub(super) loaded_eol_list: Vec<(TextSliceSep, EndOfLine)>,
     /// State of the grid.
     ///
     /// `Some` means that the grid is incomplete.

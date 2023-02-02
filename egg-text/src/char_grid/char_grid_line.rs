@@ -1,6 +1,6 @@
 use super::{CharGridSliceFrom, GridCommon};
 use crate::{
-    CharAt, CharPos, CharPosOutOfBound, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceDef,
+    CharAt, CharPos, CharPosOutOfBound, ColNum, EndOfLine, LnCol, SliceFrom, TextSliceSep,
     TryIterChar,
 };
 use derive_more::{Display, Error};
@@ -14,18 +14,27 @@ use std::{
 #[derive(Clone, Copy, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct CharGridLine<CharGridRef: Copy> {
-    /// Coordinate of the line
-    slice: TextSliceDef,
+    /// Coordinate of the first character of the line.
+    pub(crate) first_char_coord: LnCol,
+    /// Coordinate of the beginning of the line
+    pub(crate) start: TextSliceSep,
+    /// Coordinate of the end of the line
+    pub(crate) end: TextSliceSep,
     /// Type of EOL string.
-    eol: EndOfLine,
+    pub(crate) eol: EndOfLine,
     /// Reference grid.
-    grid: CharGridRef,
+    pub(crate) grid: CharGridRef,
 }
 
 impl<CharGridRef: Copy> CharGridLine<CharGridRef> {
-    /// Create a [`CharGridLine`].
-    pub(super) const fn new(slice: TextSliceDef, eol: EndOfLine, grid: CharGridRef) -> Self {
-        CharGridLine { slice, eol, grid }
+    /// Size of the line in bytes, not including EOL.
+    pub fn size_wo_eol(&self) -> usize {
+        self.end.offset() - self.start.offset()
+    }
+
+    /// Number of non-EOL characters in the line.
+    pub fn char_count_wo_eol(&self) -> usize {
+        self.end.index().pred_count() - self.start.index().pred_count()
     }
 
     /// Get text content of the slice without EOL.
@@ -33,8 +42,8 @@ impl<CharGridRef: Copy> CharGridLine<CharGridRef> {
     where
         CharGridRef: GridCommon,
     {
-        let start = self.slice.offset();
-        let end = start + self.slice.size();
+        let start = self.start.offset();
+        let end = self.end.offset();
         self.grid.inner_text_slice(start, end)
     }
 }
@@ -71,10 +80,7 @@ where
     type Error = CharGridRef::Error;
 
     fn char_at(self, col_num: ColNum) -> Result<Self::Char, Self::Error> {
-        let coord = self
-            .slice
-            .first_char_coord()
-            .advance_column(col_num.pred_count());
+        let coord = self.first_char_coord().advance_column(col_num.pred_count());
         self.grid.char_at(coord)
     }
 }
@@ -107,10 +113,10 @@ where
     type Error = ChatAtCharPosError<CharGridRef::Error>;
 
     fn char_at(self, pos: CharPos) -> Result<Self::Char, Self::Error> {
-        if pos.pred_count() > self.slice().char_count() {
+        if pos > self.end().index() {
             return Err(ChatAtCharPosError::OutOfBound);
         }
-        let pos = self.slice.first_char_pos().advance_by(pos.pred_count());
+        let pos = self.start().index().advance_by(pos.pred_count());
         self.grid
             .char_at(pos)
             .map_err(ChatAtCharPosError::GridError)
@@ -158,11 +164,13 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         let CharIter { index, line } = self;
-        let CharGridLine { slice, grid, .. } = *line;
-        if *index > slice.char_count() {
+        let CharGridLine {
+            start, end, grid, ..
+        } = *line;
+        let pos = start.index().advance_by(*index);
+        if pos > end.index() {
             return None;
         }
-        let pos = slice.first_char_pos().advance_by(*index);
         *index += 1;
         Some(grid.char_at(pos))
     }
@@ -181,5 +189,19 @@ where
             index: 0,
             line: self,
         }
+    }
+}
+
+/// Template of [`CharGridLine`].
+pub type CharGridLineTemplate = CharGridLine<()>;
+
+impl Debug for CharGridLineTemplate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("CharGridLineTemplate")
+            .field("first_char_coord", &self.first_char_coord)
+            .field("start", &self.start)
+            .field("end", &self.end)
+            .field("eol", &self.eol)
+            .finish()
     }
 }

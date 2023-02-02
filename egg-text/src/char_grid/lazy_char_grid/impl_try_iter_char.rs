@@ -27,7 +27,7 @@ where
             Err(LineAtError::OutOfBound) => return None,
             Ok(line) => line,
         };
-        match self.col_index.pred_count().cmp(&line.slice().char_count()) {
+        match self.col_index.pred_count().cmp(&line.char_count_wo_eol()) {
             Ordering::Greater => panic!("Column index should never be greater than line count"),
             Ordering::Equal => {
                 let coord = LnCol {
@@ -35,11 +35,11 @@ where
                     column: self.col_index,
                 };
                 let col_count = coord.column.pred_count(); // number of columns from line start
-                let pos = line.slice().first_char_pos().advance_by(col_count);
+                let pos = line.start().index().advance_by(col_count);
                 self.ln_index = self.ln_index.advance_by(1);
                 self.col_index = ColNum::from_pred_count(0);
-                let offset_from_ln_start = line.slice().size();
-                let offset_from_doc_start = line.slice().offset() + line.slice().size();
+                let offset_from_ln_start = line.size_wo_eol();
+                let offset_from_doc_start = line.end().offset();
                 let value = CharOrEol::EndOfLine(line.eol());
                 let char_cell = CharCell {
                     coord,
@@ -51,10 +51,7 @@ where
                 Some(Ok(char_cell))
             }
             Ordering::Less => {
-                let char_pos = line
-                    .slice()
-                    .first_char_pos()
-                    .advance_by(self.col_index.pred_count());
+                let char_pos = line.start().index().advance_by(self.col_index.pred_count());
                 self.col_index = self.col_index.advance_by(1);
                 self.grid
                     .data()
