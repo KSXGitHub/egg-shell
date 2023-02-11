@@ -6,15 +6,15 @@ use getset::CopyGetters;
 #[getset(get_copy = "pub")]
 pub struct TextSliceDef {
     /// Total sizes of all lines before this line.
-    offset: usize,
+    pub(crate) offset: usize,
     /// Size of the text in the line.
-    size: usize,
+    pub(crate) size: usize,
     /// Coordinate of the first character.
-    first_char_coord: LnCol,
+    pub(crate) first_char_coord: LnCol,
     /// Position of the first character.
-    first_char_pos: CharPos,
+    pub(crate) first_char_pos: CharPos,
     /// Number of characters in the slice.
-    char_count: usize,
+    pub(crate) char_count: usize,
 }
 
 /// Prepare a text scanner.

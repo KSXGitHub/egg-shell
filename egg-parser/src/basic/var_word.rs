@@ -40,17 +40,17 @@ where
         <<Input as CharAt<CharPos>>::Error as TryInto<CharPosOutOfBound>>::Error,
         <Input as SliceFrom<CharPos>>::Error,
     >;
-    type Output = PartiallyClonedCharGrid;
+    type Output = Option<PartiallyClonedCharGrid>; // TODO: Remove the Option wrapper
 
     fn parse(
         self,
         stack: Stack,
         input: Input,
     ) -> ParseResult<Input, Self::Output, Stack, Self::Failure, Self::FatalError> {
-        let mut output = PartiallyClonedCharGrid::default();
+        let mut output_builder = PartiallyClonedCharGrid::builder();
 
         loop {
-            let pos = CharPos::from_pred_count(output.char_count());
+            let pos = CharPos::from_pred_count(output_builder.char_count());
             let char = input.char_at(pos).map_err(TryInto::try_into);
             let char = match char {
                 Ok(char) => char,
@@ -60,10 +60,15 @@ where
             if self.end.is_end_of_word(*char.value()) {
                 break;
             }
-            output.push(char);
+            output_builder.push(char);
         }
 
-        let pos = CharPos::from_pred_count(output.char_count());
+        let output = output_builder.build();
+        let pos = output
+            .as_ref()
+            .map(PartiallyClonedCharGrid::char_count)
+            .unwrap_or(0)
+            .pipe(CharPos::from_pred_count);
         let remaining = input
             .slice_from(pos)
             .map_err(VarWordFatalError::SliceFrom)?;
