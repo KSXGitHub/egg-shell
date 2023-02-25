@@ -1,20 +1,32 @@
-// /// Body of a program.
-// ProgramBody = { Block* }
+//! Initial parser of source code.
 
-// /// Code block that is started with a first line.
-// Block = {
-//     | BlockFirstLine ~ NEWLINE ~ Block+
-//     | BlockFirstLine
-// }
+/// Complete AST tree.
+Document = _{ SOI ~ Block* ~ EOI }
 
-// /// First line to define the block, always has 1 indent level less than the rest of the block.
-// BlockFirstLine = _{ PUSH(Indentation)* ~ ItemHead }
+/// Program block.
+Block = { "(TODO)" ~ LineEnd ~ Body? }
 
-// /// Line of the boby of the block, always has 1 indent level more than the first line of the block.
-// BlockBodyLine = _{ PEEK_ALL ~ ItemHead }
+/// Body of a block.
+Body = _{
+    FirstIndent ~ Block ~
+    (SubsequentIndent ~ Block)* ~
+    DropIndent
+}
 
-// /// Head of an item.
-// ItemHead = _{ "(todo)" }
+/// Indentation of non-first blocks.
+SubsequentIndent = _{ PEEK[..] }
+
+/// Indentation of first blocks.
+FirstIndent = _{ PEEK[..] ~ PUSH(IndentChar+) }
+
+/// Drop indentation.
+DropIndent = _{ DROP }
+
+/// Character of an indentation.
+IndentChar = _{" " | "\t"}
+
+/// The end of a line.
+LineEnd = _{ (IndentChar* ~ NEWLINE)+ | EOI }
 
 /// Identifier to name types, variables, functions, etc.
 Identifier = @{ NormalIdentifier | StringIdentifier }
