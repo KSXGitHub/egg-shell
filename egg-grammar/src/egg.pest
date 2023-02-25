@@ -1,31 +1,31 @@
-// // Body of a program.
+// /// Body of a program.
 // ProgramBody = { Block* }
 
-// // Code block that is started with a first line.
+// /// Code block that is started with a first line.
 // Block = {
 //     | BlockFirstLine ~ NEWLINE ~ Block+
 //     | BlockFirstLine
 // }
 
-// // First line to define the block, always has 1 indent level less than the rest of the block.
+// /// First line to define the block, always has 1 indent level less than the rest of the block.
 // BlockFirstLine = _{ PUSH(Indentation)* ~ ItemHead }
 
-// // Line of the boby of the block, always has 1 indent level more than the first line of the block.
+// /// Line of the boby of the block, always has 1 indent level more than the first line of the block.
 // BlockBodyLine = _{ PEEK_ALL ~ ItemHead }
 
-// // Head of an item.
+// /// Head of an item.
 // ItemHead = _{ "(todo)" }
 
-// Identifier to name types, variables, functions, etc.
+/// Identifier to name types, variables, functions, etc.
 Identifier = @{ NormalIdentifier | StringIdentifier }
 
-// Identifier without special characters.
+/// Identifier without special characters.
 NormalIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~ !NormalStringLiteral }
 
-// Identifier that can contain any character.
+/// Identifier that can contain any character.
 StringIdentifier = @{ "id" ~ NormalStringLiteral }
 
-// Keyword to exclude from NormalIdentifier.
+/// Keyword to exclude from NormalIdentifier.
 Keyword = @{
     | VisibilityKeyword
     | DeclarationKeyword
@@ -35,12 +35,12 @@ Keyword = @{
     | TypeKeyword
 }
 
-// Keyword to define items' visibility.
+/// Keyword to define items' visibility.
 VisibilityKeyword = @{
     | "pub"
 }
 
-// Keyword to escape a block, a scope, a function, or a program.
+/// Keyword to escape a block, a scope, a function, or a program.
 EscapeKeyword = @{
     | "break"
     | "continue"
@@ -49,7 +49,7 @@ EscapeKeyword = @{
     | "return"
 }
 
-// Keyword to declare a binding.
+/// Keyword to declare a binding.
 DeclarationKeyword = @{
     | "const"
     | "enum"
@@ -62,7 +62,7 @@ DeclarationKeyword = @{
     | "union"
 }
 
-// Keyword to define imperative structure.
+/// Keyword to define imperative structure.
 ImperativeKeyword = @{
     | "do"
     | "else"
@@ -72,7 +72,7 @@ ImperativeKeyword = @{
     | "while"
 }
 
-// Name of a primitive type.
+/// Name of a primitive type.
 TypeKeyword = @{
     | "any"
     | "never"
@@ -80,16 +80,16 @@ TypeKeyword = @{
     | NumTypeKeyword
 }
 
-// Name of a numeric type.
+/// Name of a numeric type.
 NumTypeKeyword = @{ IntTypeKeyword | FloatTypeKeyword }
 
-// Name of an integer type.
+/// Name of an integer type.
 IntTypeKeyword = @{ ("u" | "i") ~ ("8" | "16" | "32" | "64" | "128") }
 
-// Name of a floating-point number type.
+/// Name of a floating-point number type.
 FloatTypeKeyword = @{ "f32" | "f64" }
 
-// Literal keyword to exclude from NormalIdentifier.
+/// Literal keyword to exclude from NormalIdentifier.
 LiteralKeyword = @{
     | "true"
     | "false"
@@ -98,16 +98,16 @@ LiteralKeyword = @{
     | "nan"
 }
 
-// String literal.
+/// String literal.
 StringLiteral = @{ NormalStringLiteral | RawStringLiteral }
 
-// String literal with escape sequences.
+/// String literal with escape sequences.
 NormalStringLiteral = ${
     | ("\"" ~ (!"\"" ~ NormalCharacter)* ~ "\"")
     | ("'" ~ (!"'" ~ NormalCharacter)* ~ "'")
 }
 
-// Characters to used in `NormalStringLiteral`.
+/// Characters to used in `NormalStringLiteral`.
 NormalCharacter = @{
     | !"\\" ~ ANY
     | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
@@ -116,7 +116,7 @@ NormalCharacter = @{
     | "\\" ~ "u" ~ "{" ~ ASCII_HEX_DIGIT+ ~ "}"
 }
 
-// String literal without escape sequences.
+/// String literal without escape sequences.
 RawStringLiteral = @{ "r" ~ RawStringLiteralBody }
 
 // Body of a raw string.
@@ -125,8 +125,8 @@ RawStringLiteralBody = @{
     | ("'" ~ (!"'" ~ ANY)* ~ "'")
 }
 
-// Ident at the start of a line to define a block.
+/// Ident at the start of a line to define a block.
 Indentation = _{ (" " | "\t") }
 
-// Implicit whitespace
+/// Implicit whitespace.
 WHITESPACE = _{ (" " | "\t")+ }
