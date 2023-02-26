@@ -4,7 +4,7 @@
 Document = _{ SOI ~ Block* ~ EOI }
 
 /// Program block.
-Block = { "(TODO)" ~ LineEnd ~ Body? }
+Block = { "(TODO)" ~ LineEnd ~ (Body ~ SingleWs*)? }
 
 /// Body of a block.
 Body = _{
@@ -33,7 +33,7 @@ Identifier = @{ NormalIdentifier | StringIdentifier }
 
 /// Identifier without special characters.
 NormalIdentifier = @{
-    !(Keyword ~ WHITESPACE) ~
+    !(Keyword ~ SingleWs+) ~
     ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~
     !NormalStringLiteral
 }
@@ -144,5 +144,5 @@ RawStringLiteralBody = @{
 /// Ident at the start of a line to define a block.
 Indentation = _{ (" " | "\t") }
 
-/// Implicit whitespace.
-WHITESPACE = _{ (" " | "\t")+ }
+/// Single whitespace.
+SingleWs = { " " | "\t" | NEWLINE }
