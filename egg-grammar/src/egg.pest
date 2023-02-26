@@ -4,7 +4,10 @@
 Document = _{ SOI ~ Block* ~ EOI }
 
 /// Program block.
-Block = { "(TODO)" ~ LineEnd ~ (Body ~ SingleWs*)? }
+Block = { BlockHead ~ LineEnd ~ (Body ~ SingleWs*)? }
+
+/// Head of a block.
+BlockHead = { "(TODO)" }
 
 /// Body of a block.
 Body = _{
