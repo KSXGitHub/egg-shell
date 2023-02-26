@@ -26,7 +26,7 @@ DropIndent = _{ DROP }
 SingleIndent = _{" " | "\t"}
 
 /// The end of a line.
-LineEnd = _{ (SingleIndent* ~ NEWLINE)+ | EOI }
+LineEnd = _{ SingleWs* ~ NEWLINE | EOI }
 
 /// Identifier to name types, variables, functions, etc.
 Identifier = @{ NormalIdentifier | StringIdentifier }
