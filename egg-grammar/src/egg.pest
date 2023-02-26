@@ -36,7 +36,7 @@ Identifier = @{ NormalIdentifier | StringIdentifier }
 
 /// Identifier without special characters.
 NormalIdentifier = @{
-    !(Keyword ~ SingleWs+) ~
+    !(Keyword ~ (SingleWs+ | EOI)) ~
     ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~
     !NormalStringLiteral
 }
