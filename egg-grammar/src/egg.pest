@@ -17,16 +17,16 @@ Body = _{
 SubsequentIndent = _{ PEEK[..] }
 
 /// Indentation of first blocks.
-FirstIndent = _{ PEEK[..] ~ PUSH(IndentChar+) }
+FirstIndent = _{ PEEK[..] ~ PUSH(SingleIndent+) }
 
 /// Drop indentation.
 DropIndent = _{ DROP }
 
 /// Character of an indentation.
-IndentChar = _{" " | "\t"}
+SingleIndent = _{" " | "\t"}
 
 /// The end of a line.
-LineEnd = _{ (IndentChar* ~ NEWLINE)+ | EOI }
+LineEnd = _{ (SingleIndent* ~ NEWLINE)+ | EOI }
 
 /// Identifier to name types, variables, functions, etc.
 Identifier = @{ NormalIdentifier | StringIdentifier }
