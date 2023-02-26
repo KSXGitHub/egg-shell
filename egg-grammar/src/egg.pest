@@ -141,8 +141,5 @@ RawStringLiteralBody = @{
     | ("'" ~ (!"'" ~ ANY)* ~ "'")
 }
 
-/// Ident at the start of a line to define a block.
-Indentation = _{ (" " | "\t") }
-
 /// Single whitespace.
 SingleWs = { " " | "\t" | NEWLINE }
