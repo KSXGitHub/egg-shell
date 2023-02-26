@@ -32,7 +32,11 @@ LineEnd = _{ (IndentChar* ~ NEWLINE)+ | EOI }
 Identifier = @{ NormalIdentifier | StringIdentifier }
 
 /// Identifier without special characters.
-NormalIdentifier = @{ !Keyword ~ ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~ !NormalStringLiteral }
+NormalIdentifier = @{
+    !Keyword ~
+    ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~
+    !NormalStringLiteral
+}
 
 /// Identifier that can contain any character.
 StringIdentifier = @{ "id" ~ NormalStringLiteral }
