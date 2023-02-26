@@ -33,7 +33,7 @@ Identifier = @{ NormalIdentifier | StringIdentifier }
 
 /// Identifier without special characters.
 NormalIdentifier = @{
-    !Keyword ~
+    !(Keyword ~ WHITESPACE?) ~
     ASCII_ALPHA ~ ("_" | "-" | ASCII_ALPHANUMERIC)* ~
     !NormalStringLiteral
 }
