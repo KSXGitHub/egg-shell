@@ -126,7 +126,7 @@ NormalStringLiteral = ${
     | ("'" ~ (!"'" ~ NormalCharacter)* ~ "'")
 }
 
-/// Characters to used in `NormalStringLiteral`.
+/// Characters to used in [`NormalStringLiteral`](Self::NormalStringLiteral).
 NormalCharacter = @{
     | !"\\" ~ NonEscapedChar
     | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
