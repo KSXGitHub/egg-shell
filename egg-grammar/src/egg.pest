@@ -128,7 +128,7 @@ NormalStringLiteral = ${
 
 /// Characters to used in `NormalStringLiteral`.
 NormalCharacter = @{
-    | !"\\" ~ ANY
+    | !"\\" ~ NonEscapedChar
     | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
     | "\\" ~ "x" ~ ASCII_HEX_DIGIT{2}
     | "\\" ~ "u" ~ ASCII_HEX_DIGIT{4}
@@ -140,9 +140,17 @@ RawStringLiteral = @{ "r" ~ RawStringLiteralBody }
 
 // Body of a raw string.
 RawStringLiteralBody = @{
-    | ("\"" ~ (!"\"" ~ ANY)* ~ "\"")
-    | ("'" ~ (!"'" ~ ANY)* ~ "'")
+    | ("\"" ~ (!"\"" ~ NonEscapedChar)* ~ "\"")
+    | ("'" ~ (!"'" ~ NonEscapedChar)* ~ "'")
 }
+
+/// Character to be in a [string literal](Self::StringLiteral) without escape syntax.
+///
+/// [Special ASCII characters](Self::SpecialAscii) are excluded because they wouldn't have been visible in source code.
+NonEscapedChar = @{ !SpecialAscii ~ ANY }
+
+/// Special ASCII characters, ranging from `NUL` up to `US` (right under the space character).
+SpecialAscii = @{ '0'..'\x1F' }
 
 /// Single whitespace.
 SingleWs = { " " | "\t" | NEWLINE }
