@@ -2,5 +2,5 @@
 
 pub const fn fibonacci(n: u16) -> u32
     return match n
-        0 | 1 => n
-        _ => fibonacci(n - 2) + fibonacci(n - 1)
+        case 0 or 1 then 1
+        case _ then fibonacci(n - 2) + fibonacci(n - 1)
