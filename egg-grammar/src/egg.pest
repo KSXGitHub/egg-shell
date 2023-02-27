@@ -158,4 +158,7 @@ SingleWs = { " " | "\t" | Newline }
 /// New line sequences. Either `LF` or `CRLF`.
 ///
 /// `LFCR` and `CR` are excluded according to specification.
-Newline = @{ "\n" | "\r\n" }
+Newline = @{
+    | !"\n\r" ~ "\n"
+    | "\r\n"
+}
