@@ -7,7 +7,7 @@ with
     pub fn combine(left: u8, right: u8) -> u16
         return left as u16 | bit_shl(?, size of u8) | bit_or(?, right as _)
 
-pub fn id'invoking the trait function'() -> void
+pub fn id'invoking the trait function'()
 do
     print 'Enter two integers separated by a whitespace: '
     let left: u8 = read()
