@@ -1,4 +1,5 @@
 pub trait Area(Shape, infer Output)
+with
     pub fn area(shape: Shape) -> Output
 
 pub struct Rectangle(Length, Height)
