@@ -1,5 +1,4 @@
-pub trait Area(Shape)
-with
+pub trait Area(Shape) with
     pub type Output
     pub fn area(shape: Shape) -> Output
 
