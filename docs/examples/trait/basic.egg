@@ -12,4 +12,4 @@ pub fn 'invoking the trait function'() do
     let output = Combine::combine(left, right)
     println f'Output: $output'
 
-type 'associated type of Combine(u8, u8)' = infer Output where Combine(u8, u8, Output)
+type id'associated type of Combine(u8, u8)' = infer Output where Combine(u8, u8, Output)
