@@ -12,6 +12,16 @@ pub enum IndentChar {
     Tab,
 }
 
+impl IndentChar {
+    /// Get 3-letter abbreviation.
+    pub(crate) const fn abbr(self) -> &'static str {
+        match self {
+            IndentChar::Space => "SPC",
+            IndentChar::Tab => "TAB",
+        }
+    }
+}
+
 impl From<IndentChar> for char {
     fn from(input: IndentChar) -> Self {
         match input {
