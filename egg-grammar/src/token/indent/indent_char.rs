@@ -54,47 +54,52 @@ impl TryFrom<char> for IndentChar {
     }
 }
 
-#[test]
-fn convert_indent_to_char() {
-    assert_eq!(IndentChar::Space.pipe(char::from), ' ');
-    assert_eq!(IndentChar::Tab.pipe(char::from), '\t');
-}
+#[cfg(test)]
+mod test {
+    use super::*;
 
-#[test]
-fn convert_char_to_indent() {
-    assert_eq!(' '.pipe(IndentChar::try_from).unwrap(), IndentChar::Space);
-    assert_eq!('\t'.pipe(IndentChar::try_from).unwrap(), IndentChar::Tab);
-    assert_eq!(
-        'a'.pipe(IndentChar::try_from).unwrap_err(),
-        IndentCharParseError('a'),
-    );
-}
-
-#[test]
-fn convert_back_forth() {
-    macro_rules! char_to_char {
-        ($char:literal) => {
-            assert_eq!(
-                $char.pipe(IndentChar::try_from).unwrap().pipe(char::from),
-                $char,
-            );
-        };
+    #[test]
+    fn convert_indent_to_char() {
+        assert_eq!(IndentChar::Space.pipe(char::from), ' ');
+        assert_eq!(IndentChar::Tab.pipe(char::from), '\t');
     }
 
-    macro_rules! indent_to_indent {
-        ($name:ident) => {
-            assert_eq!(
-                IndentChar::$name
-                    .pipe(char::from)
-                    .pipe(IndentChar::try_from)
-                    .unwrap(),
-                IndentChar::$name,
-            );
-        };
+    #[test]
+    fn convert_char_to_indent() {
+        assert_eq!(' '.pipe(IndentChar::try_from).unwrap(), IndentChar::Space);
+        assert_eq!('\t'.pipe(IndentChar::try_from).unwrap(), IndentChar::Tab);
+        assert_eq!(
+            'a'.pipe(IndentChar::try_from).unwrap_err(),
+            IndentCharParseError('a'),
+        );
     }
 
-    char_to_char!(' ');
-    char_to_char!('\t');
-    indent_to_indent!(Space);
-    indent_to_indent!(Tab);
+    #[test]
+    fn convert_back_forth() {
+        macro_rules! char_to_char {
+            ($char:literal) => {
+                assert_eq!(
+                    $char.pipe(IndentChar::try_from).unwrap().pipe(char::from),
+                    $char,
+                );
+            };
+        }
+
+        macro_rules! indent_to_indent {
+            ($name:ident) => {
+                assert_eq!(
+                    IndentChar::$name
+                        .pipe(char::from)
+                        .pipe(IndentChar::try_from)
+                        .unwrap(),
+                    IndentChar::$name,
+                );
+            };
+        }
+
+        char_to_char!(' ');
+        char_to_char!('\t');
+        indent_to_indent!(Space);
+        indent_to_indent!(Tab);
+    }
 }
