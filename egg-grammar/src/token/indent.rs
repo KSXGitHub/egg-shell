@@ -1,5 +1,5 @@
 mod indent_char;
+mod indent_token;
 
 pub use indent_char::*;
-
-pub struct IndentToken(Vec<IndentChar>);
+pub use indent_token::*;
