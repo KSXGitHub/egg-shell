@@ -57,6 +57,7 @@ impl TryFrom<char> for IndentChar {
 #[cfg(test)]
 mod test {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn convert_indent_to_char() {
