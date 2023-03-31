@@ -1,5 +1,10 @@
 /// Token before reprocessing.
 pub enum RawToken {
+    /// Single line comment.
+    ///
+    /// A single line comment starts with the character `#`.
+    Comment,
+
     /// Keyword or normal identifier.
     Word,
 
