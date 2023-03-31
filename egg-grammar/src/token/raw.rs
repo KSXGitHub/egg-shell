@@ -14,4 +14,10 @@ pub enum RawToken {
     /// * Exotic syntax could be `rg"[a-z]+"`, `gl"src/**/*.rs"`.
     /// * Abnormal identifier could be `id"abc"`, `id'abc'`, `idl"egg: abc"`, or `idl'egg: abc'`.
     String,
+
+    /// Number.
+    ///
+    /// * Integer could be `123`, `-123`, `123i32`, or `-123i32`.
+    /// * Floating point could be `123.45`, `123.45f32`, `-123.45`, or `-123.45f32`.
+    Number,
 }
