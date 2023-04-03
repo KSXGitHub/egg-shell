@@ -10,14 +10,28 @@ pub enum RawToken {
 
     /// String, exotic syntax, or abnormal identifier.
     ///
-    /// * String could be `"abc"`, `'abc'`, `prefix"abc"`, or `prefix'abc'`.
-    /// * Exotic syntax could be `rg"[a-z]+"`, `gl"src/**/*.rs"`.
-    /// * Abnormal identifier could be `id"abc"`, `id'abc'`, `idl"egg: abc"`, or `idl'egg: abc'`.
+    /// **Including**
+    ///
+    /// * String: `"abc"`, `'abc'`, `prefix"abc"`, `prefix'abc'`, etc.
+    /// * Exotic syntax: `rg"[a-z]+"`, `gl"src/**/*.rs"`, etc.
+    /// * Abnormal identifier: `id"abc"`, `id'abc'`, `idl"egg: abc"`, `idl'egg: abc'`, etc.
+    ///
+    /// **Excluding**
+    ///
+    /// * Multi-line string.
     String,
 
     /// Number.
     ///
-    /// * Integer could be `123`, `-123`, `123i32`, or `-123i32`.
-    /// * Floating point could be `123.45`, `123.45f32`, `-123.45`, or `-123.45f32`.
+    /// **Including**
+    ///
+    /// * Positive decimal integer: `123`, `123i32`, `123_456_789`, etc.
+    /// * Positive hexadecimal integer: `0x1234ABCD`, `0x1234abcd`, `0x1234ABCDi32`, etc.
+    /// * Positive floating point: `123.45`, `123.45f`, `123.45f32`, etc.
+    ///
+    /// **Excluding**
+    ///
+    /// * Negative numbers. Composing `-` and number instead.
+    /// * `nan` and `inf`. They are keywords.
     Number,
 }
