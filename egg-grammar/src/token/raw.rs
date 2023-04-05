@@ -26,7 +26,7 @@ pub enum RawToken {
     /// **Including**
     ///
     /// * Positive decimal integer: `123`, `123i32`, `123_456_789`, etc.
-    /// * Positive hexadecimal integer: `0x1234ABCD`, `0x1234abcd`, `0x1234ABCDi32`, etc.
+    /// * Positive hexadecimal integer: `0x1234ABCD`, `0x1234abcd`, `0x1234ABCD_i32`, etc.
     /// * Positive floating point: `123.45`, `123.45f`, `123.45f32`, etc.
     ///
     /// **Excluding**
