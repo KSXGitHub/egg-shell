@@ -34,4 +34,19 @@ pub enum RawToken {
     /// * Negative numbers. Composing `-` and number instead.
     /// * `nan` and `inf`. They are keywords.
     Number,
+
+    /// Round bracket, square bracket, curly bracket, open or closed.
+    Bracket,
+
+    /// A sequence of special characters.
+    ///
+    /// **Including**
+    ///
+    /// * Expression operator: `+`, `-`, `*`, `/`, `<`, `<=`, `>`, `>=`, `==`, `!=`, etc.
+    /// * Path separator (`::`).
+    /// * Dot notation (`.`).
+    /// * Type specifier (`:`).
+    /// * Binding or assignment (`=`).
+    /// * etc.
+    Operator,
 }
