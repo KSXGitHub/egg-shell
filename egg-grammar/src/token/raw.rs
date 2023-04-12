@@ -1,4 +1,5 @@
 /// Token before reprocessing.
+#[non_exhaustive]
 pub enum RawToken {
     /// Single line comment.
     ///
