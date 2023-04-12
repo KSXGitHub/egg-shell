@@ -61,8 +61,8 @@ mod test {
 
     #[test]
     fn convert_indent_to_char() {
-        assert_eq!(IndentChar::Space.pipe(char::from), ' ');
-        assert_eq!(IndentChar::Tab.pipe(char::from), '\t');
+        assert_eq!(char::from(IndentChar::Space), ' ');
+        assert_eq!(char::from(IndentChar::Tab), '\t');
     }
 
     #[test]
