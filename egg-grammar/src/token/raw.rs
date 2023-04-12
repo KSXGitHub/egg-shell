@@ -1,4 +1,5 @@
 /// Token before reprocessing.
+#[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum RawToken {
     /// Single line comment.
