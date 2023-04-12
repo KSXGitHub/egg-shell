@@ -22,6 +22,9 @@ pub enum RawToken {
     /// * Multi-line string.
     String,
 
+    /// Multi-line string, documentation, or embedded code.
+    Embed,
+
     /// Number.
     ///
     /// **Including**
