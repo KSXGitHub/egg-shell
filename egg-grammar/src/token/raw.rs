@@ -21,7 +21,12 @@ pub enum RawToken<Content> {
     /// **Excluding**
     ///
     /// * Multi-line string.
-    String(Content),
+    String {
+        prefix: Option<Content>,
+        suffix: Option<Content>,
+        main_content: Content,
+        quote_type: StringQuoteType,
+    },
 
     /// Multi-line string, documentation, or embedded code.
     Embed(Vec<Content>),
@@ -54,4 +59,13 @@ pub enum RawToken<Content> {
     /// * Binding or assignment (`=`).
     /// * etc.
     Operator(Content),
+}
+
+/// Quote type of [`RawToken::String`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StringQuoteType {
+    /// Single quotes (`'`) were used to wrap the string content.
+    Single,
+    /// Double quotes (`"`) were used to wrap the string content.
+    Double,
 }
