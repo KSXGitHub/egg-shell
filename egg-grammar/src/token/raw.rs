@@ -29,7 +29,10 @@ pub enum RawToken<Content> {
     },
 
     /// Multi-line string, documentation, or embedded code.
-    Embed(Vec<Content>),
+    Embed {
+        tag: Content,
+        main_content: Vec<Content>,
+    },
 
     /// Number.
     ///
