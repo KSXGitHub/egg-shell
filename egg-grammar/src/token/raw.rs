@@ -1,14 +1,14 @@
 /// Token before reprocessing.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
-pub enum RawToken {
+pub enum RawToken<Content> {
     /// Single line comment.
     ///
     /// A single line comment starts with the character `#`.
-    Comment,
+    Comment(Content),
 
     /// Keyword or normal identifier.
-    Word,
+    Word(Content),
 
     /// String, exotic syntax, or abnormal identifier.
     ///
@@ -21,10 +21,10 @@ pub enum RawToken {
     /// **Excluding**
     ///
     /// * Multi-line string.
-    String,
+    String(Content),
 
     /// Multi-line string, documentation, or embedded code.
-    Embed,
+    Embed(Vec<Content>),
 
     /// Number.
     ///
@@ -38,10 +38,10 @@ pub enum RawToken {
     ///
     /// * Negative numbers. Composing `-` and number instead.
     /// * `nan` and `inf`. They are keywords.
-    Number,
+    Number(Content),
 
     /// Round bracket, square bracket, curly bracket, open or closed.
-    Bracket,
+    Bracket(Content),
 
     /// A sequence of special characters.
     ///
@@ -53,5 +53,5 @@ pub enum RawToken {
     /// * Type specifier (`:`).
     /// * Binding or assignment (`=`).
     /// * etc.
-    Operator,
+    Operator(Content),
 }
