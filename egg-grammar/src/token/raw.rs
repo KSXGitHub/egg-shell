@@ -49,7 +49,10 @@ pub enum RawToken<Content> {
     Number(Content),
 
     /// Round bracket, square bracket, curly bracket, open or closed.
-    Bracket(Content),
+    Bracket {
+        direction: BracketDirection,
+        shape: BracketShape,
+    },
 
     /// A sequence of special characters.
     ///
@@ -71,4 +74,24 @@ pub enum StringQuoteType {
     Single,
     /// Double quotes (`"`) were used to wrap the string content.
     Double,
+}
+
+/// Open bracket or close bracket?
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BracketDirection {
+    /// When the character is one of `(`, `[`, `{`.
+    Open,
+    /// When the character is one of `)`, `]`, `}`.
+    Close,
+}
+
+/// Round bracket, square bracket, or curly bracket?
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BracketShape {
+    /// Either `(` or `)`.
+    Round,
+    /// Either `[` or `]`.
+    Square,
+    /// Either `{` or `}`.
+    Curly,
 }
