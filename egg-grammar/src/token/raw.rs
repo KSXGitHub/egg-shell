@@ -1,3 +1,11 @@
+pub mod bracket_raw_token;
+pub mod embed_raw_token;
+pub mod string_raw_token;
+
+pub use bracket_raw_token::BracketRawToken;
+pub use embed_raw_token::EmbedRawToken;
+pub use string_raw_token::StringRawToken;
+
 /// Token before reprocessing.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
@@ -21,18 +29,10 @@ pub enum RawToken<Content> {
     /// **Excluding**
     ///
     /// * Multi-line string.
-    String {
-        prefix: Option<Content>,
-        suffix: Option<Content>,
-        main_content: Content,
-        quote_type: StringQuoteType,
-    },
+    String(StringRawToken<Content>),
 
     /// Multi-line string, documentation, or embedded code.
-    Embed {
-        tag: Content,
-        main_content: Vec<Content>,
-    },
+    Embed(EmbedRawToken<Content>),
 
     /// Number.
     ///
@@ -49,10 +49,7 @@ pub enum RawToken<Content> {
     Number(Content),
 
     /// Round bracket, square bracket, curly bracket, open or closed.
-    Bracket {
-        direction: BracketDirection,
-        shape: BracketShape,
-    },
+    Bracket(BracketRawToken),
 
     /// A sequence of special characters.
     ///
@@ -65,33 +62,4 @@ pub enum RawToken<Content> {
     /// * Binding or assignment (`=`).
     /// * etc.
     Operator(Content),
-}
-
-/// Quote type of [`RawToken::String`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum StringQuoteType {
-    /// Single quotes (`'`) were used to wrap the string content.
-    Single,
-    /// Double quotes (`"`) were used to wrap the string content.
-    Double,
-}
-
-/// Open bracket or close bracket?
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum BracketDirection {
-    /// When the character is one of `(`, `[`, `{`.
-    Open,
-    /// When the character is one of `)`, `]`, `}`.
-    Close,
-}
-
-/// Round bracket, square bracket, or curly bracket?
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum BracketShape {
-    /// Either `(` or `)`.
-    Round,
-    /// Either `[` or `]`.
-    Square,
-    /// Either `{` or `}`.
-    Curly,
 }
