@@ -1,6 +1,6 @@
 /// Token for bracket characters.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct BracketRawToken {
+pub struct BracketToken {
     direction: BracketDirection,
     shape: BracketShape,
 }

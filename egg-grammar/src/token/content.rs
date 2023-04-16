@@ -1,15 +1,15 @@
-pub mod bracket_raw_token;
-pub mod embed_raw_token;
-pub mod string_raw_token;
+pub mod bracket_token;
+pub mod embed_token;
+pub mod string_token;
 
-pub use bracket_raw_token::BracketRawToken;
-pub use embed_raw_token::EmbedRawToken;
-pub use string_raw_token::StringRawToken;
+pub use bracket_token::BracketToken;
+pub use embed_token::EmbedToken;
+pub use string_token::StringToken;
 
 /// Token before reprocessing.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
-pub enum RawToken<Content> {
+pub enum ContentToken<Content> {
     /// Single line comment.
     ///
     /// A single line comment starts with the character `#`.
@@ -29,10 +29,10 @@ pub enum RawToken<Content> {
     /// **Excluding**
     ///
     /// * Multi-line string.
-    String(StringRawToken<Content>),
+    String(StringToken<Content>),
 
     /// Multi-line string, documentation, or embedded code.
-    Embed(EmbedRawToken<Content>),
+    Embed(EmbedToken<Content>),
 
     /// Number.
     ///
@@ -49,7 +49,7 @@ pub enum RawToken<Content> {
     Number(Content),
 
     /// Round bracket, square bracket, curly bracket, open or closed.
-    Bracket(BracketRawToken),
+    Bracket(BracketToken),
 
     /// A sequence of special characters.
     ///
