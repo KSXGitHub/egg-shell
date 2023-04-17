@@ -19,6 +19,7 @@ struct State {
 /// Indicate which class of token should the scanner produce.
 #[derive(Debug, Default)]
 enum Context {
+    /// The normal, default state for most types of tokens.
     #[default]
     Outermost,
 }
