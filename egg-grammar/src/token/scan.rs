@@ -1,4 +1,8 @@
+use super::{ContentToken, IndentToken};
+
 /// Token scanner.
+///
+/// Use [the iterator interface](Iterator) to interact with the scanner.
 #[derive(Debug)]
 pub struct Scan<'a> {
     text: &'a str,
@@ -24,5 +28,12 @@ impl<'a> Scan<'a> {
     pub fn new(text: &'a str) -> Self {
         let state = State::default();
         Scan { text, state }
+    }
+}
+
+impl<'a> Iterator for Scan<'a> {
+    type Item = (IndentToken, ContentToken<&'a str>);
+    fn next(&mut self) -> Option<Self::Item> {
+        todo!()
     }
 }
