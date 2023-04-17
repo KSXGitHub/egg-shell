@@ -16,7 +16,7 @@ struct State {
     context: Context,
 }
 
-/// Context of the scanner.
+/// Indicate which class of token should the scanner produce.
 #[derive(Debug, Default)]
 enum Context {
     #[default]
