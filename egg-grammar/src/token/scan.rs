@@ -34,7 +34,7 @@ impl<'a> Scan<'a> {
 }
 
 impl<'a> Iterator for Scan<'a> {
-    type Item = (IndentToken, ContentToken<&'a str>);
+    type Item = (IndentToken, Vec<ContentToken<&'a str>>);
     fn next(&mut self) -> Option<Self::Item> {
         todo!()
     }
