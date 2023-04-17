@@ -12,7 +12,8 @@ pub struct Scan<'a> {
 /// State of the scanner.
 #[derive(Debug, Default)]
 struct State {
-    scanned_lines: usize,
+    scanned_chars: usize,
+    scanned_len: usize,
     context: Context,
 }
 
