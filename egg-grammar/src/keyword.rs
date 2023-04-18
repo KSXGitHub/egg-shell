@@ -44,6 +44,7 @@ pub enum Keyword {
     Any,
     Never,
     Void,
+    Bool,
     U8,
     U16,
     U32,
