@@ -1,10 +1,12 @@
 pub mod bracket_token;
 pub mod embed_token;
 pub mod string_token;
+pub mod word_token;
 
 pub use bracket_token::BracketToken;
 pub use embed_token::EmbedToken;
 pub use string_token::StringToken;
+pub use word_token::WordToken;
 
 /// Token before reprocessing.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -16,7 +18,7 @@ pub enum ContentToken<Content> {
     Comment(Content),
 
     /// Keyword or normal identifier.
-    Word(Content),
+    Word(WordToken<Content>),
 
     /// String, exotic syntax, or abnormal identifier.
     ///
