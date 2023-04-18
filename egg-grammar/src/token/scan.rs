@@ -1,4 +1,5 @@
 use super::{ContentToken, IndentToken};
+use std::str::Lines;
 
 /// Token scanner.
 ///
@@ -6,29 +7,29 @@ use super::{ContentToken, IndentToken};
 #[derive(Debug)]
 pub struct Scan<'a> {
     text: &'a str,
-    state: State,
+    state: State<'a>,
 }
 
 /// State of the scanner.
-#[derive(Debug, Default)]
-struct State {
-    scanned_chars: usize,
-    scanned_len: usize,
+#[derive(Debug)]
+struct State<'a> {
+    line_iter: Lines<'a>,
     context: Context,
 }
 
 /// Indicate which class of token should the scanner produce.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 enum Context {
     /// The normal, default state for most types of tokens.
-    #[default]
     Outermost,
 }
 
 impl<'a> Scan<'a> {
     /// Start scanning text for tokens.
     pub fn new(text: &'a str) -> Self {
-        let state = State::default();
+        let line_iter = text.lines();
+        let context = Context::Outermost;
+        let state = State { line_iter, context };
         Scan { text, state }
     }
 }
