@@ -1,8 +1,6 @@
 use crate::keyword::Keyword;
 use derive_more::{From, TryInto};
 
-// pub struct WordToken<Content>(WordToken<Content>);
-
 /// Token of an identifier or a keyword.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum WordToken<Content> {
