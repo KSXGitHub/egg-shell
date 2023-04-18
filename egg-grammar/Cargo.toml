@@ -8,6 +8,7 @@ rust-version = "1.65"
 derive_more = "0.99.17"
 pipe-trait = "0.4.0"
 itertools = "0.10.5"
+strum = { version = "0.24.1", features = ["derive", "phf"] }
 
 [dev-dependencies]
 pretty_assertions = "1.3.0"
