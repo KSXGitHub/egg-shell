@@ -1,9 +1,7 @@
 mod ln_num_iter;
 
 use super::{ContentToken, IndentToken};
-use egg_ast::LnNum;
 use ln_num_iter::LnNumIter;
-use std::str::Lines;
 
 /// Token scanner.
 ///
