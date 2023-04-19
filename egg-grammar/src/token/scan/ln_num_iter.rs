@@ -21,6 +21,8 @@ impl<'a> Iterator for LnNumIter<'a> {
     type Item = (LnNum, &'a str);
     fn next(&mut self) -> Option<Self::Item> {
         let LnNumIter { ln_num, ln_iter } = self;
-        ln_iter.next().map(|line| (*ln_num, line))
+        let current = *ln_num;
+        *ln_num = current.advance_by(1);
+        ln_iter.next().map(|line| (current, line))
     }
 }
