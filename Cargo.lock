@@ -55,6 +55,7 @@ name = "egg-grammar"
 version = "0.0.0"
 dependencies = [
  "derive_more",
+ "egg-ast",
  "itertools",
  "pipe-trait",
  "pretty_assertions",
