@@ -8,6 +8,8 @@ VS Code numbers the first line as 1 and the first column as 1.
 
 VS Code count columns by [unicode scalar values][unicode scalar value], as a consequence, "❤️" is counted as 2 columns instead of just 1.
 
+Although VS Code counts TAB by tab size in the status bar, it's still 1 when <kbd>Alt+Click</kbd> on links.
+
 ## Specification
 
 * Each line in a document may be separated by `LF` or `CRLF`.
