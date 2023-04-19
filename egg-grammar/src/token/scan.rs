@@ -1,6 +1,6 @@
 mod ln_num_iter;
 
-use super::{ContentToken, IndentToken};
+use super::TokenLine;
 use ln_num_iter::LnNumIter;
 
 /// Token scanner.
@@ -37,7 +37,7 @@ impl<'a> Scan<'a> {
 }
 
 impl<'a> Iterator for Scan<'a> {
-    type Item = (IndentToken, Vec<ContentToken<&'a str>>);
+    type Item = TokenLine<&'a str>;
     fn next(&mut self) -> Option<Self::Item> {
         todo!()
     }
