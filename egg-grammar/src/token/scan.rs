@@ -1,5 +1,8 @@
+mod ln_num_iter;
+
 use super::{ContentToken, IndentToken};
 use egg_ast::LnNum;
+use ln_num_iter::LnNumIter;
 use std::str::Lines;
 
 /// Token scanner.
@@ -14,8 +17,7 @@ pub struct Scan<'a> {
 /// State of the scanner.
 #[derive(Debug)]
 struct State<'a> {
-    ln_num: LnNum,
-    line_iter: Lines<'a>,
+    lines: LnNumIter<'a>,
     context: Context,
 }
 
@@ -29,14 +31,9 @@ enum Context {
 impl<'a> Scan<'a> {
     /// Start scanning text for tokens.
     pub fn new(text: &'a str) -> Self {
-        let ln_num = LnNum::from_pred_count(0);
-        let line_iter = text.lines();
+        let lines = LnNumIter::new(text);
         let context = Context::Outermost;
-        let state = State {
-            ln_num,
-            line_iter,
-            context,
-        };
+        let state = State { lines, context };
         Scan { text, state }
     }
 }
