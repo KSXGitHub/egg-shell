@@ -9,5 +9,5 @@ pub struct TokenLine<Content> {
     /// Token of the indentation at the start of the line.
     pub indent: (LnCol, IndentToken),
     /// List of [`ContentToken`] after indentation.
-    pub content: Vec<(LnCol, ContentToken<Content>)>,
+    pub content: Vec<ContentToken<(LnCol, Content)>>,
 }
