@@ -1,10 +1,16 @@
 pub mod bracket_token;
+mod comment_token;
 pub mod embed_token;
+mod number_token;
+mod operator_token;
 pub mod string_token;
 pub mod word_token;
 
 pub use bracket_token::BracketToken;
+pub use comment_token::CommentToken;
 pub use embed_token::EmbedToken;
+pub use number_token::NumberToken;
+pub use operator_token::OperatorToken;
 pub use string_token::StringToken;
 pub use word_token::WordToken;
 
@@ -15,7 +21,7 @@ pub enum ContentToken<Content> {
     /// Single line comment.
     ///
     /// A single line comment starts with the character `#`.
-    Comment(Content),
+    Comment(CommentToken<Content>),
 
     /// Keyword or normal identifier.
     Word(WordToken<Content>),
@@ -48,7 +54,7 @@ pub enum ContentToken<Content> {
     ///
     /// * Negative numbers. Composing `-` and number instead.
     /// * `nan` and `inf`. They are keywords.
-    Number(Content),
+    Number(NumberToken<Content>),
 
     /// Round bracket, square bracket, curly bracket, open or closed.
     Bracket(BracketToken),
@@ -63,5 +69,5 @@ pub enum ContentToken<Content> {
     /// * Type specifier (`:`).
     /// * Binding or assignment (`=`).
     /// * etc.
-    Operator(Content),
+    Operator(OperatorToken<Content>),
 }
