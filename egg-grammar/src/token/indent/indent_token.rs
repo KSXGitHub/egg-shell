@@ -7,6 +7,26 @@ use std::fmt::{self, Debug, Formatter};
 #[derive(Clone, PartialEq, Eq, AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator)]
 pub struct IndentToken(Vec<IndentChar>);
 
+impl IndentToken {
+    /// Parse a line of text into a pair of indentation and remaining string.
+    ///
+    /// **Notes:**
+    /// * `line` is assumed to not contain any EOL characters.
+    pub fn parse_line(mut line: &str) -> (Self, &'_ str) {
+        let mut indent_char_list = Vec::with_capacity(line.len());
+        loop {
+            let mut char_iter = line.chars();
+            let Some(Ok(indent)) = char_iter.next().map(IndentChar::try_from) else {
+                break
+            };
+            indent_char_list.push(indent);
+            line = char_iter.as_str();
+        }
+        indent_char_list.shrink_to_fit();
+        (IndentToken(indent_char_list), line)
+    }
+}
+
 impl Debug for IndentToken {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "IndentToken [")?;
@@ -39,6 +59,28 @@ impl Debug for IndentToken {
 mod test {
     use super::*;
     use pretty_assertions::assert_eq;
+
+    #[test]
+    fn parse_line() {
+        macro_rules! test_case {
+            ($input:literal -> [$($indent:ident),* $(,)?], $rest:literal) => {
+                assert_eq!(
+                    IndentToken::parse_line($input),
+                    (IndentToken(vec![$(IndentChar::$indent),*]), $rest),
+                )
+            };
+        }
+
+        test_case!("" -> [], "");
+        test_case!("abc" -> [], "abc");
+        test_case!("\tabc" -> [Tab], "abc");
+        test_case!("\t\tabc" -> [Tab, Tab], "abc");
+        test_case!("  abc" -> [Space, Space], "abc");
+        test_case!("    abc" -> [Space, Space, Space, Space], "abc");
+        test_case!(" \t \tabc" -> [Space, Tab, Space, Tab], "abc");
+        test_case!("  abc def ghi" -> [Space, Space], "abc def ghi");
+        test_case!("\tabc def\tghi" -> [Tab], "abc def\tghi");
+    }
 
     #[test]
     fn debug_fmt() {
