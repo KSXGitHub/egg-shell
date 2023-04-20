@@ -39,6 +39,14 @@ impl<'a> Scan<'a> {
 impl<'a> Iterator for Scan<'a> {
     type Item = TokenLine<&'a str>;
     fn next(&mut self) -> Option<Self::Item> {
+        let Scan { text, state } = self;
+        let State { lines, context } = state;
+        let (ln_num, ln_text) = lines.next()?;
+
+        match *context {
+            Context::Outermost => {}
+        }
+
         todo!()
     }
 }
