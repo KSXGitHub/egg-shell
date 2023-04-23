@@ -26,7 +26,6 @@ pub enum Keyword {
     /* Escape keywords */
     Break,
     Continue,
-    Exec,
     Return,
 
     /* Literal keywords */
@@ -40,6 +39,7 @@ pub enum Keyword {
     Case,
     Do,
     Else,
+    Exec,
     For,
     If,
     Loop,
