@@ -28,7 +28,7 @@ pub enum Keyword {
     Continue,
     Return,
 
-    /* Literal keywords */
+    /* Value keywords */
     True,
     False,
     Null,
