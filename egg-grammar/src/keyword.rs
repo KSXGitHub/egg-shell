@@ -20,6 +20,8 @@ pub enum Keyword {
     Trait,
     Type,
     Union,
+    Where,
+    With,
 
     /* Escape keywords */
     Break,
@@ -36,11 +38,14 @@ pub enum Keyword {
     Nan,
 
     /* Imperative keywords */
+    Case,
     Do,
     Else,
     For,
     If,
     Loop,
+    Match,
+    Then,
     While,
 
     /* Type keywords */
@@ -65,6 +70,7 @@ pub enum Keyword {
     Await,
     From,
     In,
+    Infer,
     Is,
     Not,
     Of,
