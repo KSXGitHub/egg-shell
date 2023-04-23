@@ -57,4 +57,14 @@ pub enum Keyword {
     I128,
     F32,
     F64,
+
+    /* Operators */
+    Await,
+    From,
+    In,
+    Is,
+    Not,
+    Of,
+    To,
+    Yield,
 }
