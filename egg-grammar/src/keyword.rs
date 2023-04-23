@@ -27,7 +27,6 @@ pub enum Keyword {
     Break,
     Continue,
     Exec,
-    Exit,
     Return,
 
     /* Literal keywords */
