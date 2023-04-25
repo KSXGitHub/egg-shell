@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "egg-common-utils",
     "egg-ast",
     "egg-grammar",
 ]

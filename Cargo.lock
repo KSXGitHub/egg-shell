@@ -51,6 +51,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "egg-common-utils"
+version = "0.0.0"
+dependencies = [
+ "pretty_assertions",
+]
+
+[[package]]
 name = "egg-grammar"
 version = "0.0.0"
 dependencies = [
