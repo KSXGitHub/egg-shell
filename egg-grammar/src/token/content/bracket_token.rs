@@ -4,8 +4,8 @@ use egg_common_utils::split_first_char;
 /// Token for bracket characters.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BracketToken {
-    direction: BracketDirection,
-    shape: BracketShape,
+    pub direction: BracketDirection,
+    pub shape: BracketShape,
 }
 
 /// Open bracket or close bracket?
