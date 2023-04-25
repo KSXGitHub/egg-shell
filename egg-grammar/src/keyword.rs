@@ -8,11 +8,14 @@ pub enum Keyword {
     Pub,
 
     /* Declaration keywords */
+    Async,
     Const,
     Enum,
     Fn,
+    Gen,
     Impl,
     Let,
+    Meta,
     Mod,
     Mut,
     Static,
