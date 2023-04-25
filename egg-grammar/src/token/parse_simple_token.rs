@@ -1,7 +1,5 @@
 /// Parse a specific type of token.
-pub trait ParseSimpleToken: Sized {
-    /// Type of input text and remaining text
-    type Content;
+pub trait ParseSimpleToken<Content>: Sized {
     /// Parse the input text into a token
-    fn parse(input: Self::Content) -> Option<(Self, Self::Content)>;
+    fn parse(input: Content) -> Option<(Self, Content)>;
 }
