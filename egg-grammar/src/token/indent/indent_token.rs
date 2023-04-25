@@ -1,5 +1,6 @@
 use super::IndentChar;
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator};
+use egg_common_utils::split_first_char;
 use itertools::Itertools;
 use std::fmt::{self, Debug, Formatter};
 
@@ -14,13 +15,12 @@ impl IndentToken {
     /// * `line` is assumed to not contain any EOL characters.
     pub fn parse_line(mut line: &str) -> (Self, &'_ str) {
         let mut indent_char_list = Vec::with_capacity(line.len());
-        loop {
-            let mut char_iter = line.chars();
-            let Some(Ok(indent)) = char_iter.next().map(IndentChar::try_from) else {
-                break
+        while let Some((first, rest)) = split_first_char(line) {
+            let Ok(indent) = first.try_into() else {
+                break;
             };
             indent_char_list.push(indent);
-            line = char_iter.as_str();
+            line = rest;
         }
         indent_char_list.shrink_to_fit();
         (IndentToken(indent_char_list), line)

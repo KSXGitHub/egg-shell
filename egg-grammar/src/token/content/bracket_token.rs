@@ -1,4 +1,5 @@
 use crate::token::ParseSimpleToken;
+use egg_common_utils::split_first_char;
 
 /// Token for bracket characters.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -31,14 +32,14 @@ impl<'a> ParseSimpleToken<&'a str> for BracketToken {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         use BracketDirection::*;
         use BracketShape::*;
-        let (first, rest) = input.split_at(1);
+        let (first, rest) = split_first_char(input)?;
         let (direction, shape) = match first {
-            "(" => (Open, Round),
-            ")" => (Close, Round),
-            "[" => (Open, Square),
-            "]" => (Close, Square),
-            "{" => (Open, Curly),
-            "}" => (Close, Curly),
+            '(' => (Open, Round),
+            ')' => (Close, Round),
+            '[' => (Open, Square),
+            ']' => (Close, Square),
+            '{' => (Open, Curly),
+            '}' => (Close, Curly),
             _ => return None,
         };
         let token = BracketToken { direction, shape };

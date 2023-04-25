@@ -63,6 +63,7 @@ version = "0.0.0"
 dependencies = [
  "derive_more",
  "egg-ast",
+ "egg-common-utils",
  "itertools",
  "pipe-trait",
  "pretty_assertions",
