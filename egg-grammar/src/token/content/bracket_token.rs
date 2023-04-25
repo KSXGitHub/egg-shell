@@ -28,12 +28,12 @@ pub enum BracketShape {
     Curly,
 }
 
-impl<'a> ParseSimpleToken<&'a str> for BracketToken {
-    fn parse(input: &'a str) -> Option<(Self, &'a str)> {
+impl BracketToken {
+    /// Infer a [`BracketToken`] from a [character](char).
+    pub const fn from_char(char: char) -> Option<Self> {
         use BracketDirection::*;
         use BracketShape::*;
-        let (first, rest) = split_first_char(input)?;
-        let (direction, shape) = match first {
+        let (direction, shape) = match char {
             '(' => (Open, Round),
             ')' => (Close, Round),
             '[' => (Open, Square),
@@ -42,7 +42,14 @@ impl<'a> ParseSimpleToken<&'a str> for BracketToken {
             '}' => (Close, Curly),
             _ => return None,
         };
-        let token = BracketToken { direction, shape };
+        Some(BracketToken { direction, shape })
+    }
+}
+
+impl<'a> ParseSimpleToken<&'a str> for BracketToken {
+    fn parse(input: &'a str) -> Option<(Self, &'a str)> {
+        let (first, rest) = split_first_char(input)?;
+        let token = BracketToken::from_char(first)?;
         Some((token, rest))
     }
 }
