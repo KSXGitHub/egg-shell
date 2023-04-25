@@ -46,3 +46,44 @@ impl<'a> ParseSimpleToken<&'a str> for BracketToken {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn parse() {
+        macro_rules! test_positive {
+            ($input:literal -> $direction:ident $shape:ident $rest:literal) => {
+                assert_eq!(
+                    BracketToken::parse($input),
+                    Some((
+                        BracketToken {
+                            direction: BracketDirection::$direction,
+                            shape: BracketShape::$shape
+                        },
+                        $rest,
+                    )),
+                )
+            };
+        }
+
+        macro_rules! test_negative {
+            ($input:literal) => {
+                assert_eq!(BracketToken::parse($input), None)
+            };
+        }
+
+        test_positive!("(abc)" -> Open Round "abc)");
+        test_positive!("), (" -> Close Round ", (");
+        test_positive!("[abc]" -> Open Square "abc]");
+        test_positive!("], [" -> Close Square ", [");
+        test_positive!("{abc}" -> Open Curly "abc}");
+        test_positive!("}, {" -> Close Curly ", {");
+
+        test_negative!("");
+        test_negative!("abc");
+        test_negative!("<abc>");
+    }
+}
