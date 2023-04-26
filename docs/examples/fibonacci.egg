@@ -1,5 +1,16 @@
 #! /usr/bin/env egg
 
+@@. Calculate the nth element of the fibonacci sequence.
+@@:
+    The Fibonacci sequence is a sequence in which each number
+    is the sum of the two preceding ones.
+
+    fibonacci(0) = 0
+    fibonacci(1) = 1
+    fibonacci(n) = fibonacci(n - 1) + fibonacci(n - 2)
+@@?
+    n: The position of the queried number.
+    ->: The nth number in the fibonacci sequence.
 pub const fn fibonacci(n: u16) -> u32
     return match n
         case 0 or 1 then 1
