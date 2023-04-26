@@ -1,7 +1,7 @@
 use super::IndentChar;
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator};
-use egg_common_utils::split_first_char;
 use itertools::Itertools;
+use split_first_char::split_first_char;
 use std::fmt::{self, Debug, Formatter};
 
 /// Token of indentation.
