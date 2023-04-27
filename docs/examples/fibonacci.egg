@@ -23,9 +23,9 @@ pub const fn fibonacci(n: u16) -> u32
 fn handle-stdin() do
     print 'Enter the position of the fibonacci number: '
     let n: u16 = read()
-    println "Calculating fibonacci($n)..."
+    println f'Calculating fibonacci($n)...'
     let fib = fibonacci(n)
-    println "Result: fibonacci($n) = $fib"
+    println f'Result: fibonacci($n) = $fib'
 
 # This function would be executed when fibonacci.egg is called as an executable with a single argument.
 @exec-entry
