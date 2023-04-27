@@ -1,7 +1,7 @@
 #! /usr/bin/env egg
 @@!desc Library to calculate fibonacci number.
-@!exec-cli::mode 'standard'
-@!exec-help::desc 'Calculate fibonacci number'
+@!cli::mode 'standard'
+@!cli::help::desc 'Calculate fibonacci number'
 
 @@desc Calculate the nth element of the fibonacci sequence.
 @@extra
@@ -20,7 +20,7 @@ pub const fn fibonacci(n: u16) -> u32
         case _ then fibonacci(n - 2) + fibonacci(n - 1)
 
 # This function would be executed when fibonacci.egg is called as an executable without any argument.
-@exec-entry
+@cli::entry
 fn handle-stdin() do
     print 'Enter the position of the fibonacci number: '
     let n: u16 = read()
@@ -29,8 +29,8 @@ fn handle-stdin() do
     println f'Result: fibonacci($n) = $fib'
 
 # This function would be executed when fibonacci.egg is called as an executable with a single argument.
-@exec-entry
-@exec-help::params '''
+@cli::entry
+@cli::help::params '''
     n: The position of the queried number.
 fn handle-argument(n: u16) do
     n | fibonacci(?) | println(?)
