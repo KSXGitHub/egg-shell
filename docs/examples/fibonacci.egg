@@ -1,5 +1,6 @@
 #! /usr/bin/env egg
 @@!desc Library to calculate fibonacci number.
+@exec-help 'Calculate fibonacci number'
 
 @@desc Calculate the nth element of the fibonacci sequence.
 @@extra
@@ -28,5 +29,7 @@ fn handle-stdin() do
 
 # This function would be executed when fibonacci.egg is called as an executable with a single argument.
 @exec-entry
+@exec-help.params '''
+    n: The position of the queried number.
 fn handle-argument(n: u16) do
     println fibonacci(n)
