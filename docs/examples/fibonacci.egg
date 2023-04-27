@@ -32,4 +32,4 @@ fn handle-stdin() do
 @exec-help.params '''
     n: The position of the queried number.
 fn handle-argument(n: u16) do
-    println fibonacci(n)
+    n | fibonacci(?) | println(?)
