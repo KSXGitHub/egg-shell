@@ -1,6 +1,6 @@
 #! /usr/bin/env egg
 @@!desc Library to calculate fibonacci number.
-@exec-help::desc 'Calculate fibonacci number'
+@!exec-help::desc 'Calculate fibonacci number'
 
 @@desc Calculate the nth element of the fibonacci sequence.
 @@extra
