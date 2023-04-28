@@ -2,5 +2,5 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DocumentationToken<Content> {
     pub header: Content,
-    pub main_content: Vec<Content>,
+    pub body: Vec<Content>,
 }

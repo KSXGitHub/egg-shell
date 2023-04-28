@@ -3,7 +3,7 @@
 pub struct StringToken<Content> {
     pub prefix: Option<Content>,
     pub suffix: Option<Content>,
-    pub main_content: Content,
+    pub body: Content,
     pub quote_type: QuoteType,
 }
 

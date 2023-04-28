@@ -2,7 +2,7 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmbedToken<Content> {
     pub header: (QuoteType, Content),
-    pub main_content: Vec<Content>,
+    pub body: Vec<Content>,
 }
 
 /// Quote type of [`EmbedToken`].
