@@ -1,5 +1,5 @@
 /// Parse a specific type of token.
-pub trait ParseSimpleToken<Content>: Sized {
+pub trait ParseToken<Content>: Sized {
     /// Parse the input text into a token.
     ///
     /// **Return value:**

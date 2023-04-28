@@ -1,4 +1,4 @@
-use crate::token::ParseSimpleToken;
+use crate::token::ParseToken;
 use split_first_char::split_first_char;
 
 /// Token for bracket characters.
@@ -46,7 +46,7 @@ impl BracketToken {
     }
 }
 
-impl<'a> ParseSimpleToken<&'a str> for BracketToken {
+impl<'a> ParseToken<&'a str> for BracketToken {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (first, rest) = split_first_char(input)?;
         let token = BracketToken::from_char(first)?;
