@@ -4,7 +4,7 @@ pub struct StringToken<Content> {
     pub prefix: Option<Content>,
     pub suffix: Option<Content>,
     pub body: Content,
-    pub quote_type: QuoteType,
+    pub quote: QuoteType,
 }
 
 /// Quote type of [`StringToken`].
