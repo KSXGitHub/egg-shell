@@ -19,6 +19,12 @@ pub const fn fibonacci(n: u16) -> u32
         case 0 or 1 then n
         case _ then fibonacci(n - 2) + fibonacci(n - 1)
 
+@test::run
+fn 'First 10 fibonacci numbers'() do
+    let received = range(0, 10).map(fibonacci).collect()
+    let expected = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+    assert_eq(received, expected)
+
 # This function would be executed when fibonacci.egg is called as an executable without any argument.
 @cli::entry
 fn handle-stdin() do
