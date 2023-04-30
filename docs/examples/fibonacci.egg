@@ -16,7 +16,7 @@
     ->: The nth number in the fibonacci sequence.
 pub const fn fibonacci(n: u16) -> u32
     return match n
-        case 0 or 1 then 1
+        case 0 or 1 then n
         case _ then fibonacci(n - 2) + fibonacci(n - 1)
 
 # This function would be executed when fibonacci.egg is called as an executable without any argument.
