@@ -26,6 +26,12 @@ pub enum Keyword {
     Where,
     With,
 
+    /* Library keywords */
+    Use,
+    Import,
+    Export,
+    Source,
+
     /* Escape keywords */
     Break,
     Continue,
