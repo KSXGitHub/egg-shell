@@ -60,6 +60,7 @@ pub enum Keyword {
     Any,
     Never,
     Void,
+    Dyn,
     Bool,
     U8,
     U16,
