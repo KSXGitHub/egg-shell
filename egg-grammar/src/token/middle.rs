@@ -1,30 +1,21 @@
 pub mod bracket_token;
-mod comment_token;
 mod documentation_token;
-pub mod embed_token;
 mod number_token;
 mod operator_token;
 pub mod string_token;
 pub mod word_token;
 
 pub use bracket_token::BracketToken;
-pub use comment_token::CommentToken;
 pub use documentation_token::DocumentationToken;
-pub use embed_token::EmbedToken;
 pub use number_token::NumberToken;
 pub use operator_token::OperatorToken;
 pub use string_token::StringToken;
 pub use word_token::WordToken;
 
-/// Token before reprocessing.
+/// Token in the middle of the line.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
-pub enum ContentToken<Content> {
-    /// Single line comment.
-    ///
-    /// A single line comment starts with the character `#`.
-    Comment(CommentToken<Content>),
-
+pub enum MiddleToken<Content> {
     /// Keyword or normal identifier.
     Word(WordToken<Content>),
 
@@ -43,9 +34,6 @@ pub enum ContentToken<Content> {
 
     /// Documentation annotation.
     Documentation(DocumentationToken<Content>),
-
-    /// Multi-line string or embedded code.
-    Embed(EmbedToken<Content>),
 
     /// Number.
     ///

@@ -1,4 +1,4 @@
-use super::{ContentToken, IndentToken};
+use super::{EndingToken, IndentToken, MiddleToken};
 use egg_ast::{LnCol, LnNum};
 
 /// List of tokens from a line.
@@ -8,6 +8,8 @@ pub struct TokenLine<Content> {
     pub ln_num: LnNum,
     /// Token of the indentation at the start of the line.
     pub indent: (LnCol, IndentToken),
-    /// List of [`ContentToken`] after indentation.
-    pub content: Vec<(LnCol, ContentToken<Content>)>,
+    /// List of [`MiddleToken`] after indentation.
+    pub middle: Vec<(LnCol, MiddleToken<Content>)>,
+    /// Optional [`EndingToken`] at the end of the line.
+    pub ending: (LnCol, Option<EndingToken<Content>>),
 }
