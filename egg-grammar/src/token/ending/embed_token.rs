@@ -1,8 +1,8 @@
 pub mod documentation_token;
-pub mod string_token;
+pub mod text_token;
 
 pub use documentation_token::DocumentationToken;
-pub use string_token::StringToken;
+pub use text_token::TextToken;
 
 /// Token for a chunk of embedded lines.
 #[derive(Debug, Clone, PartialEq, Eq)]
