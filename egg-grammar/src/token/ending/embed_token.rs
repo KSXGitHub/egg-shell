@@ -1,15 +1,10 @@
+pub mod string_token;
+
+pub use string_token::StringToken;
+
 /// Token for a chunk of embedded lines.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct EmbedToken<Content> {
-    pub header: (Quote, Content),
-    pub body: Vec<Content>,
-}
-
-/// Quote type of [`EmbedToken`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Quote {
-    /// Three single quotes (`'''`) were used to start the embedded block.
-    Single,
-    /// Three double quotes (`"""`) were used to start the embedded block.
-    Double,
+pub struct EmbedToken<Tag, Attr, Body> {
+    pub header: (Tag, Attr),
+    pub body: Vec<Body>,
 }
