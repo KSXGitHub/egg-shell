@@ -1,5 +1,7 @@
+pub mod documentation_token;
 pub mod string_token;
 
+pub use documentation_token::DocumentationToken;
 pub use string_token::StringToken;
 
 /// Token for a chunk of embedded lines.

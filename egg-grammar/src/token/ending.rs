@@ -2,7 +2,7 @@ mod comment_token;
 pub mod embed_token;
 
 pub use comment_token::CommentToken;
-pub use embed_token::StringToken;
+pub use embed_token::{DocumentationToken, StringToken};
 
 /// Token at the end of a line.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -15,4 +15,7 @@ pub enum EndingToken<Content> {
 
     /// Multi-line string or embedded code.
     String(StringToken<Content>),
+
+    /// Documentation annotation.
+    Documentation(DocumentationToken<Content>),
 }

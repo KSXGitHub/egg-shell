@@ -1,12 +1,10 @@
 pub mod bracket_token;
-mod documentation_token;
 mod number_token;
 mod operator_token;
 pub mod string_token;
 pub mod word_token;
 
 pub use bracket_token::BracketToken;
-pub use documentation_token::DocumentationToken;
 pub use number_token::NumberToken;
 pub use operator_token::OperatorToken;
 pub use string_token::StringToken;
@@ -31,9 +29,6 @@ pub enum MiddleToken<Content> {
     ///
     /// * Multi-line string.
     String(StringToken<Content>),
-
-    /// Documentation annotation.
-    Documentation(DocumentationToken<Content>),
 
     /// Number.
     ///
