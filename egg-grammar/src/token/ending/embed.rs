@@ -33,6 +33,16 @@ where
         let token = EmbedToken { header, body };
         Some(token)
     }
+
+    /// Start the parsing process with an empty body.
+    pub fn new(input: &'a str) -> Option<Self> {
+        Self::start_parsing(input, Vec::new())
+    }
+
+    /// Start the parsing process with an empty body with a specified capacity.
+    pub fn with_capacity(input: &'a str, capacity: usize) -> Option<Self> {
+        Self::start_parsing(input, Vec::with_capacity(capacity))
+    }
 }
 
 impl<'a, Tag, Attr, Body> EmbedToken<Tag, Attr, Body>
