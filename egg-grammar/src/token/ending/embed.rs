@@ -1,7 +1,7 @@
-pub mod documentation;
+pub mod doc;
 pub mod text;
 
-pub use documentation::DocumentationToken;
+pub use doc::DocToken;
 pub use text::TextToken;
 
 /// Token for a chunk of embedded lines.

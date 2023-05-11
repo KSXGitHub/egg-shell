@@ -2,7 +2,7 @@ mod comment;
 pub mod embed;
 
 pub use comment::CommentToken;
-pub use embed::{DocumentationToken, TextToken};
+pub use embed::{DocToken, TextToken};
 
 /// Token at the end of a line.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17,5 +17,5 @@ pub enum EndingToken<Content> {
     String(TextToken<Content>),
 
     /// Documentation annotation.
-    Documentation(DocumentationToken<Content>),
+    Doc(DocToken<Content>),
 }
