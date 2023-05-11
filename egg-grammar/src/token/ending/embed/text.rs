@@ -1,5 +1,7 @@
+use crate::token::RawToken;
+
 /// Token of multi-line string.
-pub type TextToken<Content> = super::EmbedToken<TextTokenTag, Content, Content>;
+pub type TextToken<Content> = super::EmbedToken<TextTokenTag, RawToken<Content>, RawToken<Content>>;
 
 /// Tag and quote type of [`TextToken`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
