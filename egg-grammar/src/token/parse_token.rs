@@ -1,5 +1,5 @@
-/// Parse a specific type of token.
-pub trait ParseToken<Content>: Sized {
+/// Parse a middle token.
+pub trait ParseMiddleToken<Content>: Sized {
     /// Parse the input text into a token.
     ///
     /// **Return value:**
@@ -9,7 +9,7 @@ pub trait ParseToken<Content>: Sized {
 }
 
 /// Parse a tag of an embedded token.
-pub trait ParseTokenTag<Content>: Sized {
+pub trait ParseEmbedTokenTag<Content>: Sized {
     /// Parse the input text into a tag of an embedded token.
     ///
     /// **Return value:**
@@ -19,7 +19,7 @@ pub trait ParseTokenTag<Content>: Sized {
 }
 
 /// Parse attribute of an embedded token.
-pub trait ParseTokenAttr<Content>: Sized {
+pub trait ParseEmbedTokenAttr<Content>: Sized {
     /// Parse the input text into an attribute of an embedded token.
     ///
     /// **Return value:**
@@ -29,7 +29,7 @@ pub trait ParseTokenAttr<Content>: Sized {
 }
 
 /// Parse a line of a body of an embedded token.
-pub trait ParseTokenBody<Content>: Sized {
+pub trait ParseEmbedTokenBody<Content>: Sized {
     /// Parse the input text into a line of a body of an embedded token.
     ///
     /// **Return value:**

@@ -1,4 +1,4 @@
-use crate::token::ParseToken;
+use crate::token::ParseMiddleToken;
 
 /// Token for a line comment.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -21,7 +21,7 @@ impl<Content> CommentToken<Content> {
     }
 }
 
-impl<'a> ParseToken<&'a str> for CommentToken<&'a str> {
+impl<'a> ParseMiddleToken<&'a str> for CommentToken<&'a str> {
     fn parse(content: &'a str) -> Option<(Self, &'a str)> {
         let token = CommentToken::try_from_str(content)?;
         Some((token, ""))
