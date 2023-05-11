@@ -25,6 +25,11 @@ impl IndentToken {
         indent_char_list.shrink_to_fit();
         (IndentToken(indent_char_list), line)
     }
+
+    /// Check if the indent is the start of another indent.
+    pub fn is_start_of(&self, other: &[IndentChar]) -> bool {
+        other.starts_with(self)
+    }
 }
 
 impl Debug for IndentToken {
