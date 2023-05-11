@@ -1,14 +1,14 @@
-pub mod bracket_token;
-mod number_token;
-mod operator_token;
-pub mod string_token;
-pub mod word_token;
+pub mod bracket;
+mod number;
+mod operator;
+pub mod string;
+pub mod word;
 
-pub use bracket_token::BracketToken;
-pub use number_token::NumberToken;
-pub use operator_token::OperatorToken;
-pub use string_token::StringToken;
-pub use word_token::WordToken;
+pub use bracket::BracketToken;
+pub use number::NumberToken;
+pub use operator::OperatorToken;
+pub use string::StringToken;
+pub use word::WordToken;
 
 /// Token in the middle of the line.
 #[derive(Debug, Clone, PartialEq, Eq)]

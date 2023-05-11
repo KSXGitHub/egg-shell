@@ -1,8 +1,8 @@
-mod comment_token;
-pub mod embed_token;
+mod comment;
+pub mod embed;
 
-pub use comment_token::CommentToken;
-pub use embed_token::{DocumentationToken, TextToken};
+pub use comment::CommentToken;
+pub use embed::{DocumentationToken, TextToken};
 
 /// Token at the end of a line.
 #[derive(Debug, Clone, PartialEq, Eq)]
