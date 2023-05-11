@@ -44,9 +44,9 @@ where
     Body: ParseEmbedTokenBody<&'a str>,
 {
     /// Parse an item and add it to the body.
-    pub fn parse_body_item(&mut self, input: &'a str) -> Option<&'_ mut Self> {
+    pub fn parse_body_item(&mut self, input: &'a str) -> Option<()> {
         let item = Body::parse(input)?;
         self.body.push(item);
-        Some(self)
+        Some(())
     }
 }
