@@ -1,6 +1,5 @@
 use super::EmbedToken;
 use crate::token::{IndentToken, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag};
-use pipe_trait::Pipe;
 
 /// The first item is not parsed yet.
 type Empty = ();
@@ -83,8 +82,7 @@ where
         if !header_indent.is_shorter_start_of(&first_body_indent) {
             return None;
         }
-        let first_body_item = Body::parse(input)?;
-        token.body.push(first_body_item);
+        token.parse_body_item(input)?;
         let first_body_indent = (first_body_indent.to_string(), first_body_indent);
         let builder = EmbedTokenBuilder {
             header_indent,
@@ -103,8 +101,7 @@ where
     /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
     pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
         let (first_body_indent, _) = &self.first_body_indent;
-        let item = input.strip_prefix(first_body_indent)?.pipe(Body::parse)?;
-        self.token.body.push(item);
-        Some(())
+        let input = input.strip_prefix(first_body_indent)?;
+        self.token.parse_body_item(input)
     }
 }
