@@ -1,5 +1,6 @@
 use derive_more::{Display, Error};
 use pipe_trait::Pipe;
+use std::fmt::{self, Display, Formatter};
 
 /// Character for indentation. Either a space or a tab.
 ///
@@ -54,6 +55,12 @@ impl TryFrom<char> for IndentChar {
     }
 }
 
+impl Display for IndentChar {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        char::from(*self).fmt(f)
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -102,5 +109,11 @@ mod test {
         char_to_char!('\t');
         indent_to_indent!(Space);
         indent_to_indent!(Tab);
+    }
+
+    #[test]
+    fn display_fmt() {
+        assert_eq!(IndentChar::Space.pipe(char::from).to_string(), " ");
+        assert_eq!(IndentChar::Tab.pipe(char::from).to_string(), "\t");
     }
 }

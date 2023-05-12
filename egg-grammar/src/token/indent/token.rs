@@ -2,7 +2,7 @@ use super::IndentChar;
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator};
 use itertools::Itertools;
 use split_first_char::split_first_char;
-use std::fmt::{self, Debug, Formatter};
+use std::fmt::{self, Debug, Display, Formatter};
 
 /// Token of indentation.
 #[derive(Clone, PartialEq, Eq, AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator)]
@@ -34,6 +34,15 @@ impl IndentToken {
     /// Check if the indent is the shorter start of another indent.
     pub fn is_shorter_start_of(&self, other: &[IndentChar]) -> bool {
         self.len() > other.len() && self.is_start_of(other)
+    }
+}
+
+impl Display for IndentToken {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for char in self.iter() {
+            write!(f, "{}", char)?
+        }
+        Ok(())
     }
 }
 
@@ -90,6 +99,24 @@ mod test {
         test_case!(" \t \tabc" -> [Space, Tab, Space, Tab], "abc");
         test_case!("  abc def ghi" -> [Space, Space], "abc def ghi");
         test_case!("\tabc def\tghi" -> [Tab], "abc def\tghi");
+    }
+
+    #[test]
+    fn display_fmt() {
+        macro_rules! str_fmt {
+            ($($name:ident),* $(,)?) => {
+                IndentToken(vec![$(IndentChar::$name),*]).to_string()
+            };
+        }
+
+        assert_eq!(str_fmt!(), "");
+        assert_eq!(str_fmt!(Space), " ");
+        assert_eq!(str_fmt!(Tab), "\t");
+        assert_eq!(str_fmt!(Space, Space, Space, Space), " ".repeat(4),);
+        assert_eq!(
+            str_fmt!(Space, Space, Tab, Tab, Tab, Space),
+            format!("{spc}{spc}{tab}{tab}{tab}{spc}", spc = " ", tab = "\t"),
+        );
     }
 
     #[test]
