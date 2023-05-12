@@ -32,3 +32,48 @@ impl<'a> ParseMiddleToken<&'a str> for NumberToken<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $token:literal, $remaining:literal) => {
+                assert_eq!(
+                    NumberToken::parse($input).unwrap(),
+                    (NumberToken { content: $token }, $remaining),
+                )
+            };
+        }
+
+        case!("0" -> "0", "");
+        case!("123" -> "123", "");
+        case!("123u32" -> "123u32", "");
+        case!("123u32" -> "123u32", "");
+        case!("123_456u32" -> "123_456u32", "");
+        case!("123.45f64" -> "123.45f64", "");
+        case!("123+456" -> "123", "+456");
+        case!("123.456,789" -> "123.456", ",789");
+        case!("0x123ABCi32 remaining" -> "0x123ABCi32", " remaining");
+        case!("123_456_789_suffix remaining" -> "123_456_789_suffix", " remaining");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {
+                assert_eq!(NumberToken::parse($input), None)
+            };
+        }
+
+        case!("");
+        case!("_123");
+        case!("abc");
+        case!("i32");
+        case!("f64");
+        case!("-123"); // negative numbers are handled in semantic level, not token level
+    }
+}
