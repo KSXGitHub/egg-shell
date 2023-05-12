@@ -4,7 +4,7 @@ use crate::token::{IndentToken, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseE
 /// The first item is not parsed yet.
 type Empty = ();
 /// The first item is parsed.
-type Inhabited = (String, IndentToken);
+type Inhabited = String;
 
 /// Builder for [`EmbedToken`].
 ///
@@ -83,7 +83,7 @@ where
             return None;
         }
         token.parse_body_item(input)?;
-        let first_body_indent = (first_body_indent.to_string(), first_body_indent);
+        let first_body_indent = first_body_indent.to_string();
         let builder = EmbedTokenBuilder {
             header_indent,
             first_body_indent,
@@ -100,8 +100,7 @@ where
 {
     /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
     pub fn parse_next_body_item(&mut self, input: &'input str) -> Option<()> {
-        let (first_body_indent, _) = &self.first_body_indent;
-        let input = input.strip_prefix(first_body_indent)?;
+        let input = input.strip_prefix(&self.first_body_indent)?;
         self.token.parse_body_item(input)
     }
 }
