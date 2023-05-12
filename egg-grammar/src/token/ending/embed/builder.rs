@@ -1,23 +1,33 @@
 use super::EmbedToken;
 use crate::token::{IndentToken, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag};
+use pipe_trait::Pipe;
+
+/// The first item is not parsed yet.
+type Empty = ();
+/// The first item is parsed.
+type Inhabited = (String, IndentToken);
 
 /// Builder for [`EmbedToken`].
 ///
 /// This builder takes indentation into account (unlike using `EmbedToken` directly).
 #[derive(Debug, Clone)]
-pub struct EmbedTokenBuilder<'a, Tag, Attr, Body> {
-    indent: &'a IndentToken,
+pub struct EmbedTokenBuilder<'header_indent, FirstBodyIndent, Tag, Attr, Body> {
+    header_indent: &'header_indent IndentToken,
+    first_body_indent: FirstBodyIndent,
     token: EmbedToken<Tag, Attr, Body>,
 }
 
-impl<'a, Tag, Attr, Body> EmbedTokenBuilder<'a, Tag, Attr, Body> {
+impl<'header_indent, FirstBodyIndent, Tag, Attr, Body>
+    EmbedTokenBuilder<'header_indent, FirstBodyIndent, Tag, Attr, Body>
+{
     /// Extract the [token](EmbedToken) that was built.
     pub fn finish(self) -> EmbedToken<Tag, Attr, Body> {
         self.token
     }
 }
 
-impl<'indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'indent, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body>
+    EmbedTokenBuilder<'header_indent, Empty, Tag, Attr, Body>
 where
     Tag: ParseEmbedTokenTag<&'input str>,
     Attr: ParseEmbedTokenAttr<&'input str>,
@@ -26,23 +36,27 @@ where
     ///
     /// The existing body is typically an empty `Vec` constructed by `Vec::new` or `Vec::with_capacity`.
     pub fn start_parsing(
-        indent: &'indent IndentToken,
+        header_indent: &'header_indent IndentToken,
         input: &'input str,
         body: Vec<Body>,
     ) -> Option<Self> {
         let token = EmbedToken::<Tag, Attr, Body>::start_parsing(input, body)?;
-        let builder = EmbedTokenBuilder { indent, token };
+        let builder = EmbedTokenBuilder {
+            header_indent,
+            first_body_indent: (),
+            token,
+        };
         Some(builder)
     }
 
     /// Start the parsing process with an empty body.
-    pub fn new(indent: &'indent IndentToken, input: &'input str) -> Option<Self> {
+    pub fn new(indent: &'header_indent IndentToken, input: &'input str) -> Option<Self> {
         Self::start_parsing(indent, input, Vec::new())
     }
 
     /// Start the parsing process with an empty body with a specified capacity.
     pub fn with_capacity(
-        indent: &'indent IndentToken,
+        indent: &'header_indent IndentToken,
         input: &'input str,
         capacity: usize,
     ) -> Option<Self> {
@@ -50,17 +64,46 @@ where
     }
 }
 
-impl<'indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'indent, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body>
+    EmbedTokenBuilder<'header_indent, Empty, Tag, Attr, Body>
 where
     Body: ParseEmbedTokenBody<&'input str>,
 {
-    /// Parse an indent, check the indent, then parse and add a body line if the indent matches.
-    pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
-        let (input_indent, input) = IndentToken::parse_line(input);
-        if self.indent.is_start_of(&input_indent) {
-            self.token.parse_body_item(input)
-        } else {
-            None
+    /// Parse the body's first item and indentation.
+    pub fn parse_body_item(
+        self,
+        input: &'input str,
+    ) -> Option<EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>> {
+        let EmbedTokenBuilder {
+            header_indent,
+            first_body_indent: (),
+            mut token,
+        } = self;
+        let (first_body_indent, input) = IndentToken::parse_line(input);
+        if !header_indent.is_shorter_start_of(&first_body_indent) {
+            return None;
         }
+        let first_body_item = Body::parse(input)?;
+        token.body.push(first_body_item);
+        let first_body_indent = (first_body_indent.to_string(), first_body_indent);
+        let builder = EmbedTokenBuilder {
+            header_indent,
+            first_body_indent,
+            token,
+        };
+        Some(builder)
+    }
+}
+
+impl<'indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'indent, Inhabited, Tag, Attr, Body>
+where
+    Body: ParseEmbedTokenBody<&'input str>,
+{
+    /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
+    pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
+        let (first_body_indent, _) = &self.first_body_indent;
+        let item = input.strip_prefix(first_body_indent)?.pipe(Body::parse)?;
+        self.token.body.push(item);
+        Some(())
     }
 }
