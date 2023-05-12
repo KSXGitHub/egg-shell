@@ -95,7 +95,8 @@ where
     }
 }
 
-impl<'indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'indent, Inhabited, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body>
+    EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>
 where
     Body: ParseEmbedTokenBody<&'input str>,
 {
