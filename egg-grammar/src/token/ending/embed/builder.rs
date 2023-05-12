@@ -69,7 +69,7 @@ where
     Body: ParseEmbedTokenBody<&'input str>,
 {
     /// Parse the body's first item and indentation.
-    pub fn parse_body_item(
+    pub fn parse_first_body_item(
         self,
         input: &'input str,
     ) -> Option<EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>> {
@@ -99,7 +99,7 @@ where
     Body: ParseEmbedTokenBody<&'input str>,
 {
     /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
-    pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
+    pub fn parse_next_body_item(&mut self, input: &'input str) -> Option<()> {
         let (first_body_indent, _) = &self.first_body_indent;
         let input = input.strip_prefix(first_body_indent)?;
         self.token.parse_body_item(input)
