@@ -13,7 +13,7 @@ impl IndentToken {
     ///
     /// **Notes:**
     /// * `line` is assumed to not contain any EOL characters.
-    pub fn parse_line(mut line: &str) -> (Self, &'_ str) {
+    pub fn parse(mut line: &str) -> (Self, &'_ str) {
         let mut indent_char_list = Vec::with_capacity(line.len());
         while let Some((first, rest)) = split_first_char(line) {
             let Ok(indent) = first.try_into() else {
@@ -84,7 +84,7 @@ mod test {
         macro_rules! test_case {
             ($input:literal -> [$($indent:ident),* $(,)?], $rest:literal) => {
                 assert_eq!(
-                    IndentToken::parse_line($input),
+                    IndentToken::parse($input),
                     (IndentToken(vec![$(IndentChar::$indent),*]), $rest),
                 )
             };

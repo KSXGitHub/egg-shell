@@ -78,7 +78,7 @@ where
             first_body_indent: (),
             mut token,
         } = self;
-        let (first_body_indent, input) = IndentToken::parse_line(input);
+        let (first_body_indent, input) = IndentToken::parse(input);
         if !header_indent.is_shorter_start_of(&first_body_indent) {
             return None;
         }
