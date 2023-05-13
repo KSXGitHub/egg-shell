@@ -18,6 +18,7 @@ impl<'a> ParseMiddleToken<&'a str> for DecimalToken<&'a str> {
         }
 
         let first_char_len = 1; // because it is an ascii character.
+        debug_assert_eq!(first_char_len, first_char.len_utf8());
         let tail_size = iter.take_while(is_number_body).count(); // digit always has len_utf8 = 1
         let end_offset = first_char_len + tail_size;
 
