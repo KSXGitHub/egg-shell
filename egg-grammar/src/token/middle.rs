@@ -1,5 +1,5 @@
 pub mod bracket;
-mod number;
+pub mod number;
 mod operator;
 pub mod string;
 pub mod word;
