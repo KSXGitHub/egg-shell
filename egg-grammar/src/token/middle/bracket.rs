@@ -60,10 +60,10 @@ mod test {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn parse() {
-        macro_rules! test_positive {
+    fn positive() {
+        macro_rules! case {
             ($input:literal -> $direction:ident $shape:ident $rest:literal) => {{
-                eprintln!("TEST POSITIVE: {:?}", $input);
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     BracketToken::parse($input),
                     Some((
@@ -77,22 +77,25 @@ mod test {
             }};
         }
 
-        macro_rules! test_negative {
+        case!("(abc)" -> Open Round "abc)");
+        case!("), (" -> Close Round ", (");
+        case!("[abc]" -> Open Square "abc]");
+        case!("], [" -> Close Square ", [");
+        case!("{abc}" -> Open Curly "abc}");
+        case!("}, {" -> Close Curly ", {");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
             ($input:literal) => {{
-                eprintln!("TEST NEGATIVE: {:?}", $input);
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(BracketToken::parse($input), None);
             }};
         }
 
-        test_positive!("(abc)" -> Open Round "abc)");
-        test_positive!("), (" -> Close Round ", (");
-        test_positive!("[abc]" -> Open Square "abc]");
-        test_positive!("], [" -> Close Square ", [");
-        test_positive!("{abc}" -> Open Curly "abc}");
-        test_positive!("}, {" -> Close Curly ", {");
-
-        test_negative!("");
-        test_negative!("abc");
-        test_negative!("<abc>");
+        case!("");
+        case!("abc");
+        case!("<abc>");
     }
 }

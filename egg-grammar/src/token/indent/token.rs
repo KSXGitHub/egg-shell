@@ -81,7 +81,7 @@ mod test {
 
     #[test]
     fn parse_line() {
-        macro_rules! test_case {
+        macro_rules! case {
             ($input:literal -> [$($indent:ident),* $(,)?], $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
@@ -91,15 +91,15 @@ mod test {
             }};
         }
 
-        test_case!("" -> [], "");
-        test_case!("abc" -> [], "abc");
-        test_case!("\tabc" -> [Tab], "abc");
-        test_case!("\t\tabc" -> [Tab, Tab], "abc");
-        test_case!("  abc" -> [Space, Space], "abc");
-        test_case!("    abc" -> [Space, Space, Space, Space], "abc");
-        test_case!(" \t \tabc" -> [Space, Tab, Space, Tab], "abc");
-        test_case!("  abc def ghi" -> [Space, Space], "abc def ghi");
-        test_case!("\tabc def\tghi" -> [Tab], "abc def\tghi");
+        case!("" -> [], "");
+        case!("abc" -> [], "abc");
+        case!("\tabc" -> [Tab], "abc");
+        case!("\t\tabc" -> [Tab, Tab], "abc");
+        case!("  abc" -> [Space, Space], "abc");
+        case!("    abc" -> [Space, Space, Space, Space], "abc");
+        case!(" \t \tabc" -> [Space, Tab, Space, Tab], "abc");
+        case!("  abc def ghi" -> [Space, Space], "abc def ghi");
+        case!("\tabc def\tghi" -> [Tab], "abc def\tghi");
     }
 
     #[test]
