@@ -73,6 +73,7 @@ where
         self,
         input: &'input str,
     ) -> Option<EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>> {
+        debug_assert!(!input.trim().is_empty(), "parse_first_body_item assumes that the input string contain more than just whitespaces");
         let EmbedTokenBuilder {
             header_indent,
             first_body_indent: (),
@@ -100,6 +101,10 @@ where
 {
     /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
     pub fn parse_next_body_item(&mut self, input: &'input str) -> Option<()> {
+        debug_assert!(
+            !input.trim().is_empty(),
+            "parse_next_body_item assumes that the input string contain more than just whitespaces",
+        );
         let input = input.strip_prefix(&self.first_body_indent)?;
         self.token.parse_body_item(input)
     }
