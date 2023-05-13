@@ -79,6 +79,12 @@ mod test {
     use super::*;
     use pretty_assertions::assert_eq;
 
+    macro_rules! token {
+        ($($indent:ident),* $(,)?) => {
+            IndentToken(vec![$(IndentChar::$indent),*])
+        };
+    }
+
     #[test]
     fn parse_line() {
         macro_rules! case {
@@ -86,7 +92,7 @@ mod test {
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     IndentToken::parse($input),
-                    (IndentToken(vec![$(IndentChar::$indent),*]), $rest),
+                    (token![$($indent),*], $rest),
                 );
             }};
         }
@@ -106,7 +112,7 @@ mod test {
     fn display_fmt() {
         macro_rules! str_fmt {
             ($($name:ident),* $(,)?) => {
-                IndentToken(vec![$(IndentChar::$name),*]).to_string()
+                token![$($name),*].to_string()
             };
         }
 
@@ -124,7 +130,7 @@ mod test {
     fn debug_fmt() {
         macro_rules! dbg_fmt {
             ($($name:ident),* $(,)?) => {{
-                let indent_token = IndentToken(vec![$(IndentChar::$name),*]);
+                let indent_token = token![$($name),*];
                 format!("{indent_token:?}")
             }};
         }
