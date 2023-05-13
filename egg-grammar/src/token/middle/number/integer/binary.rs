@@ -3,6 +3,7 @@ use crate::token::ParseMiddleToken;
 /// The start of a binary token.
 pub const BINARY_PREFIX: &str = "0b";
 
+/// Token for integer in base-2.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BinaryToken<Content> {
     pub body: Content,
