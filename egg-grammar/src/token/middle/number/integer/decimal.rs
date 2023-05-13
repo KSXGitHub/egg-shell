@@ -34,12 +34,13 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $rest:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     DecimalToken::parse($input).unwrap(),
                     (DecimalToken($token), $rest),
                 )
-            };
+            }};
         }
 
         case!("0" -> "0", "");
@@ -52,9 +53,10 @@ mod test {
     #[test]
     fn negative() {
         macro_rules! case {
-            ($input:literal) => {
-                assert_eq!(DecimalToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(DecimalToken::parse($input), None);
+            }};
         }
 
         case!("");

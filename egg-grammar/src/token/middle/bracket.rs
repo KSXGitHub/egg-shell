@@ -62,7 +62,8 @@ mod test {
     #[test]
     fn parse() {
         macro_rules! test_positive {
-            ($input:literal -> $direction:ident $shape:ident $rest:literal) => {
+            ($input:literal -> $direction:ident $shape:ident $rest:literal) => {{
+                eprintln!("TEST POSITIVE: {:?}", $input);
                 assert_eq!(
                     BracketToken::parse($input),
                     Some((
@@ -72,14 +73,15 @@ mod test {
                         },
                         $rest,
                     )),
-                )
-            };
+                );
+            }};
         }
 
         macro_rules! test_negative {
-            ($input:literal) => {
-                assert_eq!(BracketToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST NEGATIVE: {:?}", $input);
+                assert_eq!(BracketToken::parse($input), None);
+            }};
         }
 
         test_positive!("(abc)" -> Open Round "abc)");

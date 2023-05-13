@@ -28,12 +28,13 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $rest:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     HexadecimalToken::parse($input).unwrap(),
                     (HexadecimalToken($token), $rest),
                 )
-            };
+            }};
         }
 
         case!("0x0" -> "0", "");
@@ -49,9 +50,10 @@ mod test {
     #[test]
     fn negative() {
         macro_rules! case {
-            ($input:literal) => {
-                assert_eq!(HexadecimalToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(HexadecimalToken::parse($input), None);
+            }};
         }
 
         case!("");

@@ -82,12 +82,13 @@ mod test {
     #[test]
     fn parse_line() {
         macro_rules! test_case {
-            ($input:literal -> [$($indent:ident),* $(,)?], $rest:literal) => {
+            ($input:literal -> [$($indent:ident),* $(,)?], $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     IndentToken::parse($input),
                     (IndentToken(vec![$(IndentChar::$indent),*]), $rest),
-                )
-            };
+                );
+            }};
         }
 
         test_case!("" -> [], "");

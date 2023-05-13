@@ -28,12 +28,13 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $rest:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     BinaryToken::parse($input).unwrap(),
                     (BinaryToken($token), $rest),
-                )
-            };
+                );
+            }};
         }
 
         case!("0b0" -> "0", "");
@@ -47,9 +48,10 @@ mod test {
     #[test]
     fn negative() {
         macro_rules! case {
-            ($input:literal) => {
-                assert_eq!(BinaryToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(BinaryToken::parse($input), None);
+            }};
         }
 
         case!("");

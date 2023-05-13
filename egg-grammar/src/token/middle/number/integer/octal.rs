@@ -28,12 +28,13 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $rest:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 assert_eq!(
                     OctalToken::parse($input).unwrap(),
                     (OctalToken($token), $rest),
-                )
-            };
+                );
+            }};
         }
 
         case!("0o0" -> "0", "");
@@ -52,9 +53,10 @@ mod test {
     #[test]
     fn negative() {
         macro_rules! case {
-            ($input:literal) => {
-                assert_eq!(OctalToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(OctalToken::parse($input), None);
+            }};
         }
 
         case!("");

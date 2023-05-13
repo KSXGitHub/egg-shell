@@ -60,6 +60,7 @@ mod test {
 
         macro_rules! case {
             ($input:literal -> $prefix:expr, $token:expr, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
                 let (token, rest) = IntegerToken::parse($input).unwrap();
                 assert_eq!((token.prefix(), token, rest), ($prefix, $token, $rest));
             }};
@@ -79,9 +80,10 @@ mod test {
     #[test]
     fn negative() {
         macro_rules! case {
-            ($input:literal) => {
-                assert_eq!(IntegerToken::parse($input), None)
-            };
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(IntegerToken::parse($input), None);
+            }};
         }
 
         case!("");
