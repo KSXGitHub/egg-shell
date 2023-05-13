@@ -61,7 +61,7 @@ mod test {
 
         case!("");
         case!("0");
-        case!("0x");
+        case!("0o");
         case!("_123");
         case!("u32");
     }
