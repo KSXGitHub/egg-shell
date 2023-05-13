@@ -36,8 +36,8 @@ impl<'a> ParseMiddleToken<&'a str> for IntegerToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         macro_rules! case {
             ($token_type:ident -> $token_variant:ident) => {
-                if let Some((token, remaining)) = $token_type::parse(input) {
-                    return Some((IntegerToken::$token_variant(token), remaining));
+                if let Some((token, rest)) = $token_type::parse(input) {
+                    return Some((IntegerToken::$token_variant(token), rest));
                 }
             };
         }
@@ -59,12 +59,9 @@ mod test {
         use IntegerToken::*;
 
         macro_rules! case {
-            ($input:literal -> $prefix:expr, $token:expr, $remaining:literal) => {{
-                let (token, remaining) = IntegerToken::parse($input).unwrap();
-                assert_eq!(
-                    (token.prefix(), token, remaining),
-                    ($prefix, $token, $remaining),
-                );
+            ($input:literal -> $prefix:expr, $token:expr, $rest:literal) => {{
+                let (token, rest) = IntegerToken::parse($input).unwrap();
+                assert_eq!((token.prefix(), token, rest), ($prefix, $token, $rest));
             }};
         }
 

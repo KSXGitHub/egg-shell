@@ -16,9 +16,9 @@ pub struct BinaryToken<Content> {
 
 impl<'a> ParseMiddleToken<&'a str> for BinaryToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let (body, remaining) = parse_prefixed_number(input, BINARY_PREFIX, is_number_body)?;
+        let (body, rest) = parse_prefixed_number(input, BINARY_PREFIX, is_number_body)?;
         let token = BinaryToken { body };
-        Some((token, remaining))
+        Some((token, rest))
     }
 }
 
@@ -30,10 +30,10 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $remaining:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     BinaryToken::parse($input).unwrap(),
-                    (BinaryToken { body: $token }, $remaining),
+                    (BinaryToken { body: $token }, $rest),
                 )
             };
         }

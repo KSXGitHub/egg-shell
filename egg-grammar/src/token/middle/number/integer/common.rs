@@ -17,6 +17,6 @@ pub fn parse_prefixed_number<'input, 'prefix>(
     }
     let body_size = input.chars().take_while(is_number_body).count(); // digit always has len_utf8 = 1
     let body = &input[..body_size];
-    let remaining = &input[body_size..];
-    Some((body, remaining))
+    let rest = &input[body_size..];
+    Some((body, rest))
 }

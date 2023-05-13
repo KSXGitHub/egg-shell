@@ -64,10 +64,10 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $remaining:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     NumberToken::parse($input).unwrap(),
-                    (NumberToken { content: $token }, $remaining),
+                    (NumberToken { content: $token }, $rest),
                 )
             };
         }
@@ -80,11 +80,11 @@ mod test {
         case!("123.45f64" -> "123.45f64", "");
         case!("123." -> "123", ".");
         case!("123.f64" -> "123", ".f64"); // by design, this is '(123).f64', not '123.0f64'
-        case!("123.45.remaining" -> "123.45", ".remaining");
+        case!("123.45.rest" -> "123.45", ".rest");
         case!("123+456" -> "123", "+456");
         case!("123.456,789" -> "123.456", ",789");
-        case!("0x123ABCi32 remaining" -> "0x123ABCi32", " remaining");
-        case!("123_456_789_suffix remaining" -> "123_456_789_suffix", " remaining");
+        case!("0x123ABCi32 rest" -> "0x123ABCi32", " rest");
+        case!("123_456_789_suffix rest" -> "123_456_789_suffix", " rest");
     }
 
     #[test]

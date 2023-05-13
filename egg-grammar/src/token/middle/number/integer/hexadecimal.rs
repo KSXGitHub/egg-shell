@@ -16,10 +16,9 @@ const fn is_hexadecimal_body(char: &char) -> bool {
 
 impl<'a> ParseMiddleToken<&'a str> for HexadecimalToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let (body, remaining) =
-            parse_prefixed_number(input, HEXADECIMAL_PREFIX, is_hexadecimal_body)?;
+        let (body, rest) = parse_prefixed_number(input, HEXADECIMAL_PREFIX, is_hexadecimal_body)?;
         let token = HexadecimalToken { body };
-        Some((token, remaining))
+        Some((token, rest))
     }
 }
 
@@ -31,10 +30,10 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $remaining:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     HexadecimalToken::parse($input).unwrap(),
-                    (HexadecimalToken { body: $token }, $remaining),
+                    (HexadecimalToken { body: $token }, $rest),
                 )
             };
         }

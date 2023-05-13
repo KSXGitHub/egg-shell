@@ -20,9 +20,9 @@ impl<'a> ParseMiddleToken<&'a str> for DecimalToken<&'a str> {
         let end_offset = first_char_len + tail_size;
 
         let content = &input[..end_offset];
-        let remaining = &input[end_offset..];
+        let rest = &input[end_offset..];
         let token = DecimalToken(content);
-        Some((token, remaining))
+        Some((token, rest))
     }
 }
 
@@ -34,10 +34,10 @@ mod test {
     #[test]
     fn positive() {
         macro_rules! case {
-            ($input:literal -> $token:literal, $remaining:literal) => {
+            ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     DecimalToken::parse($input).unwrap(),
-                    (DecimalToken($token), $remaining),
+                    (DecimalToken($token), $rest),
                 )
             };
         }
