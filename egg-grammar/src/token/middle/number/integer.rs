@@ -48,3 +48,42 @@ impl<'a> ParseMiddleToken<&'a str> for IntegerToken<&'a str> {
         None
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        use IntegerToken::*;
+
+        macro_rules! case {
+            ($input:literal -> $prefix:expr, $token:expr, $remaining:literal) => {{
+                let (token, remaining) = IntegerToken::parse($input).unwrap();
+                assert_eq!(
+                    (token.prefix(), token, remaining),
+                    ($prefix, $token, $remaining),
+                );
+            }};
+        }
+
+        case!("123i32" -> None, Decimal(DecimalToken("123")), "i32");
+        case!("0b101101u32" -> Some("0b"), Binary(BinaryToken { body: "101101" }), "u32");
+        case!("0o123i8" -> Some("0o"), Octal(OctalToken { body: "123" }), "i8");
+        case!("0x123ABCu64" -> Some("0x"), Hexadecimal(HexadecimalToken { body: "123ABC" }), "u64");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {
+                assert_eq!(IntegerToken::parse($input), None)
+            };
+        }
+
+        case!("");
+        case!("_123");
+        case!("u32");
+    }
+}
