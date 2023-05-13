@@ -110,41 +110,39 @@ mod test {
 
     #[test]
     fn display_fmt() {
-        macro_rules! str_fmt {
-            ($($name:ident),* $(,)?) => {
-                token![$($name),*].to_string()
-            };
+        macro_rules! case {
+            ([$($name:ident),* $(,)?] -> $expected:expr) => {{
+                let token = token![$($name),*];
+                eprintln!("TEST: {:?}", token.0);
+                std::assert_eq!(token.to_string(), $expected);
+            }};
         }
 
-        assert_eq!(str_fmt!(), "");
-        assert_eq!(str_fmt!(Space), " ");
-        assert_eq!(str_fmt!(Tab), "\t");
-        assert_eq!(str_fmt!(Space, Space, Space, Space), " ".repeat(4),);
-        assert_eq!(
-            str_fmt!(Space, Space, Tab, Tab, Tab, Space),
-            format!("{spc}{spc}{tab}{tab}{tab}{spc}", spc = " ", tab = "\t"),
+        case!([] -> "");
+        case!([Space] -> " ");
+        case!([Tab] -> "\t");
+        case!([Space, Space, Space, Space] -> " ".repeat(4));
+        case!(
+            [Space, Space, Tab, Tab, Tab, Space] ->
+            format!("{spc}{spc}{tab}{tab}{tab}{spc}", spc = " ", tab = "\t")
         );
     }
 
     #[test]
     fn debug_fmt() {
-        macro_rules! dbg_fmt {
-            ($($name:ident),* $(,)?) => {{
-                let indent_token = token![$($name),*];
-                format!("{indent_token:?}")
+        macro_rules! case {
+            ([$($name:ident),* $(,)?] -> $expected:expr) => {{
+                let token = token![$($name),*];
+                eprintln!("TEST: {:?}", token.0);
+                let actual = format!("{token:?}");
+                assert_eq!(actual, $expected);
             }};
         }
 
-        assert_eq!(dbg_fmt!(), "IndentToken []");
-        assert_eq!(dbg_fmt!(Space), "IndentToken [<SPC>]");
-        assert_eq!(dbg_fmt!(Tab), "IndentToken [<TAB>]");
-        assert_eq!(
-            dbg_fmt!(Space, Space, Space, Space),
-            "IndentToken [<SPC✕4>]",
-        );
-        assert_eq!(
-            dbg_fmt!(Space, Space, Tab, Tab, Tab, Space),
-            "IndentToken [<SPC✕2><TAB✕3><SPC>]",
-        );
+        case!([] -> "IndentToken []");
+        case!([Space] -> "IndentToken [<SPC>]");
+        case!([Tab] -> "IndentToken [<TAB>]");
+        case!([Space, Space, Space, Space] -> "IndentToken [<SPC✕4>]");
+        case!([Space, Space, Tab, Tab, Tab, Space] -> "IndentToken [<SPC✕2><TAB✕3><SPC>]");
     }
 }
