@@ -5,13 +5,17 @@ use crate::token::ParseMiddleToken;
 pub const BINARY_PREFIX: &str = "0b";
 
 /// Token for integer in base-2.
+///
+/// **Note:** To avoid weird syntax quirks and confusing error messages,
+/// non-binary digits are allowed in this token, and it shall be the job
+/// of the semantic layer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BinaryToken<Content> {
     pub body: Content,
 }
 
 const fn is_binary_body(char: &char) -> bool {
-    matches!(char, '0' | '1' | '_')
+    matches!(char, '0'..='9' | '_')
 }
 
 impl<'a> ParseMiddleToken<&'a str> for BinaryToken<&'a str> {
@@ -40,10 +44,10 @@ mod test {
 
         case!("0b0" -> "0", "");
         case!("0b1" -> "1", "");
-        case!("0b0123456789" -> "01", "23456789");
         case!("0b00100111i32" -> "00100111", "i32");
         case!("0b1001_1100_1101u64" -> "1001_1100_1101", "u64");
         case!("0b1110011_suffix" -> "1110011_", "suffix");
+        case!("0b0123456789" -> "0123456789", "");
     }
 
     #[test]

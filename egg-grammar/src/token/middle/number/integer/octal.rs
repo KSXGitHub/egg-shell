@@ -5,13 +5,17 @@ use crate::token::ParseMiddleToken;
 pub const OCTAL_PREFIX: &str = "0o";
 
 /// Token for integer in base-8.
+///
+/// **Note:** To avoid weird syntax quirks and confusing error messages,
+/// non-octal digits are allowed in this token, and it shall be the job
+/// of the semantic layer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OctalToken<Content> {
     pub body: Content,
 }
 
 const fn is_octal_body(char: &char) -> bool {
-    matches!(char, '0'..='7' | '_')
+    matches!(char, '0'..='9' | '_')
 }
 
 impl<'a> ParseMiddleToken<&'a str> for OctalToken<&'a str> {
@@ -43,12 +47,12 @@ mod test {
         case!("0o3" -> "3", "");
         case!("0o5" -> "5", "");
         case!("0o7" -> "7", "");
-        case!("0o0123456789" -> "01234567", "89");
         case!("0o3657" -> "3657", "");
         case!("0o3657u32" -> "3657", "u32");
         case!("0o1234567i32" -> "1234567", "i32");
         case!("0o0123_4567u64" -> "0123_4567", "u64");
         case!("0o123_suffix" -> "123_", "suffix");
+        case!("0o0123456789" -> "0123456789", "");
     }
 
     #[test]
