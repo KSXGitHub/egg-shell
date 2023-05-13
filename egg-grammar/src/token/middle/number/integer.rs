@@ -66,9 +66,14 @@ mod test {
         }
 
         case!("123i32" -> None, Decimal(DecimalToken("123")), "i32");
+        case!("123_456_i32" -> None, Decimal(DecimalToken("123_456_")), "i32");
+        case!("101101u32" -> None, Decimal(DecimalToken("101101")), "u32");
+        case!("123ABCu64" -> None, Decimal(DecimalToken("123")), "ABCu64");
         case!("0b101101u32" -> Some("0b"), Binary(BinaryToken("101101")), "u32");
+        case!("0b10_1101_u32" -> Some("0b"), Binary(BinaryToken("10_1101_")), "u32");
         case!("0o123i8" -> Some("0o"), Octal(OctalToken("123")), "i8");
         case!("0x123ABCu64" -> Some("0x"), Hexadecimal(HexadecimalToken("123ABC")), "u64");
+        case!("0x12_3A_BC_u64" -> Some("0x"), Hexadecimal(HexadecimalToken("12_3A_BC_")), "u64");
     }
 
     #[test]
