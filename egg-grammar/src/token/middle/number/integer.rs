@@ -1,4 +1,5 @@
 mod binary;
+mod common;
 mod decimal;
 mod hexadecimal;
 mod octal;

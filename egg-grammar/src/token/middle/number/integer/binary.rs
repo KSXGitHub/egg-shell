@@ -1,3 +1,4 @@
+use super::common::parse_prefixed_number;
 use crate::token::ParseMiddleToken;
 
 /// The start of a binary token.
@@ -15,13 +16,7 @@ const fn is_binary_body(char: &char) -> bool {
 
 impl<'a> ParseMiddleToken<&'a str> for BinaryToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let input = input.strip_prefix(BINARY_PREFIX)?;
-        if input.is_empty() {
-            return None;
-        }
-        let body_size = input.chars().take_while(is_binary_body).count(); // digit always has len_utf8 = 1
-        let body = &input[..body_size];
-        let remaining = &input[body_size..];
+        let (body, remaining) = parse_prefixed_number(input, BINARY_PREFIX, is_binary_body)?;
         let token = BinaryToken { body };
         Some((token, remaining))
     }
