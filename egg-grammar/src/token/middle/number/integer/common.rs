@@ -1,3 +1,8 @@
+/// Check if a character can be in a decimal, binary, or octal token.
+pub const fn is_number_body(char: &char) -> bool {
+    matches!(char, '0'..='9' | '_')
+}
+
 /// Parse a number with prefix.
 ///
 /// It is assumed that the resulting number body contains only ASCII characters.

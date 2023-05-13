@@ -1,12 +1,9 @@
+use super::common::is_number_body;
 use crate::token::ParseMiddleToken;
 
 /// Token for integer in base-10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DecimalToken<Content>(pub Content);
-
-const fn is_number_body(char: &char) -> bool {
-    matches!(char, '0'..='9' | '_')
-}
 
 impl<'a> ParseMiddleToken<&'a str> for DecimalToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
