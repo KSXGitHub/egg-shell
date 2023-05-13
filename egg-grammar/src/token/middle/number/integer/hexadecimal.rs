@@ -1,10 +1,10 @@
 use super::common::parse_prefixed_number;
 use crate::token::ParseMiddleToken;
 
-/// The start of a binary token.
+/// The start of a hexadecimal token.
 pub const HEXADECIMAL_PREFIX: &str = "0x";
 
-/// Token for integer in base-2.
+/// Token for integer in base-16.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HexadecimalToken<Content> {
     pub body: Content,
