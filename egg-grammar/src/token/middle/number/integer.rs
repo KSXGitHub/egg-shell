@@ -41,10 +41,10 @@ impl<'a> ParseMiddleToken<&'a str> for IntegerToken<&'a str> {
                 }
             };
         }
-        case!(DecimalToken -> Decimal);
         case!(HexadecimalToken -> Hexadecimal);
         case!(OctalToken -> Octal);
         case!(BinaryToken -> Binary);
+        case!(DecimalToken -> Decimal);
         None
     }
 }
