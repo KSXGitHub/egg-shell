@@ -6,9 +6,7 @@ pub const HEXADECIMAL_PREFIX: &str = "0x";
 
 /// Token for integer in base-16.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct HexadecimalToken<Content> {
-    pub body: Content,
-}
+pub struct HexadecimalToken<Content>(pub Content);
 
 const fn is_hexadecimal_body(char: &char) -> bool {
     matches!(char, '0'..='9' | 'A'..='F' | 'a'..='f' | '_')
@@ -17,7 +15,7 @@ const fn is_hexadecimal_body(char: &char) -> bool {
 impl<'a> ParseMiddleToken<&'a str> for HexadecimalToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (body, rest) = parse_prefixed_number(input, HEXADECIMAL_PREFIX, is_hexadecimal_body)?;
-        let token = HexadecimalToken { body };
+        let token = HexadecimalToken(body);
         Some((token, rest))
     }
 }
@@ -33,7 +31,7 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     HexadecimalToken::parse($input).unwrap(),
-                    (HexadecimalToken { body: $token }, $rest),
+                    (HexadecimalToken($token), $rest),
                 )
             };
         }

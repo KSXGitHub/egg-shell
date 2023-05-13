@@ -10,14 +10,12 @@ pub const OCTAL_PREFIX: &str = "0o";
 /// non-octal digits are allowed in this token, and it shall be the job
 /// of the semantic layer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct OctalToken<Content> {
-    pub body: Content,
-}
+pub struct OctalToken<Content>(pub Content);
 
 impl<'a> ParseMiddleToken<&'a str> for OctalToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (body, rest) = parse_prefixed_number(input, OCTAL_PREFIX, is_number_body)?;
-        let token = OctalToken { body };
+        let token = OctalToken(body);
         Some((token, rest))
     }
 }
@@ -33,7 +31,7 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {
                 assert_eq!(
                     OctalToken::parse($input).unwrap(),
-                    (OctalToken { body: $token }, $rest),
+                    (OctalToken($token), $rest),
                 )
             };
         }
