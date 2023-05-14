@@ -32,10 +32,7 @@ mod test {
         macro_rules! case {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(
-                    OctalToken::parse($input).unwrap(),
-                    (OctalToken($token), $rest),
-                );
+                assert_eq!(OctalToken::parse($input), Some((OctalToken($token), $rest)));
             }};
         }
 

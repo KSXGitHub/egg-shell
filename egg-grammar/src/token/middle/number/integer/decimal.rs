@@ -36,8 +36,8 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
-                    DecimalToken::parse($input).unwrap(),
-                    (DecimalToken($token), $rest),
+                    DecimalToken::parse($input),
+                    Some((DecimalToken($token), $rest)),
                 )
             }};
         }

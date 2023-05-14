@@ -30,8 +30,8 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
-                    HexadecimalToken::parse($input).unwrap(),
-                    (HexadecimalToken($token), $rest),
+                    HexadecimalToken::parse($input),
+                    Some((HexadecimalToken($token), $rest)),
                 )
             }};
         }

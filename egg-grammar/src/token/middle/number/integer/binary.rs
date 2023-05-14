@@ -33,8 +33,8 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
-                    BinaryToken::parse($input).unwrap(),
-                    (BinaryToken($token), $rest),
+                    BinaryToken::parse($input),
+                    Some((BinaryToken($token), $rest)),
                 );
             }};
         }
