@@ -2,6 +2,7 @@ use super::DecimalToken;
 use crate::token::{number::is_number_body, ParseMiddleToken};
 use split_first_char::split_first_char;
 
+/// Token for fractional number.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FractionalToken<Content> {
     /// The integer part of the token.
