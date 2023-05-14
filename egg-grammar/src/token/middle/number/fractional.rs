@@ -64,3 +64,52 @@ impl<'a> ParseMiddleToken<&'a str> for FractionalToken<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $integer:literal, $fraction:expr, $exponent:expr, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                let token = FractionalToken {
+                    integer: $integer,
+                    fraction: $fraction,
+                    exponent: $exponent,
+                };
+                assert_eq!(FractionalToken::parse($input), Some((token, $rest)));
+            }};
+        }
+
+        case!("123.456" -> "123", Some("456"), None, "");
+        case!("123.456f64" -> "123", Some("456"), None, "f64");
+        case!("123e456" -> "123", None, Some("456"), "");
+        case!("123e456f64" -> "123", None, Some("456"), "f64");
+        case!("123e+456f64" -> "123", None, Some("+456"), "f64");
+        case!("123e-456f64" -> "123", None, Some("-456"), "f64");
+        case!("123.456e789" -> "123", Some("456"), Some("789"), "");
+        case!("123.456e789f64" -> "123", Some("456"), Some("789"), "f64");
+        case!("123.456e+789f64" -> "123", Some("456"), Some("+789"), "f64");
+        case!("123.456e-789f64" -> "123", Some("456"), Some("-789"), "f64");
+        case!("54_083.850_96e+71_326f128" -> "54_083", Some("850_96"), Some("+71_326"), "f128");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(FractionalToken::parse($input), None);
+            }};
+        }
+
+        case!("");
+        case!("123");
+        case!("_123.456");
+        case!("f64");
+        case!("0x123.456");
+    }
+}
