@@ -1,5 +1,5 @@
 use super::DecimalToken;
-use crate::token::ParseMiddleToken;
+use crate::token::{number::is_number_body, ParseMiddleToken};
 use split_first_char::split_first_char;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -27,15 +27,13 @@ fn parse_exponent(input: &str) -> Option<(&'_ str, &'_ str)> {
 
     let mut iter = input.chars();
     let first_char = iter.next()?;
-    if !matches!(first_char, '+' | '-' | '0'..='9' | '_') {
+    if first_char != '+' && first_char != '-' && !is_number_body(&first_char) {
         return None;
     }
 
     let first_char_len = 1; // because it is an ascii character.
     debug_assert_eq!(first_char_len, first_char.len_utf8());
-    let tail_size = iter
-        .take_while(|char| matches!(char, '0'..='9' | '_'))
-        .count();
+    let tail_size = iter.take_while(is_number_body).count();
     let end_offset = first_char_len + tail_size;
 
     let exponent = &input[..end_offset];

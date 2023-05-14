@@ -1,3 +1,4 @@
+mod common;
 mod fractional;
 mod integer;
 
@@ -14,7 +15,7 @@ pub struct NumberToken<Content> {
 }
 
 /// Check if a character belongs to the body of a number token.
-const fn is_number_body(char: char) -> bool {
+const fn is_number_body(char: &char) -> bool {
     matches!(char, '0'..='9' | 'a'..='z' | 'A'..='Z' | '_')
 }
 
@@ -27,7 +28,7 @@ fn parse_number_body(offset: usize, iter: &mut Chars) -> Option<usize> {
 
     let mut end_offset = offset + first_char.len_utf8();
     while let Some(char) = iter.next() {
-        if is_number_body(char) {
+        if is_number_body(&char) {
             end_offset += char.len_utf8();
             continue;
         }

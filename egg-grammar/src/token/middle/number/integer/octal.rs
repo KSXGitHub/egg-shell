@@ -1,5 +1,7 @@
-use super::common::{is_number_body, parse_prefixed_number};
-use crate::token::ParseMiddleToken;
+use crate::token::{
+    number::common::{is_number_body, parse_prefixed_number},
+    ParseMiddleToken,
+};
 
 /// The start of an octal token.
 pub const OCTAL_PREFIX: &str = "0o";

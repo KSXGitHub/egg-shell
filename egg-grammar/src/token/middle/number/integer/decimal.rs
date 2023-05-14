@@ -1,5 +1,4 @@
-use super::common::is_number_body;
-use crate::token::ParseMiddleToken;
+use crate::token::{number::common::is_number_body, ParseMiddleToken};
 
 /// Token for integer in base-10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
