@@ -53,6 +53,9 @@ impl<'a> ParseMiddleToken<&'a str> for FractionalToken<&'a str> {
             None => (None, input),
             Some((exponent, rest)) => (Some(exponent), rest),
         };
+        if fraction.is_none() && exponent.is_none() {
+            return None;
+        }
         let token = FractionalToken {
             integer,
             fraction,
