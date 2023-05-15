@@ -1,6 +1,7 @@
 use super::{FractionalToken, IntegerToken};
 use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
+use pipe_trait::Pipe;
 
 /// Body of a [number token](super::NumberToken).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
@@ -23,3 +24,18 @@ impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
         None
     }
 }
+
+macro_rules! impl_from_int {
+    ($token_type:ident) => {
+        impl<Content> From<super::$token_type<Content>> for NumberTokenBody<Content> {
+            fn from(token: super::$token_type<Content>) -> Self {
+                token.pipe(IntegerToken::from).into()
+            }
+        }
+    };
+}
+
+impl_from_int!(DecimalToken);
+impl_from_int!(BinaryToken);
+impl_from_int!(OctalToken);
+impl_from_int!(HexadecimalToken);
