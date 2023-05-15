@@ -9,9 +9,10 @@ pub use hexadecimal::*;
 pub use octal::*;
 
 use crate::token::ParseMiddleToken;
+use derive_more::{From, TryInto};
 
 /// Token for integer number.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum IntegerToken<Content> {
     Decimal(DecimalToken<Content>),
     Binary(BinaryToken<Content>),
@@ -34,16 +35,16 @@ impl<Content> IntegerToken<Content> {
 impl<'a> ParseMiddleToken<&'a str> for IntegerToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         macro_rules! case {
-            ($token_type:ident -> $token_variant:ident) => {
+            ($token_type:ident) => {
                 if let Some((token, rest)) = $token_type::parse(input) {
-                    return Some((IntegerToken::$token_variant(token), rest));
+                    return Some((IntegerToken::from(token), rest));
                 }
             };
         }
-        case!(HexadecimalToken -> Hexadecimal);
-        case!(OctalToken -> Octal);
-        case!(BinaryToken -> Binary);
-        case!(DecimalToken -> Decimal);
+        case!(HexadecimalToken);
+        case!(OctalToken);
+        case!(BinaryToken);
+        case!(DecimalToken);
         None
     }
 }

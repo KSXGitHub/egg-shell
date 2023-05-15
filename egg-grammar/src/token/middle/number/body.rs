@@ -1,7 +1,8 @@
 use super::{FractionalToken, IntegerToken};
 use crate::token::ParseMiddleToken;
+use derive_more::{From, TryInto};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum NumberTokenBody<Content> {
     Integer(IntegerToken<Content>),
     Fractional(FractionalToken<Content>),
@@ -10,14 +11,14 @@ pub enum NumberTokenBody<Content> {
 impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         macro_rules! case {
-            ($token_type:ident -> $token_variant:ident) => {
+            ($token_type:ident) => {
                 if let Some((token, rest)) = $token_type::parse(input) {
-                    return Some((NumberTokenBody::$token_variant(token), rest));
+                    return Some((NumberTokenBody::from(token), rest));
                 }
             };
         }
-        case!(IntegerToken -> Integer);
-        case!(FractionalToken -> Fractional);
+        case!(IntegerToken);
+        case!(FractionalToken);
         None
     }
 }
