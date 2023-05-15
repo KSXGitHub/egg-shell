@@ -13,6 +13,21 @@ pub struct FractionalToken<Content> {
     pub exponent: Option<Content>,
 }
 
+impl<Content> FractionalToken<Content> {
+    /// Quickly and dirtily create a [`FractionalToken`] without specifying its field names.
+    pub const fn new(
+        integer: Content,
+        fraction: Option<Content>,
+        exponent: Option<Content>,
+    ) -> Self {
+        FractionalToken {
+            integer,
+            fraction,
+            exponent,
+        }
+    }
+}
+
 fn parse_fraction(input: &str) -> Option<(&'_ str, &'_ str)> {
     let Some(('.', input)) = split_first_char(input) else {
         return None;
@@ -75,11 +90,7 @@ mod test {
         macro_rules! case {
             ($input:literal -> $integer:literal, $fraction:expr, $exponent:expr, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                let token = FractionalToken {
-                    integer: $integer,
-                    fraction: $fraction,
-                    exponent: $exponent,
-                };
+                let token = FractionalToken::new($integer, $fraction, $exponent);
                 assert_eq!(FractionalToken::parse($input), Some((token, $rest)));
             }};
         }
