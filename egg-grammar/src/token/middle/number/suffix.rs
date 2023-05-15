@@ -1,7 +1,8 @@
 use crate::token::ParseMiddleToken;
+use derive_more::{AsRef, Deref};
 
 /// Suffix of a [number token](super::NumberToken).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, AsRef, Deref)]
 pub struct NumberTokenSuffix<Content>(pub Content);
 
 const fn is_number_suffix(char: &char) -> bool {
