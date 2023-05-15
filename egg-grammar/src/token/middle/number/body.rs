@@ -19,8 +19,8 @@ impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
                 }
             };
         }
-        try_parse!(IntegerToken);
         try_parse!(FractionalToken);
+        try_parse!(IntegerToken);
         None
     }
 }
