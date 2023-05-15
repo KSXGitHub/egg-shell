@@ -10,15 +10,15 @@ pub enum NumberTokenBody<Content> {
 
 impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        macro_rules! case {
+        macro_rules! try_parse {
             ($token_type:ident) => {
                 if let Some((token, rest)) = $token_type::parse(input) {
                     return Some((NumberTokenBody::from(token), rest));
                 }
             };
         }
-        case!(IntegerToken);
-        case!(FractionalToken);
+        try_parse!(IntegerToken);
+        try_parse!(FractionalToken);
         None
     }
 }

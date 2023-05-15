@@ -34,17 +34,17 @@ impl<Content> IntegerToken<Content> {
 
 impl<'a> ParseMiddleToken<&'a str> for IntegerToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        macro_rules! case {
+        macro_rules! try_parse {
             ($token_type:ident) => {
                 if let Some((token, rest)) = $token_type::parse(input) {
                     return Some((IntegerToken::from(token), rest));
                 }
             };
         }
-        case!(HexadecimalToken);
-        case!(OctalToken);
-        case!(BinaryToken);
-        case!(DecimalToken);
+        try_parse!(HexadecimalToken);
+        try_parse!(OctalToken);
+        try_parse!(BinaryToken);
+        try_parse!(DecimalToken);
         None
     }
 }
