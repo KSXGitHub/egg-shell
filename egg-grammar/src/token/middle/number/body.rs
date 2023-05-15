@@ -2,6 +2,7 @@ use super::{FractionalToken, IntegerToken};
 use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
 
+/// Body of a [number token](super::NumberToken).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum NumberTokenBody<Content> {
     Integer(IntegerToken<Content>),

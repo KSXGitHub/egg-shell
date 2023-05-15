@@ -1,5 +1,6 @@
 use crate::token::ParseMiddleToken;
 
+/// Suffix of a [number token](super::NumberToken).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NumberTokenSuffix<Content>(pub Content);
 

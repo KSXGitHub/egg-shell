@@ -11,6 +11,7 @@ pub use suffix::*;
 
 use crate::token::ParseMiddleToken;
 
+/// Token for numeric literal.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NumberToken<Content> {
     pub body: NumberTokenBody<Content>,
