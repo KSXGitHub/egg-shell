@@ -63,6 +63,7 @@ where
     Body: ParseEmbedTokenBody<&'input str>,
     Vec<Body>: InsertWhitespaces<&'input str>,
 {
+    /// Parse the body's item and indentation.
     pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
         if input.trim().is_empty() {
             return self.token.insert_body_ws(input);
