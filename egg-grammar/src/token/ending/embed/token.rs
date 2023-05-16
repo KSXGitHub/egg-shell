@@ -1,4 +1,6 @@
-use crate::token::{ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag};
+use crate::token::{
+    InsertWhitespaces, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag,
+};
 
 /// Token for a chunk of embedded lines.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -48,5 +50,15 @@ where
         let item = Body::parse(input)?;
         self.body.push(item);
         Some(())
+    }
+}
+
+impl<'a, Tag, Attr, Body> EmbedToken<Tag, Attr, Body>
+where
+    Vec<Body>: InsertWhitespaces<&'a str>,
+{
+    /// Parse a string of whitespaces and add it to the body.
+    pub fn insert_body_ws(&mut self, ws: &'a str) -> Option<()> {
+        self.body.insert_whitespaces(ws)
     }
 }

@@ -1,5 +1,7 @@
 use super::EmbedToken;
-use crate::token::{IndentToken, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag};
+use crate::token::{
+    IndentToken, InsertWhitespaces, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag,
+};
 use pipe_trait::Pipe;
 
 /// Builder for [`EmbedToken`].
@@ -59,10 +61,11 @@ where
 impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
 where
     Body: ParseEmbedTokenBody<&'input str>,
+    Vec<Body>: InsertWhitespaces<&'input str>,
 {
     pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
         if input.trim().is_empty() {
-            // TODO: define action on empty token
+            self.token.insert_body_ws(input)?;
             return Some(());
         }
 

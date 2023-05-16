@@ -37,3 +37,13 @@ pub trait ParseEmbedTokenBody<Content>: Sized {
     /// * `Some(body)` means that `body` is the body line.
     fn parse(input: Content) -> Option<Self>;
 }
+
+/// Add a string of only whitespaces.
+pub trait InsertWhitespaces<Whitespace> {
+    /// Parse a string of whitespaces into a token and add it to `self`.
+    ///
+    /// **Return value:**
+    /// * `None` means the whitespace is rejected.
+    /// * `Some(())` means that the whitespace is added to `self`.
+    fn insert_whitespaces(&mut self, ws: Whitespace) -> Option<()>;
+}
