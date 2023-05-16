@@ -11,6 +11,9 @@ const fn is_operator_char(char: &char) -> bool {
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let end_offset = input.chars().take_while(is_operator_char).count(); // ascii char has len_utf8 = 1
+        if end_offset == 0 {
+            return None;
+        }
         let content = &input[..end_offset];
         let rest = &input[end_offset..];
         let token = OperatorToken(content);
