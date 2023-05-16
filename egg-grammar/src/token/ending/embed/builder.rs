@@ -1,32 +1,25 @@
 use super::EmbedToken;
 use crate::token::{IndentToken, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag};
-
-/// The first item is not parsed yet.
-type Empty = ();
-/// The first item is parsed.
-type Inhabited = String;
+use pipe_trait::Pipe;
 
 /// Builder for [`EmbedToken`].
 ///
 /// This builder takes indentation into account (unlike using `EmbedToken` directly).
 #[derive(Debug, Clone)]
-pub struct EmbedTokenBuilder<'header_indent, FirstBodyIndent, Tag, Attr, Body> {
+pub struct EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
     header_indent: &'header_indent IndentToken,
-    first_body_indent: FirstBodyIndent,
+    first_body_indent: Option<String>,
     token: EmbedToken<Tag, Attr, Body>,
 }
 
-impl<'header_indent, FirstBodyIndent, Tag, Attr, Body>
-    EmbedTokenBuilder<'header_indent, FirstBodyIndent, Tag, Attr, Body>
-{
+impl<'header_indent, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
     /// Extract the [token](EmbedToken) that was built.
     pub fn finish(self) -> EmbedToken<Tag, Attr, Body> {
         self.token
     }
 }
 
-impl<'header_indent, 'input, Tag, Attr, Body>
-    EmbedTokenBuilder<'header_indent, Empty, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
 where
     Tag: ParseEmbedTokenTag<&'input str>,
     Attr: ParseEmbedTokenAttr<&'input str>,
@@ -42,7 +35,7 @@ where
         let token = EmbedToken::<Tag, Attr, Body>::start_parsing(input, body)?;
         let builder = EmbedTokenBuilder {
             header_indent,
-            first_body_indent: (),
+            first_body_indent: None,
             token,
         };
         Some(builder)
@@ -63,49 +56,27 @@ where
     }
 }
 
-impl<'header_indent, 'input, Tag, Attr, Body>
-    EmbedTokenBuilder<'header_indent, Empty, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
 where
     Body: ParseEmbedTokenBody<&'input str>,
 {
-    /// Parse the body's first item and indentation.
-    pub fn parse_first_body_item(
-        self,
-        input: &'input str,
-    ) -> Option<EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>> {
-        debug_assert!(!input.trim().is_empty(), "parse_first_body_item assumes that the input string contain more than just whitespaces");
-        let EmbedTokenBuilder {
-            header_indent,
-            first_body_indent: (),
-            mut token,
-        } = self;
+    pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
+        if input.trim().is_empty() {
+            // TODO: define action on empty token
+            return Some(());
+        }
+
+        if let Some(first_body_indent) = &self.first_body_indent {
+            let input = input.strip_prefix(first_body_indent)?;
+            return self.token.parse_body_item(input);
+        }
+
         let (first_body_indent, input) = IndentToken::parse(input);
-        if !header_indent.is_shorter_start_of(&first_body_indent) {
+        if !self.header_indent.is_shorter_start_of(&first_body_indent) {
             return None;
         }
-        token.parse_body_item(input)?;
-        let first_body_indent = first_body_indent.to_string();
-        let builder = EmbedTokenBuilder {
-            header_indent,
-            first_body_indent,
-            token,
-        };
-        Some(builder)
-    }
-}
-
-impl<'header_indent, 'input, Tag, Attr, Body>
-    EmbedTokenBuilder<'header_indent, Inhabited, Tag, Attr, Body>
-where
-    Body: ParseEmbedTokenBody<&'input str>,
-{
-    /// If the input has the same indent as the body's first indent, parse the input and add the resulting token.
-    pub fn parse_next_body_item(&mut self, input: &'input str) -> Option<()> {
-        debug_assert!(
-            !input.trim().is_empty(),
-            "parse_next_body_item assumes that the input string contain more than just whitespaces",
-        );
-        let input = input.strip_prefix(&self.first_body_indent)?;
-        self.token.parse_body_item(input)
+        self.token.parse_body_item(input)?;
+        self.first_body_indent = first_body_indent.to_string().pipe(Some);
+        Some(())
     }
 }
