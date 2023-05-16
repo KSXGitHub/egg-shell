@@ -65,8 +65,7 @@ where
 {
     pub fn parse_body_item(&mut self, input: &'input str) -> Option<()> {
         if input.trim().is_empty() {
-            self.token.insert_body_ws(input)?;
-            return Some(());
+            return self.token.insert_body_ws(input);
         }
 
         if let Some(first_body_indent) = &self.first_body_indent {
