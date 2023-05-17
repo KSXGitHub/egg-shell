@@ -9,11 +9,11 @@ use crate::token::ParseMiddleToken;
 /// String-like token.
 ///
 /// **Structure:**
-/// `[prefix] <quote> <body> <quote> [suffix]`
+/// `<prefix> <quote> <body> <quote> <suffix>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct StringToken<Content> {
-    pub prefix: Option<Content>,
-    pub suffix: Option<Content>,
+    pub prefix: Content,
+    pub suffix: Content,
     pub body: Content,
     pub quote: Quote,
     pub error: Option<Error>,
@@ -50,11 +50,6 @@ fn parse_word(input: &str) -> (&'_ str, &'_ str) {
 impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (prefix, input) = parse_word(input);
-        let prefix = if prefix.is_empty() {
-            None
-        } else {
-            Some(prefix)
-        };
 
         let mut iter = input.chars();
 
@@ -97,11 +92,6 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
 
         let input = &input[end_offset..];
         let (suffix, rest) = parse_word(input);
-        let suffix = if suffix.is_empty() {
-            None
-        } else {
-            Some(suffix)
-        };
 
         let token = StringToken {
             prefix,
