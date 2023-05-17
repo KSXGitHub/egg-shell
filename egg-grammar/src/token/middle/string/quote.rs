@@ -1,6 +1,6 @@
 use derive_more::{Display, Error};
 
-/// Quote type of [`StringToken`].
+/// Quote type of [`StringToken`](super::StringToken).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Quote {
     /// Single quotes (`'`) were used to wrap the string content.
