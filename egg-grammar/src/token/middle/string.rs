@@ -20,11 +20,11 @@ pub struct StringToken<Content> {
 }
 
 const fn is_word_head(char: &char) -> bool {
-    matches!(char, 'a'..='z' | 'A'..='Z' | '_')
+    matches!(char, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_')
 }
 
 const fn is_word_body(char: &char) -> bool {
-    is_word_head(char) || matches!(char, '0'..='9' | '-')
+    is_word_head(char) || matches!(char, '-')
 }
 
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
@@ -262,6 +262,5 @@ mod test {
 
         case!("");
         case!("abc");
-        case!("0x'abc'");
     }
 }
