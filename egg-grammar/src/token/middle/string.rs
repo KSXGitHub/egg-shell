@@ -62,8 +62,6 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
         let mut end_quote = false;
 
         for char in iter {
-            end_offset += char.len_utf8();
-
             if char == quote.to_char() && !escaping {
                 end_quote = true;
                 break;
@@ -76,10 +74,10 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
 
             if char == '\n' {
                 end_quote = false;
-                end_offset -= char.len_utf8(); // undo the the increment at the start
                 break;
             }
 
+            end_offset += char.len_utf8();
             escaping = false;
         }
 
