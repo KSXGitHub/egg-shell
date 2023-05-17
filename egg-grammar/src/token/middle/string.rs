@@ -27,6 +27,10 @@ const fn is_word_body(char: &char) -> bool {
     is_word_head(char) || matches!(char, '-')
 }
 
+const fn is_word_tail(char: &char) -> bool {
+    is_word_head(char)
+}
+
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
     let mut iter = input.chars();
 
@@ -43,8 +47,17 @@ fn parse_word(input: &str) -> (&'_ str, &'_ str) {
     let end_offset = first_char_len + tail_size;
 
     let word = &input[..end_offset];
-    let rest = &input[end_offset..];
-    (word, rest)
+    let last_char = word.chars().next_back().expect("word is not empty");
+
+    if is_word_tail(&last_char) {
+        let rest = &input[end_offset..];
+        (word, rest)
+    } else {
+        let end_offset = end_offset - 1; // it's ascii, no needs to worry about panic
+        let word = &input[..end_offset];
+        let rest = &input[end_offset..];
+        (word, rest)
+    }
 }
 
 impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
@@ -210,6 +223,14 @@ mod test {
             error: None,
         }, "++' jkl mno'");
 
+        case!("123-abc'def'ghi-jkl-" -> StringToken {
+            prefix: "123-abc",
+            suffix: "ghi-jkl",
+            body: "def",
+            quote: Quote::Single,
+            error: None,
+        }, "-");
+
         case!("'" -> StringToken {
             prefix: "",
             suffix: "",
@@ -270,5 +291,6 @@ mod test {
 
         case!("");
         case!("abc");
+        case!("prefix-'abc'");
     }
 }
