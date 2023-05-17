@@ -78,14 +78,24 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
         }
 
         let body = &input[start_offset..end_offset];
-        let error = if end_quote {
-            None
-        } else {
-            Some(Error::EndQuoteNotFound)
-        };
 
-        let input = input.get((end_offset + quote_len)..).unwrap_or("");
+        if !end_quote {
+            let suffix = "";
+            let error = Some(Error::EndQuoteNotFound);
+            let token = StringToken {
+                prefix,
+                suffix,
+                body,
+                quote,
+                error,
+            };
+            let rest = &input[end_offset..];
+            return Some((token, rest));
+        }
+
+        let input = &input[(end_offset + quote_len)..];
         let (suffix, rest) = parse_word(input);
+        let error = None;
 
         let token = StringToken {
             prefix,
