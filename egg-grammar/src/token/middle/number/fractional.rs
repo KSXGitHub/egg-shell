@@ -5,7 +5,6 @@ use split_first_char::split_first_char;
 /// Token for fractional number.
 ///
 /// **Structure:**
-/// * `<integer>`
 /// * `<integer> . <fraction>`
 /// * `<integer> e <exponent>`
 /// * `<integer> . <fraction> e <exponent>`
