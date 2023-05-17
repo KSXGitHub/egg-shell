@@ -231,6 +231,22 @@ mod test {
             error: None,
         }, "-");
 
+        case!("prefix'I ❤️ programming.'suffíx" -> StringToken {
+            prefix: "prefix",
+            suffix: "suff",
+            body: "I ❤️ programming.",
+            quote: Quote::Single,
+            error: None,
+        }, "íx");
+
+        case!("GalaxyBrainGigachadWarStratagem'三十六計，走為上計'逃げるんだよ" -> StringToken {
+            prefix: "GalaxyBrainGigachadWarStratagem",
+            suffix: "",
+            body: "三十六計，走為上計",
+            quote: Quote::Single,
+            error: None
+        }, "逃げるんだよ");
+
         case!("'" -> StringToken {
             prefix: "",
             suffix: "",
@@ -292,5 +308,6 @@ mod test {
         case!("");
         case!("abc");
         case!("prefix-'abc'");
+        case!("prefíx'abc'"); // í is not i
     }
 }
