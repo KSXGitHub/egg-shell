@@ -8,6 +8,9 @@ pub const BINARY_PREFIX: &str = "0b";
 
 /// Token for integer in base-2.
 ///
+/// **Structure:**
+/// `0b <content>`
+///
 /// **Note:** To avoid weird syntax quirks and confusing error messages,
 /// non-binary digits are allowed in this token, and it shall be the job
 /// of the semantic layer to detect them.

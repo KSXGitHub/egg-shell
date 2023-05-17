@@ -1,4 +1,7 @@
 /// String-like token.
+///
+/// **Structure:**
+/// `[prefix] <quote> <body> <quote> [suffix]`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct StringToken<Content> {
     pub prefix: Option<Content>,

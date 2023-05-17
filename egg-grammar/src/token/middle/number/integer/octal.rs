@@ -8,6 +8,9 @@ pub const OCTAL_PREFIX: &str = "0o";
 
 /// Token for integer in base-8.
 ///
+/// **Structure:**
+/// `0o <content>`
+///
 /// **Note:** To avoid weird syntax quirks and confusing error messages,
 /// non-octal digits are allowed in this token, and it shall be the job
 /// of the semantic layer to detect them.

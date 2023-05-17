@@ -3,6 +3,12 @@ use crate::token::{number::common::is_number_body, ParseMiddleToken};
 use split_first_char::split_first_char;
 
 /// Token for fractional number.
+///
+/// **Structure:**
+/// * `<integer>`
+/// * `<integer> . <fraction>`
+/// * `<integer> e <exponent>`
+/// * `<integer> . <fraction> e <exponent>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FractionalToken<Content> {
     /// The integer part of the token.

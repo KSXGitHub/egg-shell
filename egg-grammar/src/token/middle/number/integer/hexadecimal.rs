@@ -4,6 +4,9 @@ use crate::token::{number::common::parse_prefixed_number, ParseMiddleToken};
 pub const HEXADECIMAL_PREFIX: &str = "0x";
 
 /// Token for integer in base-16.
+///
+/// **Structure:**
+/// `0x <content>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HexadecimalToken<Content>(pub Content);
 
