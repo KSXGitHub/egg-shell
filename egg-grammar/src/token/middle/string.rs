@@ -14,5 +14,5 @@ pub struct StringToken<Content> {
     pub suffix: Option<Content>,
     pub body: Content,
     pub quote: Quote,
-    pub error: Error,
+    pub error: Option<Error>,
 }
