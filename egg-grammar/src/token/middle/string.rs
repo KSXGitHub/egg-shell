@@ -73,6 +73,7 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
                 escaping = true;
                 continue;
             }
+
             escaping = false;
         }
 
