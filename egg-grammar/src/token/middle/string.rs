@@ -1,5 +1,7 @@
+mod error;
 mod quote;
 
+pub use error::*;
 pub use quote::*;
 
 /// String-like token.
@@ -12,4 +14,5 @@ pub struct StringToken<Content> {
     pub suffix: Option<Content>,
     pub body: Content,
     pub quote: Quote,
+    pub error: Error,
 }
