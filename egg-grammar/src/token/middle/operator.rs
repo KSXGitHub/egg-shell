@@ -36,6 +36,7 @@ impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn not_operator_head() {
@@ -76,5 +77,39 @@ mod test {
 
         case!('"' '\''); // used in string literals
         case!('(' ')' '[' ']' '{' '}'); // used as bracket tokens
+    }
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(
+                    OperatorToken::parse($input),
+                    Some((OperatorToken($token), $rest)),
+                );
+            }};
+        }
+
+        case!("+123" -> "+", "123");
+        case!("+ +" -> "+", " +");
+        case!("+=123" -> "+=", "123");
+        case!("+ =123" -> "+", " =123");
+        case!("+#abc" -> "+#", "abc");
+        case!("+ #abc" -> "+", " #abc");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(OperatorToken::parse($input), None);
+            }};
+        }
+
+        case!("");
+        case!("# comment");
+        case!("@attribute");
     }
 }
