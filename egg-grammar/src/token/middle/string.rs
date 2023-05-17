@@ -97,3 +97,161 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $token:expr, $rest:literal) => {{
+                eprintln!("CASE: {}", $input);
+                assert_eq!(StringToken::parse($input), Some(($token, $rest)));
+            }};
+        }
+
+        case!("''" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Single,
+            error: None,
+        }, "");
+
+        case!(r#""""# -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Double,
+            error: None,
+        }, "");
+
+        case!("'' abc" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Single,
+            error: None,
+        }, " abc");
+
+        case!(r#""" abc"# -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Double,
+            error: None,
+        }, " abc");
+
+        case!("'abc def ghi'" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc def ghi",
+            quote: Quote::Single,
+            error: None,
+        }, "");
+
+        case!(r#""abc def ghi""# -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc def ghi",
+            quote: Quote::Double,
+            error: None,
+        }, "");
+
+        case!(r"'abc def \' ghi'" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: r"abc def \' ghi",
+            quote: Quote::Single,
+            error: None,
+        }, "");
+
+        case!(r#""abc def \" ghi""# -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: r#"abc def \" ghi"#,
+            quote: Quote::Double,
+            error: None,
+        }, "");
+
+        case!(r"prefix'abc def \' ghi\n\t'suffix++' jkl mno'" -> StringToken {
+            prefix: "prefix",
+            suffix: "suffix",
+            body: r"abc def \' ghi\n\t",
+            quote: Quote::Single,
+            error: None,
+        }, "++' jkl mno'");
+
+        case!(r#"prefix"abc def \" ghi\n\t"suffix++' jkl mno'"# -> StringToken {
+            prefix: "prefix",
+            suffix: "suffix",
+            body: r#"abc def \" ghi\n\t"#,
+            quote: Quote::Double,
+            error: None,
+        }, "++' jkl mno'");
+
+        case!("'" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Single,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("\"" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "",
+            quote: Quote::Double,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("'abc" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc",
+            quote: Quote::Single,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("\"abc" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc",
+            quote: Quote::Double,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("prefix'abc def ghi" -> StringToken {
+            prefix: "prefix",
+            suffix: "",
+            body: "abc def ghi",
+            quote: Quote::Single,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("prefix\"abc def ghi" -> StringToken {
+            prefix: "prefix",
+            suffix: "",
+            body: "abc def ghi",
+            quote: Quote::Double,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("CASE: {}", $input);
+                assert_eq!(StringToken::parse($input), None);
+            }};
+        }
+
+        case!("");
+        case!("abc");
+        case!("0x'abc'");
+    }
+}
