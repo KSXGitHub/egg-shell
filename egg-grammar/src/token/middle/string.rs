@@ -67,12 +67,12 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
                 break;
             }
 
+            end_offset += char.len_utf8();
+
             if char == '\\' && !escaping {
                 escaping = true;
                 continue;
             }
-
-            end_offset += char.len_utf8();
             escaping = false;
         }
 
@@ -83,6 +83,7 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
             Some(Error::EndQuoteNotFound)
         };
 
+        end_offset += quote_len; // eliminate end quote from the suffix
         let input = &input[end_offset..];
         let (suffix, rest) = parse_word(input);
 
