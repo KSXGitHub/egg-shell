@@ -83,8 +83,7 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
             Some(Error::EndQuoteNotFound)
         };
 
-        end_offset += quote_len; // eliminate end quote from the suffix
-        let input = &input[end_offset..];
+        let input = &input[(end_offset + quote_len)..];
         let (suffix, rest) = parse_word(input);
 
         let token = StringToken {
