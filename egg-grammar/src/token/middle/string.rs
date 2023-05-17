@@ -186,6 +186,14 @@ mod test {
             error: None,
         }, "");
 
+        case!("1foo-bar'abc def'" -> StringToken {
+            prefix: "1foo-bar",
+            suffix: "",
+            body: "abc def",
+            quote: Quote::Single,
+            error: None,
+        }, "");
+
         case!(r"prefix'abc def \' ghi\n\t'suffix++' jkl mno'" -> StringToken {
             prefix: "prefix",
             suffix: "suffix",
