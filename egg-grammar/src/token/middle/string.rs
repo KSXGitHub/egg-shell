@@ -72,11 +72,6 @@ impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
                 continue;
             }
 
-            if char == '\n' {
-                end_quote = false;
-                break;
-            }
-
             end_offset += char.len_utf8();
             escaping = false;
         }
