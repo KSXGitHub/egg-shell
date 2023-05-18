@@ -12,16 +12,16 @@ pub enum WordToken<Content> {
     Keyword(Keyword),
 }
 
-impl<Content> WordToken<Content> {
+impl<Content> WordToken<Content>
+where
+    Content: AsRef<str>,
+{
     /// Convert a string to a word token.
     ///
     /// **Note:** If `Content` is [`Keyword`], this method is suboptimal, please use
     /// [`WordToken::Keyword`], [`From<Keyword>::from`], or [`Into<WordToken>::into`]
     /// instead.
-    pub fn from_any_str(content: Content) -> Self
-    where
-        Content: AsRef<str>,
-    {
+    pub fn from_any_str(content: Content) -> Self {
         match Keyword::try_from(content.as_ref()) {
             Ok(keyword) => WordToken::Keyword(keyword),
             Err(_) => WordToken::Identifier(content),
@@ -29,16 +29,15 @@ impl<Content> WordToken<Content> {
     }
 
     /// Get the reference to the internal string.
-    pub fn as_str(&self) -> &'_ str
-    where
-        Content: AsRef<str>,
-    {
+    pub fn as_str(&self) -> &'_ str {
         match self {
             WordToken::Identifier(identifier) => identifier.as_ref(),
             WordToken::Keyword(keyword) => keyword.as_ref(),
         }
     }
+}
 
+impl<Content> WordToken<Content> {
     /// Check if the word is an identifier.
     pub fn is_identifier(self) -> bool {
         matches!(self, WordToken::Identifier(_))
