@@ -73,11 +73,11 @@ const fn is_word_head(char: &char) -> bool {
 }
 
 const fn is_word_body(char: &char) -> bool {
-    is_word_tail(char) || matches!(char, '-')
+    matches!(char, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '-')
 }
 
 const fn is_word_tail(char: &char) -> bool {
-    is_word_head(char) || matches!(char, '0'..='9')
+    matches!(char, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_')
 }
 
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
