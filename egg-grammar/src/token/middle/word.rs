@@ -28,6 +28,17 @@ impl<Content> WordToken<Content> {
         }
     }
 
+    /// Get the reference to the internal string.
+    pub fn as_str(&self) -> &'_ str
+    where
+        Content: AsRef<str>,
+    {
+        match self {
+            WordToken::Identifier(identifier) => identifier.as_ref(),
+            WordToken::Keyword(keyword) => keyword.as_ref(),
+        }
+    }
+
     /// Check if the word is an identifier.
     pub fn is_identifier(self) -> bool {
         matches!(self, WordToken::Identifier(_))
