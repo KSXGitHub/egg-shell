@@ -29,6 +29,15 @@ where
     Some((body, rest))
 }
 
+/// Combine two boolean functions with an AND operator.
+const fn combine_condition<X, F, G>(f: F, g: G) -> impl Fn(&X) -> bool
+where
+    F: Fn(&X) -> bool,
+    G: Fn(&X) -> bool,
+{
+    move |x| f(x) && g(x)
+}
+
 /// Extract an ASCII sequence of string whose first char, last char, and middle chars
 /// have 3 different requirements.
 ///
@@ -49,26 +58,30 @@ where
     VerifyBody: Fn(&char) -> bool,
     VerifyTail: Fn(&char) -> bool,
 {
+    // Ensure that the verifiers only execute on ASCII characters.
+    // If is_ascii is redundant, the compiler will optimize it away.
+    let is_head = combine_condition(char::is_ascii, is_head);
+    let is_body = combine_condition(char::is_ascii, is_body);
+    let is_tail = combine_condition(char::is_ascii, is_tail);
+
     let mut iter = input.chars();
 
     let Some(first_char) = iter.next() else {
         return ("", input);
     };
-    if !first_char.is_ascii() || !is_head(&first_char) {
+    if !is_head(&first_char) {
         return ("", input);
     }
 
     let first_char_len = 1; // because it is an ascii character.
     debug_assert_eq!(first_char_len, first_char.len_utf8());
-    let tail_size = iter
-        .take_while(|char| char.is_ascii() && is_body(char))
-        .count(); // ascii char has len_utf8 = 1
+    let tail_size = iter.take_while(is_body).count(); // ascii char has len_utf8 = 1
     let end_offset = first_char_len + tail_size;
 
     let word = &input[..end_offset];
     let last_char = word.chars().next_back().expect("word is not empty");
 
-    if last_char.is_ascii() && is_tail(&last_char) {
+    if is_tail(&last_char) {
         let rest = &input[end_offset..];
         (word, rest)
     } else {
