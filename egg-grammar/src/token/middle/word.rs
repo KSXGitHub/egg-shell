@@ -40,7 +40,7 @@ where
         }
     }
 
-    /// Get the reference to the internal string.
+    /// Get reference to the internal string.
     pub fn as_str(&self) -> &'_ str {
         match self {
             WordToken::Identifier(identifier) => identifier.as_ref(),
