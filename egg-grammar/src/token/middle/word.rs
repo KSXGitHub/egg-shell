@@ -57,3 +57,12 @@ impl<'a> From<&'a str> for WordToken<&'a str> {
         WordToken::from_any_str(input)
     }
 }
+
+impl<Content> AsRef<str> for WordToken<Content>
+where
+    Content: AsRef<str>,
+{
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
