@@ -1,6 +1,6 @@
 use crate::{keyword::Keyword, token::ParseMiddleToken};
 use derive_more::{From, TryInto};
-use egg_common_utils::split_hbt;
+use egg_common_utils::split_hbt_ascii;
 
 /// Token of an identifier or a keyword.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
@@ -81,7 +81,7 @@ const fn is_word_tail(char: &char) -> bool {
 }
 
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
-    split_hbt(input, is_word_head, is_word_body, is_word_tail)
+    split_hbt_ascii(input, is_word_head, is_word_body, is_word_tail)
 }
 
 impl<'a> ParseMiddleToken<&'a str> for WordToken<&'a str> {

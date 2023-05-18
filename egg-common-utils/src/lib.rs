@@ -32,10 +32,13 @@ where
 /// Extract a sequence of string whose first char, last char, and middle chars
 /// have 3 different requirements.
 ///
+/// **Note:**
+/// The 3 character verifiers are assumed to return false on non-ASCII chars.
+///
 /// **Return:**
 /// * The first item of the tuple is the resulting sequence of string.
 /// * The second item of the tuple is the remaining part of the input string.
-pub fn split_hbt<VerifyHead, VerifyBody, VerifyTail>(
+pub fn split_hbt_ascii<VerifyHead, VerifyBody, VerifyTail>(
     input: &str,
     is_head: VerifyHead,
     is_body: VerifyBody,
