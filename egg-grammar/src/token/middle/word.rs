@@ -12,6 +12,18 @@ pub enum WordToken<Content> {
     Keyword(Keyword),
 }
 
+impl<Content> WordToken<Content> {
+    /// Check if the word is an identifier.
+    pub fn is_identifier(self) -> bool {
+        matches!(self, WordToken::Identifier(_))
+    }
+
+    /// Check if the word is a keyword.
+    pub fn is_keyword(self) -> bool {
+        matches!(self, WordToken::Keyword(_))
+    }
+}
+
 impl<Content> WordToken<Content>
 where
     Content: AsRef<str>,
@@ -34,18 +46,6 @@ where
             WordToken::Identifier(identifier) => identifier.as_ref(),
             WordToken::Keyword(keyword) => keyword.as_ref(),
         }
-    }
-}
-
-impl<Content> WordToken<Content> {
-    /// Check if the word is an identifier.
-    pub fn is_identifier(self) -> bool {
-        matches!(self, WordToken::Identifier(_))
-    }
-
-    /// Check if the word is a keyword.
-    pub fn is_keyword(self) -> bool {
-        matches!(self, WordToken::Keyword(_))
     }
 }
 
