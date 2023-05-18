@@ -94,3 +94,50 @@ impl<'a> ParseMiddleToken<&'a str> for WordToken<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        use Keyword::*;
+        let id = WordToken::Identifier;
+        let kw = WordToken::Keyword;
+
+        macro_rules! case {
+            ($input:literal -> $token:expr, $rest:literal) => {{
+                eprintln!("CASE: {:?}", $input);
+                assert_eq!(WordToken::parse($input), Some(($token, $rest)));
+            }};
+        }
+
+        case!("if a + b == c then" -> kw(If), " a + b == c then");
+        case!("return true" -> kw(Return), " true");
+        case!("return-123" -> id("return-123"), "");
+        case!("return.123" -> kw(Return), ".123");
+        case!("print('hello world')" -> id("print"), "('hello world')");
+        case!("a + b" -> id("a"), " + b");
+        case!("abc123-def-" -> id("abc123-def"), "-");
+        case!("abc123_def_" -> id("abc123_def_"), "");
+        case!("_abc def" -> id("_abc"), " def");
+        case!("u32 -> u32" -> kw(U32), " -> u32");
+        case!("abcđef" -> id("abc"), "đef");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("CASE: {:?}", $input);
+                assert_eq!(WordToken::parse($input), None);
+            }};
+        }
+
+        case!("");
+        case!("3a");
+        case!("-abc");
+        case!("âbc");
+    }
+}
