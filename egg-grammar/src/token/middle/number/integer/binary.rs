@@ -1,7 +1,5 @@
-use crate::token::{
-    number::common::{is_number_body, parse_prefixed_number},
-    ParseMiddleToken,
-};
+use crate::token::ParseMiddleToken;
+use egg_common_utils::{is_number_body, parse_prefixed_number};
 
 /// The start of a binary token.
 pub const BINARY_PREFIX: &str = "0b";

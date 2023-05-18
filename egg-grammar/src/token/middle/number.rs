@@ -1,5 +1,4 @@
 mod body;
-mod common;
 mod fractional;
 mod integer;
 mod suffix;

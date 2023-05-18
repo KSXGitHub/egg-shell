@@ -6,6 +6,7 @@ rust-version = "1.65"
 
 [dependencies]
 egg-ast = { version = "0.0.0", path = "../egg-ast" }
+egg-common-utils = { version = "0.0.0", path = "../egg-common-utils" }
 derive_more = "0.99.17"
 pipe-trait = "0.4.0"
 itertools = "0.10.5"

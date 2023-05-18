@@ -1,5 +1,6 @@
 use super::DecimalToken;
-use crate::token::{number::common::is_number_body, ParseMiddleToken};
+use crate::token::ParseMiddleToken;
+use egg_common_utils::is_number_body;
 use split_first_char::split_first_char;
 
 /// Token for fractional number.

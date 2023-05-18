@@ -1,4 +1,5 @@
-use crate::token::{number::common::parse_prefixed_number, ParseMiddleToken};
+use crate::token::ParseMiddleToken;
+use egg_common_utils::parse_prefixed_number;
 
 /// The start of a hexadecimal token.
 pub const HEXADECIMAL_PREFIX: &str = "0x";

@@ -5,6 +5,7 @@ pub use error::*;
 pub use quote::*;
 
 use crate::token::ParseMiddleToken;
+use egg_common_utils::split_hbt;
 
 /// String-like token.
 ///
@@ -32,32 +33,7 @@ const fn is_word_tail(char: &char) -> bool {
 }
 
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
-    let mut iter = input.chars();
-
-    let Some(first_char) = iter.next() else {
-        return ("", input);
-    };
-    if !is_word_head(&first_char) {
-        return ("", input);
-    }
-
-    let first_char_len = 1; // because it is an ascii character.
-    debug_assert_eq!(first_char_len, first_char.len_utf8());
-    let tail_size = iter.take_while(is_word_body).count(); // ascii char has len_utf8 = 1
-    let end_offset = first_char_len + tail_size;
-
-    let word = &input[..end_offset];
-    let last_char = word.chars().next_back().expect("word is not empty");
-
-    if is_word_tail(&last_char) {
-        let rest = &input[end_offset..];
-        (word, rest)
-    } else {
-        let end_offset = end_offset - 1; // it's ascii, no needs to worry about panic
-        let word = &input[..end_offset];
-        let rest = &input[end_offset..];
-        (word, rest)
-    }
+    split_hbt(input, is_word_head, is_word_body, is_word_tail)
 }
 
 impl<'a> ParseMiddleToken<&'a str> for StringToken<&'a str> {
