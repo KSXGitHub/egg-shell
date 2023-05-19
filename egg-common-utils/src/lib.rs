@@ -38,6 +38,17 @@ where
     move |x| f(x) && g(x)
 }
 
+/// Declare a function that can be used as a verifier in [`split_hbt_ascii`].
+#[macro_export]
+macro_rules! char_matcher {
+    ($(#[$attr:meta])* $name:ident => $pattern:pat) => {
+        $(#[$attr])*
+        const fn $name(char: &char) -> bool {
+            matches!(char, $pattern)
+        }
+    };
+}
+
 /// Extract an ASCII sequence of string whose first char, last char, and middle chars
 /// have 3 different requirements.
 ///

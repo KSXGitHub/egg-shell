@@ -1,6 +1,6 @@
 use crate::{keyword::Keyword, token::ParseMiddleToken};
 use derive_more::{From, TryInto};
-use egg_common_utils::split_hbt_ascii;
+use egg_common_utils::{char_matcher, split_hbt_ascii};
 
 /// Token of an identifier or a keyword.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
@@ -68,19 +68,10 @@ where
     }
 }
 
-const fn is_word_head(char: &char) -> bool {
-    matches!(char, 'a'..='z' | 'A'..='Z' | '_')
-}
-
-const fn is_word_body(char: &char) -> bool {
-    matches!(char, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '-')
-}
-
-const fn is_word_tail(char: &char) -> bool {
-    matches!(char, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_')
-}
-
 fn parse_word(input: &str) -> (&'_ str, &'_ str) {
+    char_matcher!(is_word_head => 'a'..='z' | 'A'..='Z' | '_');
+    char_matcher!(is_word_body => 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '-');
+    char_matcher!(is_word_tail => 'a'..='z' | 'A'..='Z' | '0'..='9' | '_');
     split_hbt_ascii(input, is_word_head, is_word_body, is_word_tail)
 }
 
