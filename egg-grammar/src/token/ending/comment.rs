@@ -1,8 +1,6 @@
 /// Token for a line comment.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct CommentToken<Content> {
-    pub content: Content,
-}
+pub struct CommentToken<Content>(pub Content);
 
 impl<Content> CommentToken<Content> {
     /// If `content` is a comment, return a token in a [`Some`].
@@ -12,7 +10,7 @@ impl<Content> CommentToken<Content> {
         Content: AsRef<str>,
     {
         if content.as_ref().starts_with('#') {
-            Some(CommentToken { content })
+            Some(CommentToken(content))
         } else {
             None
         }
