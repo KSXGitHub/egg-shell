@@ -41,9 +41,9 @@ where
 /// Declare a function that can be used as a verifier in [`split_hbt_ascii`].
 #[macro_export]
 macro_rules! char_matcher {
-    ($(#[$attr:meta])* $name:ident => $pattern:pat) => {
+    ($(#[$attr:meta])* $visibility:vis $name:ident => $pattern:pat) => {
         $(#[$attr])*
-        const fn $name(char: &char) -> bool {
+        $visibility const fn $name(char: &char) -> bool {
             matches!(char, $pattern)
         }
     };
