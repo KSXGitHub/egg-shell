@@ -9,10 +9,9 @@ impl<Content> CommentToken<Content> {
     where
         Content: AsRef<str>,
     {
-        if content.as_ref().starts_with('#') {
-            Some(CommentToken(content))
-        } else {
-            None
-        }
+        content
+            .as_ref()
+            .starts_with('#')
+            .then_some(CommentToken(content))
     }
 }
