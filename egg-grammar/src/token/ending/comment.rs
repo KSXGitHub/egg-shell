@@ -5,8 +5,7 @@ pub struct CommentToken<Content>(pub Content);
 impl<'a> CommentToken<&'a str> {
     /// Parse an input text into a line comment.
     ///
-    /// **Notes:**
-    /// * `line` is assumed to not contain any EOL characters.
+    /// **Note:** `line` is assumed to not contain any EOL characters.
     pub fn parse(input: &'a str) -> Option<Self> {
         input.strip_prefix('#').map(CommentToken)
     }

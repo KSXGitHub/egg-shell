@@ -52,8 +52,7 @@ macro_rules! char_matcher {
 /// Extract an ASCII sequence of string whose first char, last char, and middle chars
 /// have 3 different requirements.
 ///
-/// **Note:**
-/// The 3 character verifiers will only run on ASCII characters.
+/// **Note:** The 3 character verifiers will only run on ASCII characters.
 ///
 /// **Return:**
 /// * The first item of the tuple is the resulting sequence of string.

@@ -11,8 +11,7 @@ pub struct IndentToken(Vec<IndentChar>);
 impl IndentToken {
     /// Parse a line of text into a pair of indentation and remaining string.
     ///
-    /// **Notes:**
-    /// * `line` is assumed to not contain any EOL characters.
+    /// **Note:** `line` is assumed to not contain any EOL characters.
     pub fn parse(mut line: &str) -> (Self, &'_ str) {
         let mut indent_char_list = Vec::with_capacity(line.len());
         while let Some((first, rest)) = split_first_char(line) {
