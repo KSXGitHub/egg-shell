@@ -5,6 +5,8 @@ pub type DocToken<Content> =
     super::EmbedToken<DocTokenTag<Content>, RawToken<Content>, RawToken<Content>>;
 
 /// Tag of [`DocToken`].
+///
+/// **Structure:** `@@<name>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DocTokenTag<Content>(pub WordToken<Content>);
 
