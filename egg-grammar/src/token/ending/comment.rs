@@ -2,16 +2,12 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CommentToken<Content>(pub Content);
 
-impl<Content> CommentToken<Content> {
-    /// If `content` is a comment, return a token in a [`Some`].
-    /// Otherwise, return a [`None`].
-    pub fn try_from_str(content: Content) -> Option<Self>
-    where
-        Content: AsRef<str>,
-    {
-        content
-            .as_ref()
-            .starts_with('#')
-            .then_some(CommentToken(content))
+impl<'a> CommentToken<&'a str> {
+    /// Parse an input text into a line comment.
+    ///
+    /// **Notes:**
+    /// * `line` is assumed to not contain any EOL characters.
+    pub fn parse(input: &'a str) -> Option<Self> {
+        input.strip_prefix('#').map(CommentToken)
     }
 }
