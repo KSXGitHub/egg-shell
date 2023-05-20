@@ -1,4 +1,6 @@
 use crate::token::{ParseEmbedTokenTag, ParseMiddleToken, RawToken, WordToken};
+use derive_more::{From, Into};
+use pipe_trait::Pipe;
 
 /// Token for chunk of documentation lines.
 pub type DocToken<Content> =
@@ -7,8 +9,20 @@ pub type DocToken<Content> =
 /// Tag of [`DocToken`].
 ///
 /// **Structure:** `@@[name]`
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, From, Into)]
 pub struct DocTokenTag<Content>(pub Option<WordToken<Content>>);
+
+impl<Content> From<WordToken<Content>> for DocTokenTag<Content> {
+    fn from(token: WordToken<Content>) -> Self {
+        token.pipe(Some).into()
+    }
+}
+
+impl<'a> From<&'a str> for DocTokenTag<&'a str> {
+    fn from(name: &'a str) -> Self {
+        name.pipe(WordToken::from).into()
+    }
+}
 
 impl<'a> ParseEmbedTokenTag<&'a str> for DocTokenTag<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
