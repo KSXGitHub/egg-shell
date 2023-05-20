@@ -35,3 +35,40 @@ impl<'a> ParseEmbedTokenTag<&'a str> for DocTokenTag<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $token:expr, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                let token = $token.into();
+                assert_eq!(DocTokenTag::parse($input), Some((token, $rest)));
+            }};
+        }
+
+        case!("@@" -> None, "");
+        case!("@@foo" -> "foo", "");
+        case!("@@. abcdef" -> None, ". abcdef");
+        case!("@@ Nothing to see here" -> None, " Nothing to see here");
+        case!("@@desc Description of an item" -> "desc", " Description of an item");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(DocTokenTag::parse($input), None);
+            }};
+        }
+
+        case!("");
+        case!("@desc Description of an item");
+        case!("abcdef");
+    }
+}
