@@ -4,8 +4,10 @@ pub mod embed;
 pub use comment::CommentToken;
 pub use embed::{DocToken, TextToken};
 
+use derive_more::{From, TryInto};
+
 /// Token at the end of a line.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, From, TryInto)]
 #[non_exhaustive]
 pub enum EndingToken<Content> {
     /// Single line comment.
