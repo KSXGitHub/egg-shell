@@ -42,7 +42,7 @@ impl<'input> EndingToken<&'input str> {
         if let Some(comment) = CommentToken::parse(header_text) {
             return comment.pipe(EndingToken::from).pipe(Some);
         }
-        // try_build!(TextToken);
+        try_build!(TextToken);
         try_build!(DocToken);
         None
     }
