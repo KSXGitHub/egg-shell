@@ -1,4 +1,5 @@
 use super::{BracketToken, NumberToken, OperatorToken, StringToken, WordToken};
+use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
 
 /// Token in the middle of the line.
@@ -49,4 +50,22 @@ pub enum MiddleToken<Content> {
     /// * Binding or assignment (`=`).
     /// * etc.
     Operator(OperatorToken<Content>),
+}
+
+impl<'a> ParseMiddleToken<&'a str> for MiddleToken<&'a str> {
+    fn parse(input: &'a str) -> Option<(Self, &'a str)> {
+        macro_rules! try_parse {
+            ($token_type:ident) => {
+                if let Some((token, rest)) = $token_type::parse(input) {
+                    return Some((MiddleToken::from(token), rest));
+                }
+            };
+        }
+        try_parse!(StringToken);
+        try_parse!(WordToken);
+        try_parse!(NumberToken);
+        try_parse!(BracketToken);
+        try_parse!(OperatorToken);
+        None
+    }
 }
