@@ -14,6 +14,28 @@ pub struct EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
     token: EmbedToken<Tag, Attr, Body>,
 }
 
+impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
+where
+    Tag: ParseEmbedTokenTag<&'input str>,
+    Attr: ParseEmbedTokenAttr<&'input str>,
+    Body: ParseEmbedTokenBody<&'input str>,
+    Vec<Body>: InsertWhitespaces<&'input str>,
+{
+    /// Build an [`EmbedToken`] from start to finish.
+    pub(crate) fn build(
+        header_indent: &'header_indent IndentToken,
+        header_text: &'input str,
+        mut next_line: impl FnMut() -> Option<&'input str>,
+    ) -> Option<EmbedToken<Tag, Attr, Body>> {
+        let mut builder = EmbedTokenBuilder::new(header_indent, header_text)?;
+
+        let mut parse_body_item = |line| builder.parse_body_item(line);
+        while let Some(()) = next_line().and_then(&mut parse_body_item) {}
+
+        Some(builder.finish())
+    }
+}
+
 impl<'header_indent, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
     /// Extract the [token](EmbedToken) that was built.
     pub fn finish(self) -> EmbedToken<Tag, Attr, Body> {

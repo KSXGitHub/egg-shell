@@ -1,5 +1,6 @@
+use super::EmbedTokenBuilder;
 use crate::token::{
-    InsertWhitespaces, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag,
+    IndentToken, InsertWhitespaces, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag,
 };
 
 /// Token for a chunk of embedded lines.
@@ -7,6 +8,23 @@ use crate::token::{
 pub struct EmbedToken<Tag, Attr, Body> {
     pub header: (Tag, Attr),
     pub body: Vec<Body>,
+}
+
+impl<'input, Tag, Attr, Body> EmbedToken<Tag, Attr, Body>
+where
+    Tag: ParseEmbedTokenTag<&'input str>,
+    Attr: ParseEmbedTokenAttr<&'input str>,
+    Body: ParseEmbedTokenBody<&'input str>,
+    Vec<Body>: InsertWhitespaces<&'input str>,
+{
+    /// Build an [`EmbedToken`] from start to finish.
+    pub(crate) fn build<'header_indent>(
+        header_indent: &'header_indent IndentToken,
+        header_text: &'input str,
+        next_line: impl FnMut() -> Option<&'input str>,
+    ) -> Option<Self> {
+        EmbedTokenBuilder::build(header_indent, header_text, next_line)
+    }
 }
 
 impl<'a, Tag, Attr, Body> EmbedToken<Tag, Attr, Body>
