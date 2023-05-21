@@ -105,7 +105,9 @@ mod test {
         }
 
         case!("if a + b == c then" -> kw(If), " a + b == c then");
+        case!("IF a + b == c then" -> id("IF"), " a + b == c then");
         case!("return true" -> kw(Return), " true");
+        case!("RETURN TRUE" -> id("RETURN"), " TRUE");
         case!("return-123" -> id("return-123"), "");
         case!("return.123" -> kw(Return), ".123");
         case!("print('hello world')" -> id("print"), "('hello world')");
