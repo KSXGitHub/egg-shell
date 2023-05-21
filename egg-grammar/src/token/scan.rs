@@ -1,9 +1,8 @@
 mod ln_num_iter;
 
-use super::{CommentToken, EndingToken, IndentToken, TokenLine};
+use super::{EndingToken, IndentToken, TokenLine};
 use egg_ast::ColNum;
 use ln_num_iter::LnNumIter;
-use pipe_trait::Pipe;
 
 /// Token scanner.
 ///
@@ -42,9 +41,10 @@ impl<'a> Iterator for Scan<'a> {
         let mut middle = Vec::new();
 
         while !ln_text.is_empty() {
-            if let Some(comment) = CommentToken::parse(ln_text) {
-                let token = comment.pipe(EndingToken::from).pipe(Some);
+            let next_line = || lines.next().map(|(_, text)| text);
+            if let Some(token) = EndingToken::build(&indent, ln_text, next_line) {
                 middle.shrink_to_fit();
+                let token = Some(token);
                 let token_line = TokenLine::new(ln_num, (indent_col, indent), middle, (col, token));
                 return Some(token_line);
             }
