@@ -246,6 +246,22 @@ mod test {
             error: Some(Error::EndQuoteNotFound),
         }, "");
 
+        case!("'abc\"" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc\"",
+            quote: Quote::Single,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
+        case!("\"abc'" -> StringToken {
+            prefix: "",
+            suffix: "",
+            body: "abc'",
+            quote: Quote::Double,
+            error: Some(Error::EndQuoteNotFound),
+        }, "");
+
         case!("prefix'abc def ghi" -> StringToken {
             prefix: "prefix",
             suffix: "",
