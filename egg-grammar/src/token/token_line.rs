@@ -1,8 +1,9 @@
 use super::{EndingToken, IndentToken, MiddleToken};
+use derive_more::Constructor;
 use egg_ast::{ColNum, LnNum};
 
 /// List of tokens from a line.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Constructor)]
 pub struct TokenLine<Content> {
     /// The number of the line.
     pub ln_num: LnNum,
