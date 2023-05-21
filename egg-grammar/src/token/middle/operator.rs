@@ -1,5 +1,5 @@
 use crate::token::ParseMiddleToken;
-use egg_common_utils::char_matcher;
+use egg_common_utils::{char_matcher, parse_hb_ascii};
 
 /// Token a sequence of special characters.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -10,22 +10,7 @@ char_matcher!(is_operator_body => '!' | '#'..='&' | '*'..='/' | ':'..='@' | '\\'
 
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let mut iter = input.chars();
-
-        let first_char = iter.next()?;
-        if !is_operator_head(&first_char) {
-            return None;
-        }
-
-        let first_char_len = 1; // because it is an ascii character.
-        debug_assert_eq!(first_char_len, first_char.len_utf8());
-        let tail_size = iter.take_while(is_operator_body).count(); // ascii char has len_utf8 = 1
-        let end_offset = first_char_len + tail_size;
-
-        let content = &input[..end_offset];
-        let rest = &input[end_offset..];
-        let token = OperatorToken(content);
-        Some((token, rest))
+        parse_hb_ascii(OperatorToken, input, is_operator_head, is_operator_body)
     }
 }
 

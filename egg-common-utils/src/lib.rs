@@ -49,6 +49,49 @@ macro_rules! char_matcher {
     };
 }
 
+/// Parse a token whose first char has different requirement from the rest.
+///
+/// **Note:** The 2 character verifiers will only run on ASCII characters.
+///
+/// **Return:**
+/// * `None` when `is_head` returns `false`.
+/// * `Some((token, rest))` means parsing succeeded with `token` being the result
+///   and `rest` being the remaining string.
+pub fn parse_hb_ascii<'a, Token, Tokenize, VerifyHead, VerifyBody>(
+    tokenize: Tokenize,
+    input: &'a str,
+    is_head: VerifyHead,
+    is_body: VerifyBody,
+) -> Option<(Token, &'a str)>
+where
+    Token: 'a,
+    Tokenize: FnOnce(&'a str) -> Token,
+    VerifyHead: Fn(&char) -> bool,
+    VerifyBody: Fn(&char) -> bool,
+{
+    // Ensure that the verifiers only execute on ASCII characters.
+    // If is_ascii is redundant, the compiler will optimize it away.
+    let is_head = combine_condition(char::is_ascii, is_head);
+    let is_body = combine_condition(char::is_ascii, is_body);
+
+    let mut iter = input.chars();
+
+    let first_char = iter.next()?;
+    if !is_head(&first_char) {
+        return None;
+    }
+
+    let first_char_len = 1; // because it is an ascii character.
+    debug_assert_eq!(first_char_len, first_char.len_utf8());
+    let tail_size = iter.take_while(is_body).count(); // ascii char always has len_utf8 = 1
+    let end_offset = first_char_len + tail_size;
+
+    let content = &input[..end_offset];
+    let rest = &input[end_offset..];
+    let token = tokenize(content);
+    Some((token, rest))
+}
+
 /// Extract an ASCII sequence of string whose first char, last char, and middle chars
 /// have 3 different requirements.
 ///

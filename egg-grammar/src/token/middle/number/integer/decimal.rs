@@ -1,5 +1,5 @@
 use crate::token::ParseMiddleToken;
-use egg_common_utils::is_number_body;
+use egg_common_utils::{is_number_body, parse_hb_ascii};
 
 /// Token for integer in base-10.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -7,22 +7,7 @@ pub struct DecimalToken<Content>(pub Content);
 
 impl<'a> ParseMiddleToken<&'a str> for DecimalToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let mut iter = input.chars();
-
-        let first_char = iter.next()?;
-        if !first_char.is_ascii_digit() {
-            return None;
-        }
-
-        let first_char_len = 1; // because it is an ascii character.
-        debug_assert_eq!(first_char_len, first_char.len_utf8());
-        let tail_size = iter.take_while(is_number_body).count(); // digit always has len_utf8 = 1
-        let end_offset = first_char_len + tail_size;
-
-        let content = &input[..end_offset];
-        let rest = &input[end_offset..];
-        let token = DecimalToken(content);
-        Some((token, rest))
+        parse_hb_ascii(DecimalToken, input, char::is_ascii_digit, is_number_body)
     }
 }
 
