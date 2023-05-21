@@ -4,9 +4,6 @@ use super::{BracketToken, NumberToken, OperatorToken, StringToken, WordToken};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum MiddleToken<Content> {
-    /// Keyword or normal identifier.
-    Word(WordToken<Content>),
-
     /// String, exotic syntax, or abnormal identifier.
     ///
     /// **Including**
@@ -19,6 +16,9 @@ pub enum MiddleToken<Content> {
     ///
     /// * Multi-line string.
     String(StringToken<Content>),
+
+    /// Keyword or normal identifier.
+    Word(WordToken<Content>),
 
     /// Number.
     ///
