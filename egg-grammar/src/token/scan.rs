@@ -16,22 +16,13 @@ pub struct Scan<'a> {
 #[derive(Debug)]
 struct State<'a> {
     lines: LnNumIter<'a>,
-    context: Context,
-}
-
-/// Indicate which class of token should the scanner produce.
-#[derive(Debug)]
-enum Context {
-    /// The normal, default state for most types of tokens.
-    Outermost,
 }
 
 impl<'a> Scan<'a> {
     /// Start scanning text for tokens.
     pub fn new(text: &'a str) -> Self {
         let lines = LnNumIter::new(text);
-        let context = Context::Outermost;
-        let state = State { lines, context };
+        let state = State { lines };
         Scan { text, state }
     }
 }
@@ -40,12 +31,8 @@ impl<'a> Iterator for Scan<'a> {
     type Item = TokenLine<&'a str>;
     fn next(&mut self) -> Option<Self::Item> {
         let Scan { text, state } = self;
-        let State { lines, context } = state;
+        let State { lines } = state;
         let (ln_num, ln_text) = lines.next()?;
-
-        match *context {
-            Context::Outermost => {}
-        }
 
         todo!()
     }
