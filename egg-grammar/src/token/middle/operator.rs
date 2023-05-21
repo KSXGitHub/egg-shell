@@ -5,7 +5,7 @@ use crate::token::ParseMiddleToken;
 pub struct OperatorToken<Content>(pub Content);
 
 const fn is_operator_head(char: &char) -> bool {
-    matches!(char, '!' | '$' | '%' | '&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
+    matches!(char, '!' | '$'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
 }
 
 const fn is_operator_body(char: &char) -> bool {
