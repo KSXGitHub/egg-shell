@@ -1,7 +1,8 @@
 use super::{BracketToken, NumberToken, OperatorToken, StringToken, WordToken};
+use derive_more::{From, TryInto};
 
 /// Token in the middle of the line.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 #[non_exhaustive]
 pub enum MiddleToken<Content> {
     /// String, exotic syntax, or abnormal identifier.
