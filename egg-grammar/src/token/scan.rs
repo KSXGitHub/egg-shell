@@ -1,6 +1,6 @@
 mod ln_num_iter;
 
-use super::{EndingToken, IndentToken, TokenLine};
+use super::{EndingToken, IndentToken, MiddleToken, ParseMiddleToken, TokenLine};
 use egg_ast::ColNum;
 use ln_num_iter::LnNumIter;
 
@@ -34,7 +34,7 @@ impl<'a> Iterator for Scan<'a> {
         let Scan { text, state } = self;
         let State { lines } = state;
         let (ln_num, ln_text) = lines.next()?;
-        let (indent, ln_text) = IndentToken::parse(ln_text);
+        let (indent, mut ln_text) = IndentToken::parse(ln_text);
         let indent_col = ColNum::from_pred_count(0); // this may be wasteful data, but it helps with symmetry
 
         let mut col = indent_col.advance_by(indent.len());
@@ -49,7 +49,12 @@ impl<'a> Iterator for Scan<'a> {
                 return Some(token_line);
             }
 
-            todo!()
+            if let Some((token, rest)) = MiddleToken::parse(ln_text) {
+                let token_len = ln_text.len() - rest.len();
+                col = col.advance_by(token_len);
+                middle.push((col, token));
+                ln_text = rest;
+            }
         }
 
         middle.shrink_to_fit();
