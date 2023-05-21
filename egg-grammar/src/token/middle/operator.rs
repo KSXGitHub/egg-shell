@@ -9,7 +9,7 @@ const fn is_operator_head(char: &char) -> bool {
 }
 
 const fn is_operator_body(char: &char) -> bool {
-    is_operator_head(char) || matches!(char, '#')
+    matches!(char, '!' | '#'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
 }
 
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
