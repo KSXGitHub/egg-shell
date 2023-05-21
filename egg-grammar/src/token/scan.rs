@@ -39,18 +39,21 @@ impl<'a> Iterator for Scan<'a> {
         let indent_col = ColNum::from_pred_count(0); // this may be wasteful data, but it helps with symmetry
 
         let mut col = indent_col.advance_by(indent.len());
+        let mut middle = Vec::new();
 
-        if let Some(comment) = CommentToken::parse(ln_text) {
-            let token = comment.pipe(EndingToken::from).pipe(Some);
-            let token_line = TokenLine {
-                ln_num,
-                indent: (indent_col, indent),
-                middle: Vec::with_capacity(0),
-                ending: (col, token),
-            };
-            return Some(token_line);
+        while !ln_text.is_empty() {
+            if let Some(comment) = CommentToken::parse(ln_text) {
+                let token = comment.pipe(EndingToken::from).pipe(Some);
+                middle.shrink_to_fit();
+                let token_line = TokenLine::new(ln_num, (indent_col, indent), middle, (col, token));
+                return Some(token_line);
+            }
+
+            todo!()
         }
 
-        todo!()
+        middle.shrink_to_fit();
+        let token_line = TokenLine::new(ln_num, (indent_col, indent), middle, (col, None));
+        Some(token_line)
     }
 }
