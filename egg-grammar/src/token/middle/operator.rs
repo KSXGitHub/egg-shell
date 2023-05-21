@@ -1,16 +1,12 @@
 use crate::token::ParseMiddleToken;
+use egg_common_utils::char_matcher;
 
 /// Token a sequence of special characters.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OperatorToken<Content>(pub Content);
 
-const fn is_operator_head(char: &char) -> bool {
-    matches!(char, '!' | '$'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
-}
-
-const fn is_operator_body(char: &char) -> bool {
-    matches!(char, '!' | '#'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
-}
+char_matcher!(is_operator_head => '!' | '$'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~');
+char_matcher!(is_operator_body => '!' | '#'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~');
 
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
