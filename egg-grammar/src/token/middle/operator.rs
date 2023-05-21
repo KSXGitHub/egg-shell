@@ -5,11 +5,11 @@ use crate::token::ParseMiddleToken;
 pub struct OperatorToken<Content>(pub Content);
 
 const fn is_operator_head(char: &char) -> bool {
-    matches!(char, '!' | '%' | '&' | '*'..='/' | ':'..='?' | '\\' | '^' | '|' | '~')
+    matches!(char, '!' | '$' | '%' | '&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~')
 }
 
 const fn is_operator_body(char: &char) -> bool {
-    is_operator_head(char) || matches!(char, '$' | '#' | '@')
+    is_operator_head(char) || matches!(char, '#')
 }
 
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
@@ -55,9 +55,7 @@ mod test {
 
         case!('"' '\''); // used in string literals
         case!('(' ')' '[' ']' '{' '}'); // used as bracket tokens
-        case!('$'); // used as variable interpolation in strings and macros
         case!('#'); // used in comments
-        case!('@'); // used in annotations, meta attributes, and macros
     }
 
     #[test]
@@ -109,6 +107,8 @@ mod test {
         case!("+ #abc" -> "+", " #abc");
         case!("++'abc'" -> "++", "'abc'");
         case!(r#"++"abc"# -> "++", r#""abc"#);
+        case!("$interpolation" -> "$", "interpolation");
+        case!("@attribute" -> "@", "attribute");
     }
 
     #[test]
@@ -121,8 +121,6 @@ mod test {
         }
 
         case!("");
-        case!("$interpolation");
         case!("# comment");
-        case!("@attribute");
     }
 }
