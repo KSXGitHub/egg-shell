@@ -9,7 +9,6 @@ use ln_num_iter::LnNumIter;
 /// Use [the iterator interface](Iterator) to interact with the scanner.
 #[derive(Debug)]
 pub struct Scan<'a> {
-    text: &'a str,
     state: State<'a>,
 }
 
@@ -24,14 +23,14 @@ impl<'a> Scan<'a> {
     pub fn new(text: &'a str) -> Self {
         let lines = LnNumIter::new(text);
         let state = State { lines };
-        Scan { text, state }
+        Scan { state }
     }
 }
 
 impl<'a> Iterator for Scan<'a> {
     type Item = TokenLine<&'a str>;
     fn next(&mut self) -> Option<Self::Item> {
-        let Scan { text, state } = self;
+        let Scan { state } = self;
         let State { lines } = state;
         let (ln_num, ln_text) = lines.next()?;
         let (indent, mut ln_text) = IndentToken::parse(ln_text);
