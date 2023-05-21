@@ -1,7 +1,9 @@
 mod ln_num_iter;
 
-use super::TokenLine;
+use super::{CommentToken, EndingToken, IndentToken, TokenLine};
+use egg_ast::ColNum;
 use ln_num_iter::LnNumIter;
+use pipe_trait::Pipe;
 
 /// Token scanner.
 ///
@@ -33,6 +35,21 @@ impl<'a> Iterator for Scan<'a> {
         let Scan { text, state } = self;
         let State { lines } = state;
         let (ln_num, ln_text) = lines.next()?;
+        let (indent, ln_text) = IndentToken::parse(ln_text);
+        let indent_col = ColNum::from_pred_count(0); // this may be wasteful data, but it helps with symmetry
+
+        let mut col = indent_col.advance_by(indent.len());
+
+        if let Some(comment) = CommentToken::parse(ln_text) {
+            let token = comment.pipe(EndingToken::from).pipe(Some);
+            let token_line = TokenLine {
+                ln_num,
+                indent: (indent_col, indent),
+                middle: Vec::with_capacity(0),
+                ending: (col, token),
+            };
+            return Some(token_line);
+        }
 
         todo!()
     }
