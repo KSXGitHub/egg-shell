@@ -16,7 +16,7 @@ pub enum EndingToken<Content> {
     Comment(CommentToken<Content>),
 
     /// Multi-line string or embedded code.
-    String(TextToken<Content>),
+    Text(TextToken<Content>),
 
     /// Documentation annotation.
     Doc(DocToken<Content>),
