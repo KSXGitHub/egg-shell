@@ -1,7 +1,7 @@
 use super::{BracketToken, NumberToken, OperatorToken, StringToken, WordToken};
 
 /// Token in the middle of the line.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum MiddleToken<Content> {
     /// Keyword or normal identifier.
