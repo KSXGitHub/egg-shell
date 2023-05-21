@@ -97,7 +97,7 @@ mod test {
     fn positive() {
         macro_rules! case {
             ($input:literal -> $token:expr, $rest:literal) => {{
-                eprintln!("CASE: {}", $input);
+                eprintln!("TEST: {}", $input);
                 assert_eq!(StringToken::parse($input), Some(($token, $rest)));
             }};
         }
@@ -267,7 +267,7 @@ mod test {
     fn negative() {
         macro_rules! case {
             ($input:literal) => {{
-                eprintln!("CASE: {}", $input);
+                eprintln!("TEST: {}", $input);
                 assert_eq!(StringToken::parse($input), None);
             }};
         }
