@@ -1,10 +1,8 @@
-mod ln_num_iter;
-
 use super::{
     EndingToken, IndentToken, InvalidToken, MiddleToken, ParseMiddleToken, TokenLine, TokenLineItem,
 };
-use ln_num_iter::LnNumIter;
 use split_first_char::split_first_char;
+use std::str::Lines;
 
 /// Token scanner.
 ///
@@ -17,13 +15,13 @@ pub struct Scan<'a> {
 /// State of the scanner.
 #[derive(Debug)]
 struct State<'a> {
-    lines: LnNumIter<'a>,
+    lines: Lines<'a>,
 }
 
 impl<'a> Scan<'a> {
     /// Start scanning text for tokens.
     pub fn new(text: &'a str) -> Self {
-        let lines = LnNumIter::new(text);
+        let lines = text.lines();
         let state = State { lines };
         Scan { state }
     }
@@ -34,7 +32,7 @@ impl<'a> Iterator for Scan<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let Scan { state } = self;
         let State { lines } = state;
-        let (ln_num, ln_text) = lines.next()?;
+        let ln_text = lines.next()?;
         let (indent, rest) = IndentToken::parse(ln_text);
         let indent_src_text = &ln_text[..indent.len()];
         let indent_item = TokenLineItem::new(0, indent_src_text, indent);
@@ -45,12 +43,10 @@ impl<'a> Iterator for Scan<'a> {
         let mut middle = Vec::new();
 
         while !input.is_empty() {
-            let next_line = || lines.next().map(|(_, text)| text);
-            if let Some(token) = EndingToken::build(indent, input, next_line) {
+            if let Some(token) = EndingToken::build(indent, input, || lines.next()) {
                 middle.shrink_to_fit();
                 let ending_item = TokenLineItem::new(offset, input, token);
-                let token_line =
-                    TokenLine::new(ln_num, ln_text, indent_item, middle, Some(ending_item));
+                let token_line = TokenLine::new(ln_text, indent_item, middle, Some(ending_item));
                 return Some(token_line);
             }
 
@@ -77,7 +73,7 @@ impl<'a> Iterator for Scan<'a> {
         }
 
         middle.shrink_to_fit();
-        let token_line = TokenLine::new(ln_num, ln_text, indent_item, middle, None);
+        let token_line = TokenLine::new(ln_text, indent_item, middle, None);
         Some(token_line)
     }
 }

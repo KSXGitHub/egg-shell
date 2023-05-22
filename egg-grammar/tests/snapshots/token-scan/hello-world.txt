@@ -1,6 +1,5 @@
 [
     TokenLine {
-        ln_num: LnNum 1,
         ln_text: "@cli::entry",
         indent: TokenLineItem {
             offset: 0,
@@ -56,7 +55,6 @@
         ending: None,
     },
     TokenLine {
-        ln_num: LnNum 2,
         ln_text: "fn main() do",
         indent: TokenLineItem {
             offset: 0,
@@ -147,7 +145,6 @@
         ending: None,
     },
     TokenLine {
-        ln_num: LnNum 3,
         ln_text: "    println!(\"Hello, World!\")",
         indent: TokenLineItem {
             offset: 0,
