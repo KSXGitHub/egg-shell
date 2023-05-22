@@ -6,8 +6,8 @@ use derive_more::{From, TryInto};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 #[non_exhaustive]
 pub enum MiddleToken<Content> {
-    /// Single character of Space or Tab.
-    Whitespace(WhitespaceToken),
+    /// Sequence of spaces and tabs.
+    Whitespace(WhitespaceToken<Content>),
 
     /// String, exotic syntax, or abnormal identifier.
     ///
@@ -101,8 +101,8 @@ mod test {
         def_macro!(case -> Whitespace);
         case!(" " -> "");
         case!("\t" -> "");
-        case!("  " -> " ");
-        case!("\t\t" -> "\t");
+        case!("  " -> "");
+        case!("\t\t" -> "");
         case!(" abc" -> "abc");
         case!("\tabc" -> "abc");
     }

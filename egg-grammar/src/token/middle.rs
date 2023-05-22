@@ -3,7 +3,7 @@ pub mod number;
 mod operator;
 pub mod string;
 mod token;
-pub mod whitespace;
+mod whitespace;
 pub mod word;
 
 pub use bracket::BracketToken;
