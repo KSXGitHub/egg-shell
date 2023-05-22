@@ -76,11 +76,12 @@ impl Debug for IndentToken {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::token::WhitespaceToken;
     use pretty_assertions::assert_eq;
 
     macro_rules! token {
         ($($indent:ident),* $(,)?) => {
-            IndentToken(vec![$(IndentChar::$indent),*])
+            IndentToken(vec![$(WhitespaceToken::$indent.into()),*])
         };
     }
 
