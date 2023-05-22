@@ -3,6 +3,7 @@ use pretty_assertions::assert_eq;
 
 macro_rules! test_snapshot {
     ($tokens:expr, $path:literal) => {{
+        eprintln!();
         eprintln!("TEST: debug format snapshot");
         let received = format!("{:#?}", &$tokens);
         let expected = include_str!($path);
@@ -12,6 +13,7 @@ macro_rules! test_snapshot {
 
 macro_rules! test_ln_text {
     ($tokens:expr, $text:expr) => {{
+        eprintln!();
         eprintln!("TEST: source of each TokenLine");
         let received: Vec<_> = $tokens.iter().map(|item| item.ln_text).collect();
         let expected: Vec<_> = $text.lines().collect();
