@@ -62,7 +62,7 @@ impl<'a> Iterator for Scan<'a> {
                 continue;
             }
 
-            if let Some((token, rest)) = InvalidToken::take(ln_text) {
+            if let Some((token, rest)) = InvalidToken::parse(ln_text) {
                 let token_len = token.0.len_utf8();
                 let src_text = &ln_text[..token_len];
                 middle.push(TokenLineItem::new(offset, src_text, Err(token)));
@@ -71,7 +71,7 @@ impl<'a> Iterator for Scan<'a> {
                 continue;
             }
 
-            break; // InvalidToken::take failing means that ln_text is empty
+            break; // InvalidToken::parse failing means that ln_text is empty
         }
 
         middle.shrink_to_fit();

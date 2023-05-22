@@ -8,7 +8,7 @@ pub struct InvalidToken(#[error(not(source))] pub char);
 
 impl InvalidToken {
     /// Create an [`InvalidToken`] from the first character of a string.
-    pub fn take(input: &str) -> Option<(Self, &'_ str)> {
+    pub fn parse(input: &str) -> Option<(Self, &'_ str)> {
         let (char, rest) = split_first_char(input)?;
         let token = InvalidToken(char);
         Some((token, rest))
