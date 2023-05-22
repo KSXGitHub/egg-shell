@@ -1,4 +1,4 @@
-use super::{BracketToken, NumberToken, OperatorToken, StringToken, WordToken};
+use super::{BracketToken, NumberToken, OperatorToken, StringToken, WhitespaceToken, WordToken};
 use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
 
@@ -6,6 +6,9 @@ use derive_more::{From, TryInto};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 #[non_exhaustive]
 pub enum MiddleToken<Content> {
+    /// Single character of Space or Tab.
+    Whitespace(WhitespaceToken),
+
     /// String, exotic syntax, or abnormal identifier.
     ///
     /// **Including**
@@ -61,6 +64,7 @@ impl<'a> ParseMiddleToken<&'a str> for MiddleToken<&'a str> {
                 }
             };
         }
+        try_parse!(WhitespaceToken);
         try_parse!(StringToken);
         try_parse!(WordToken);
         try_parse!(NumberToken);
@@ -90,6 +94,17 @@ mod test {
                 }};
             }
         };
+    }
+
+    #[test]
+    fn whitespace() {
+        def_macro!(case -> Whitespace);
+        case!(" " -> "");
+        case!("\t" -> "");
+        case!("  " -> " ");
+        case!("\t\t" -> "\t");
+        case!(" abc" -> "abc");
+        case!("\tabc" -> "abc");
     }
 
     #[test]
@@ -153,8 +168,6 @@ mod test {
         }
 
         case!("");
-        case!(" ");
-        case!("\t");
         case!("# this is a comment");
     }
 }
