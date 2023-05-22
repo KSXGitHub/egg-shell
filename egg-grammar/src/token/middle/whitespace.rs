@@ -20,3 +20,45 @@ impl<'a> ParseMiddleToken<&'a str> for WhitespaceToken<&'a str> {
         Some((token, rest))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn positive() {
+        macro_rules! case {
+            ($input:literal -> $token:literal, $rest:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(
+                    WhitespaceToken::parse($input),
+                    Some((WhitespaceToken($token), $rest)),
+                );
+            }};
+        }
+        case!(" " -> " ", "");
+        case!("\t" -> "\t", "");
+        case!("  " -> "  ", "");
+        case!("\t\t" -> "\t\t", "");
+        case!(" \t \t" -> " \t \t", "");
+        case!(" abc" -> " ", "abc");
+        case!("\tabc" -> "\t", "abc");
+        case!("  abc" -> "  ", "abc");
+        case!("\t\tabc" -> "\t\t", "abc");
+        case!(" \t \tabc" -> " \t \t", "abc");
+    }
+
+    #[test]
+    fn negative() {
+        macro_rules! case {
+            ($input:literal) => {{
+                eprintln!("TEST: {:?}", $input);
+                assert_eq!(WhitespaceToken::parse($input), None);
+            }};
+        }
+        case!("");
+        case!("\n"); // parse by line so newline will have no chance to appear
+        case!("abc");
+    }
+}
