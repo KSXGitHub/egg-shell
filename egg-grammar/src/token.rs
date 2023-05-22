@@ -1,5 +1,6 @@
 mod ending;
 mod indent;
+mod invalid;
 mod middle;
 mod parse_token;
 mod raw;
@@ -8,6 +9,7 @@ mod token_line;
 
 pub use ending::*;
 pub use indent::*;
+pub use invalid::*;
 pub use middle::*;
 pub use parse_token::*;
 pub use raw::*;
