@@ -57,6 +57,8 @@ impl<'a> Iterator for Scan<'a> {
                 middle.push(TokenLineItem::new(offset, src_text, token));
                 offset += token_len;
                 ln_text = rest;
+            } else {
+                todo!("Unexpected token: {ln_text:?}");
             }
         }
 
