@@ -48,7 +48,7 @@ impl<'a> Iterator for Scan<'a> {
             }
 
             if let Some((token, rest)) = MiddleToken::parse(ln_text) {
-                let token_len = ln_text.len() - rest.len(); // TODO: switch to unicode width
+                let token_len = ln_text.len() - rest.len();
                 col = col.advance_by(token_len);
                 middle.push((col, token));
                 ln_text = rest;
