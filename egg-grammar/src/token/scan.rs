@@ -40,36 +40,36 @@ impl<'a> Iterator for Scan<'a> {
         let indent_item = TokenLineItem::new(0, indent_src_text, indent);
         let indent = &indent_item.token; // re-borrow a moved value
 
-        let mut ln_text = rest;
+        let mut input = rest;
         let mut offset = indent.len();
         let mut middle = Vec::new();
 
-        while !ln_text.is_empty() {
+        while !input.is_empty() {
             let next_line = || lines.next().map(|(_, text)| text);
-            if let Some(token) = EndingToken::build(indent, ln_text, next_line) {
+            if let Some(token) = EndingToken::build(indent, input, next_line) {
                 middle.shrink_to_fit();
-                let ending_item = TokenLineItem::new(offset, ln_text, token);
+                let ending_item = TokenLineItem::new(offset, input, token);
                 let token_line =
-                    TokenLine::new(ln_num, ln_text, indent_item, middle, Some(ending_item));
+                    TokenLine::new(ln_num, input, indent_item, middle, Some(ending_item));
                 return Some(token_line);
             }
 
-            if let Some((token, rest)) = MiddleToken::parse(ln_text) {
-                let token_len = ln_text.len() - rest.len();
-                let src_text = &ln_text[..token_len];
+            if let Some((token, rest)) = MiddleToken::parse(input) {
+                let token_len = input.len() - rest.len();
+                let src_text = &input[..token_len];
                 middle.push(TokenLineItem::new(offset, src_text, Ok(token)));
                 offset += token_len;
-                ln_text = rest;
+                input = rest;
                 continue;
             }
 
-            if let Some((char, rest)) = split_first_char(ln_text) {
+            if let Some((char, rest)) = split_first_char(input) {
                 let token = InvalidToken(char);
                 let char_len = char.len_utf8();
-                let src_text = &ln_text[..char_len];
+                let src_text = &input[..char_len];
                 middle.push(TokenLineItem::new(offset, src_text, Err(token)));
                 offset += char_len;
-                ln_text = rest;
+                input = rest;
                 continue;
             }
 
@@ -77,7 +77,7 @@ impl<'a> Iterator for Scan<'a> {
         }
 
         middle.shrink_to_fit();
-        let token_line = TokenLine::new(ln_num, ln_text, indent_item, middle, None);
+        let token_line = TokenLine::new(ln_num, input, indent_item, middle, None);
         Some(token_line)
     }
 }
