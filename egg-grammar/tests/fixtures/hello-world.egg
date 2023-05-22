@@ -1,0 +1,3 @@
+@cli::entry
+fn main() do
+    println!("Hello, World!")

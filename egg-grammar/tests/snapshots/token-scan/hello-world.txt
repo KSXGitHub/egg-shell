@@ -1,0 +1,222 @@
+[
+    TokenLine {
+        ln_num: LnNum 1,
+        ln_text: "",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 0,
+                src_text: "@",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "@",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 1,
+                src_text: "cli",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "cli",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 4,
+                src_text: "::",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "::",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 6,
+                src_text: "entry",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "entry",
+                        ),
+                    ),
+                ),
+            },
+        ],
+        ending: None,
+    },
+    TokenLine {
+        ln_num: LnNum 2,
+        ln_text: "",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 0,
+                src_text: "fn",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Fn,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 2,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 3,
+                src_text: "main",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "main",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 7,
+                src_text: "(",
+                token: Ok(
+                    Bracket(
+                        BracketToken {
+                            direction: Open,
+                            shape: Round,
+                        },
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 8,
+                src_text: ")",
+                token: Ok(
+                    Bracket(
+                        BracketToken {
+                            direction: Close,
+                            shape: Round,
+                        },
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 9,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 10,
+                src_text: "do",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Do,
+                        ),
+                    ),
+                ),
+            },
+        ],
+        ending: None,
+    },
+    TokenLine {
+        ln_num: LnNum 3,
+        ln_text: "",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "    ",
+            token: IndentToken [<SPC✕4>],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 4,
+                src_text: "println",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "println",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 11,
+                src_text: "!",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "!",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 12,
+                src_text: "(",
+                token: Ok(
+                    Bracket(
+                        BracketToken {
+                            direction: Open,
+                            shape: Round,
+                        },
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 13,
+                src_text: "\"Hello, World!\"",
+                token: Ok(
+                    String(
+                        StringToken {
+                            prefix: "",
+                            suffix: "",
+                            body: "Hello, World!",
+                            quote: Double,
+                            error: None,
+                        },
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 28,
+                src_text: ")",
+                token: Ok(
+                    Bracket(
+                        BracketToken {
+                            direction: Close,
+                            shape: Round,
+                        },
+                    ),
+                ),
+            },
+        ],
+        ending: None,
+    },
+]
