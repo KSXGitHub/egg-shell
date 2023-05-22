@@ -1,6 +1,9 @@
-use super::{EndingToken, IndentToken, MiddleToken};
+use super::{EndingToken, IndentToken, InvalidToken, MiddleToken};
 use derive_more::Constructor;
 use egg_ast::LnNum;
+
+/// Either a [`MiddleToken`] or an [`InvalidToken`].
+type MiddleTokenResult<Content> = Result<MiddleToken<Content>, InvalidToken>;
 
 /// List of tokens from a line.
 #[derive(Debug, Clone, PartialEq, Eq, Constructor)]
@@ -12,7 +15,7 @@ pub struct TokenLine<Content> {
     /// Token of the indentation at the start of the line.
     pub indent: TokenLineItem<Content, IndentToken>,
     /// List of [`MiddleToken`] after indentation.
-    pub middle: Vec<TokenLineItem<Content, MiddleToken<Content>>>,
+    pub middle: Vec<TokenLineItem<Content, MiddleTokenResult<Content>>>,
     /// Optional [`EndingToken`] at the end of the line.
     pub ending: Option<TokenLineItem<Content, EndingToken<Content>>>,
 }

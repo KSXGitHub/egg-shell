@@ -1,6 +1,8 @@
 mod ln_num_iter;
 
-use super::{EndingToken, IndentToken, MiddleToken, ParseMiddleToken, TokenLine, TokenLineItem};
+use super::{
+    EndingToken, IndentToken, InvalidToken, MiddleToken, ParseMiddleToken, TokenLine, TokenLineItem,
+};
 use ln_num_iter::LnNumIter;
 
 /// Token scanner.
@@ -54,13 +56,22 @@ impl<'a> Iterator for Scan<'a> {
             if let Some((token, rest)) = MiddleToken::parse(ln_text) {
                 let token_len = ln_text.len() - rest.len();
                 let src_text = &ln_text[..token_len];
-                middle.push(TokenLineItem::new(offset, src_text, token));
+                middle.push(TokenLineItem::new(offset, src_text, Ok(token)));
                 offset += token_len;
                 ln_text = rest;
                 continue;
             }
 
-            todo!("Unexpected token: {ln_text:?}");
+            if let Some((token, rest)) = InvalidToken::take(ln_text) {
+                let token_len = token.0.len_utf8();
+                let src_text = &ln_text[..token_len];
+                middle.push(TokenLineItem::new(offset, src_text, Err(token)));
+                offset += token_len;
+                ln_text = rest;
+                continue;
+            }
+
+            break; // InvalidToken::take failing means that ln_text is empty
         }
 
         middle.shrink_to_fit();
