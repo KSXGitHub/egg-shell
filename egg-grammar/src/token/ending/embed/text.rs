@@ -1,28 +1,32 @@
 use crate::token::{ParseEmbedTokenTag, RawToken};
+use strum::{AsRefStr, Display, EnumString, IntoStaticStr};
 
 /// Token of multi-line string.
 pub type TextToken<Content> = super::EmbedToken<TextTokenTag, RawToken<Content>, RawToken<Content>>;
 
 /// Tag and quote type of [`TextToken`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)] // essential std traits
+#[derive(AsRefStr, Display, EnumString, IntoStaticStr)] // essential strum traits
 pub enum TextTokenTag {
     /// Three single quotes (`'''`) were used to start the embedded block.
+    #[strum(serialize = "'''")]
     Single,
     /// Three double quotes (`"""`) were used to start the embedded block.
+    #[strum(serialize = "\"\"\"")]
     Double,
 }
 
 impl<'a> ParseEmbedTokenTag<&'a str> for TextTokenTag {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         macro_rules! try_parse {
-            ($syntax:literal -> $token_variant:ident) => {
-                if let Some(rest) = input.strip_prefix($syntax) {
+            ($token_variant:ident) => {
+                if let Some(rest) = input.strip_prefix(TextTokenTag::$token_variant.as_ref()) {
                     return Some((TextTokenTag::$token_variant, rest));
                 }
             };
         }
-        try_parse!("'''" -> Single);
-        try_parse!("\"\"\"" -> Double);
+        try_parse!(Single);
+        try_parse!(Double);
         None
     }
 }
