@@ -4,6 +4,7 @@ use super::{
     EndingToken, IndentToken, InvalidToken, MiddleToken, ParseMiddleToken, TokenLine, TokenLineItem,
 };
 use ln_num_iter::LnNumIter;
+use split_first_char::split_first_char;
 
 /// Token scanner.
 ///
@@ -62,16 +63,17 @@ impl<'a> Iterator for Scan<'a> {
                 continue;
             }
 
-            if let Some((token, rest)) = InvalidToken::parse(ln_text) {
-                let token_len = token.0.len_utf8();
-                let src_text = &ln_text[..token_len];
+            if let Some((char, rest)) = split_first_char(ln_text) {
+                let token = InvalidToken(char);
+                let char_len = char.len_utf8();
+                let src_text = &ln_text[..char_len];
                 middle.push(TokenLineItem::new(offset, src_text, Err(token)));
-                offset += token_len;
+                offset += char_len;
                 ln_text = rest;
                 continue;
             }
 
-            break; // InvalidToken::parse failing means that ln_text is empty
+            break;
         }
 
         middle.shrink_to_fit();
