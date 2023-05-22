@@ -11,9 +11,9 @@ pub const fn is_number_body(char: &char) -> bool {
 /// Parse a number with prefix.
 ///
 /// It is assumed that the resulting number body contains only ASCII characters.
-pub fn parse_prefixed_number<'input, 'prefix, VerifyBody>(
+pub fn parse_prefixed_number<'input, VerifyBody>(
     input: &'input str,
-    prefix: &'prefix str,
+    prefix: &str,
     is_number_body: VerifyBody,
 ) -> Option<(&'input str, &'input str)>
 where
