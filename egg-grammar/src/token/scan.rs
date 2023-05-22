@@ -50,7 +50,7 @@ impl<'a> Iterator for Scan<'a> {
                 middle.shrink_to_fit();
                 let ending_item = TokenLineItem::new(offset, input, token);
                 let token_line =
-                    TokenLine::new(ln_num, input, indent_item, middle, Some(ending_item));
+                    TokenLine::new(ln_num, ln_text, indent_item, middle, Some(ending_item));
                 return Some(token_line);
             }
 
@@ -77,7 +77,7 @@ impl<'a> Iterator for Scan<'a> {
         }
 
         middle.shrink_to_fit();
-        let token_line = TokenLine::new(ln_num, input, indent_item, middle, None);
+        let token_line = TokenLine::new(ln_num, ln_text, indent_item, middle, None);
         Some(token_line)
     }
 }
