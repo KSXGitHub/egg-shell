@@ -25,10 +25,11 @@ impl TextTokenTag {
 
 impl<'a> ParseEmbedTokenTag<&'a str> for TextTokenTag {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
+        use TextTokenTag::*;
         macro_rules! try_parse {
-            ($token_variant:ident) => {
-                if let Some(rest) = input.strip_prefix(TextTokenTag::$token_variant.as_str()) {
-                    return Some((TextTokenTag::$token_variant, rest));
+            ($token:ident) => {
+                if let Some(rest) = input.strip_prefix($token.as_str()) {
+                    return Some(($token, rest));
                 }
             };
         }
