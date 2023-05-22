@@ -4,7 +4,7 @@ mod operator;
 pub mod string;
 mod token;
 mod whitespace;
-pub mod word;
+mod word;
 
 pub use bracket::BracketToken;
 pub use number::NumberToken;
