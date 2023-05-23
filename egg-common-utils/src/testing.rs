@@ -35,11 +35,10 @@ where
         let UniDiff(left_text, right_text) = self;
 
         let workspace = tempdir().map_err(UniDiffExecError::Workspace)?;
-        let left_file = workspace.path().join("left");
-        let right_file = workspace.path().join("right");
 
-        fs::write(&left_file, left_text.as_ref()).map_err(UniDiffExecError::Left)?;
-        fs::write(&right_file, right_text.as_ref()).map_err(UniDiffExecError::Right)?;
+        let write_file = |name: &str, text: &str| fs::write(workspace.path().join(name), text);
+        write_file("left", left_text.as_ref()).map_err(UniDiffExecError::Left)?;
+        write_file("right", right_text.as_ref()).map_err(UniDiffExecError::Right)?;
 
         let output = Command::new("diff")
             .with_current_dir(&workspace)
