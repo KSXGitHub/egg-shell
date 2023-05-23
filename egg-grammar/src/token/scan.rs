@@ -43,11 +43,11 @@ impl<'a> Iterator for Scan<'a> {
         let mut middle = Vec::new();
 
         while !input.is_empty() {
-            let mut lines_copy = lines.clone();
+            let mut lines_copy = lines.clone(); // to preserve the first non-body line (after the final body line)
             let next_line = || lines_copy.next();
             let mut body_line_list = Vec::new();
             let after_parse = |body_line: &'a str| {
-                lines.next();
+                lines.next(); // the current line is proven to be belong in an ending token's body, it must be removed from `lines`.
                 body_line_list.push(body_line);
             };
 
