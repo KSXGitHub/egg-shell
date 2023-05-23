@@ -1,0 +1,596 @@
+[
+    TokenLine {
+        ln_text: "@@desc Simple hello world text.",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [],
+        ending: Some(
+            TokenLineItem {
+                offset: 0,
+                src_text: "@@desc Simple hello world text.",
+                token: Doc(
+                    EmbedToken {
+                        header: (
+                            DocTokenTag(
+                                Some(
+                                    Identifier(
+                                        "desc",
+                                    ),
+                                ),
+                            ),
+                            RawToken(
+                                " Simple hello world text.",
+                            ),
+                        ),
+                        body: [],
+                    },
+                ),
+            },
+        ),
+    },
+    TokenLine {
+        ln_text: "pub const HELLO_WORLD: str = '''",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 0,
+                src_text: "pub",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Pub,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 3,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 4,
+                src_text: "const",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Const,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 9,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 10,
+                src_text: "HELLO_WORLD",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "HELLO_WORLD",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 21,
+                src_text: ":",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            ":",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 22,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 23,
+                src_text: "str",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "str",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 26,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 27,
+                src_text: "=",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "=",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 28,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+        ],
+        ending: Some(
+            TokenLineItem {
+                offset: 29,
+                src_text: "'''",
+                token: Text(
+                    EmbedToken {
+                        header: (
+                            Single,
+                            RawToken(
+                                "",
+                            ),
+                        ),
+                        body: [
+                            RawToken(
+                                "Hello, World!",
+                            ),
+                            RawToken(
+                                "",
+                            ),
+                        ],
+                    },
+                ),
+            },
+        ),
+    },
+    TokenLine {
+        ln_text: "@@desc Example YAML text.",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [],
+        ending: Some(
+            TokenLineItem {
+                offset: 0,
+                src_text: "@@desc Example YAML text.",
+                token: Doc(
+                    EmbedToken {
+                        header: (
+                            DocTokenTag(
+                                Some(
+                                    Identifier(
+                                        "desc",
+                                    ),
+                                ),
+                            ),
+                            RawToken(
+                                " Example YAML text.",
+                            ),
+                        ),
+                        body: [],
+                    },
+                ),
+            },
+        ),
+    },
+    TokenLine {
+        ln_text: "pub const CONFIG: str = '''yaml",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 0,
+                src_text: "pub",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Pub,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 3,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 4,
+                src_text: "const",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Const,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 9,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 10,
+                src_text: "CONFIG",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "CONFIG",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 16,
+                src_text: ":",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            ":",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 17,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 18,
+                src_text: "str",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "str",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 21,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 22,
+                src_text: "=",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "=",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 23,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+        ],
+        ending: Some(
+            TokenLineItem {
+                offset: 24,
+                src_text: "'''yaml",
+                token: Text(
+                    EmbedToken {
+                        header: (
+                            Single,
+                            RawToken(
+                                "yaml",
+                            ),
+                        ),
+                        body: [
+                            RawToken(
+                                "title: This is some YAML",
+                            ),
+                            RawToken(
+                                "publisher: The name of the publisher",
+                            ),
+                            RawToken(
+                                "pages: 335",
+                            ),
+                            RawToken(
+                                "chapters: 12",
+                            ),
+                            RawToken(
+                                "genres:",
+                            ),
+                            RawToken(
+                                "    - drama",
+                            ),
+                            RawToken(
+                                "    - tragedy",
+                            ),
+                            RawToken(
+                                "    - comedy",
+                            ),
+                            RawToken(
+                                "contributors:",
+                            ),
+                            RawToken(
+                                "    author: Some guy",
+                            ),
+                            RawToken(
+                                "    editor: Some other guy",
+                            ),
+                            RawToken(
+                                "",
+                            ),
+                        ],
+                    },
+                ),
+            },
+        ),
+    },
+    TokenLine {
+        ln_text: "@@desc Example JavaScript text.",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [],
+        ending: Some(
+            TokenLineItem {
+                offset: 0,
+                src_text: "@@desc Example JavaScript text.",
+                token: Doc(
+                    EmbedToken {
+                        header: (
+                            DocTokenTag(
+                                Some(
+                                    Identifier(
+                                        "desc",
+                                    ),
+                                ),
+                            ),
+                            RawToken(
+                                " Example JavaScript text.",
+                            ),
+                        ),
+                        body: [],
+                    },
+                ),
+            },
+        ),
+    },
+    TokenLine {
+        ln_text: "pub const PROGRAM: str = '''js",
+        indent: TokenLineItem {
+            offset: 0,
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                offset: 0,
+                src_text: "pub",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Pub,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 3,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 4,
+                src_text: "const",
+                token: Ok(
+                    Word(
+                        Keyword(
+                            Const,
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 9,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 10,
+                src_text: "PROGRAM",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "PROGRAM",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 17,
+                src_text: ":",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            ":",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 18,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 19,
+                src_text: "str",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "str",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 22,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 23,
+                src_text: "=",
+                token: Ok(
+                    Operator(
+                        OperatorToken(
+                            "=",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                offset: 24,
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+        ],
+        ending: Some(
+            TokenLineItem {
+                offset: 25,
+                src_text: "'''js",
+                token: Text(
+                    EmbedToken {
+                        header: (
+                            Single,
+                            RawToken(
+                                "js",
+                            ),
+                        ),
+                        body: [
+                            RawToken(
+                                "export function add(a, b) {",
+                            ),
+                            RawToken(
+                                "    return a + b",
+                            ),
+                            RawToken(
+                                "}",
+                            ),
+                        ],
+                    },
+                ),
+            },
+        ),
+    },
+]

@@ -1,0 +1,23 @@
+@@desc Simple hello world text.
+pub const HELLO_WORLD: str = '''
+    Hello, World!
+
+@@desc Example YAML text.
+pub const CONFIG: str = '''yaml
+    title: This is some YAML
+    publisher: The name of the publisher
+    pages: 335
+    chapters: 12
+    genres:
+        - drama
+        - tragedy
+        - comedy
+    contributors:
+        author: Some guy
+        editor: Some other guy
+
+@@desc Example JavaScript text.
+pub const PROGRAM: str = '''js
+    export function add(a, b) {
+        return a + b
+    }
