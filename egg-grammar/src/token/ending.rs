@@ -30,10 +30,12 @@ impl<'input> EndingToken<&'input str> {
         header_indent: &'header_indent IndentToken,
         header_text: &'input str,
         mut next_line: impl FnMut() -> Option<&'input str>,
+        mut after_parse: impl FnMut(),
     ) -> Option<Self> {
         macro_rules! try_build {
             ($token_type:ident) => {
-                if let Some(token) = $token_type::build(header_indent, header_text, &mut next_line)
+                if let Some(token) =
+                    $token_type::build(header_indent, header_text, &mut next_line, &mut after_parse)
                 {
                     return token.pipe(EndingToken::from).pipe(Some);
                 }

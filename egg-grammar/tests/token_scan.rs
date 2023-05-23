@@ -33,3 +33,10 @@ fn hello_world() {
     test_snapshot!(tokens, "snapshots/token-scan/hello-world.txt");
     test_ln_text!(tokens, text);
 }
+
+#[test]
+fn multi_line() {
+    let text = include_str!("fixtures/multi-line.egg");
+    let tokens: Vec<_> = dbg!(Scan::new(text).collect());
+    test_snapshot!(tokens, "snapshots/token-scan/multi-line.txt");
+}

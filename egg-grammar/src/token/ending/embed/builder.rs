@@ -26,11 +26,14 @@ where
         header_indent: &'header_indent IndentToken,
         header_text: &'input str,
         mut next_line: impl FnMut() -> Option<&'input str>,
+        mut after_parse: impl FnMut(),
     ) -> Option<EmbedToken<Tag, Attr, Body>> {
         let mut builder = EmbedTokenBuilder::new(header_indent, header_text)?;
 
         let mut parse_body_item = |line| builder.parse_body_item(line);
-        while let Some(()) = next_line().and_then(&mut parse_body_item) {}
+        while let Some(()) = next_line().and_then(&mut parse_body_item) {
+            after_parse();
+        }
 
         Some(builder.finish())
     }

@@ -22,8 +22,9 @@ where
         header_indent: &'header_indent IndentToken,
         header_text: &'input str,
         next_line: impl FnMut() -> Option<&'input str>,
+        after_parse: impl FnMut(),
     ) -> Option<Self> {
-        EmbedTokenBuilder::build(header_indent, header_text, next_line)
+        EmbedTokenBuilder::build(header_indent, header_text, next_line, after_parse)
     }
 }
 
