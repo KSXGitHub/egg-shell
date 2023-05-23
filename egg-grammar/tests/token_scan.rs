@@ -15,11 +15,11 @@ macro_rules! test_snapshot {
     }};
 }
 
-fn test_src_text(tokens: &[TokenLine<&str>], text: &str) {
+fn test_ln_text(tokens: &[TokenLine<&str>], text: &str) {
     title("source of each TokenLine");
     let received: Vec<_> = tokens
         .iter()
-        .flat_map(TokenLine::all_src_text)
+        .flat_map(TokenLine::all_ln_text)
         .copied()
         .collect();
     let expected: Vec<_> = text.lines().collect();
@@ -31,7 +31,7 @@ fn hello_world() {
     let text = include_str!("fixtures/hello-world.egg");
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
     test_snapshot!(tokens, "snapshots/token-scan/hello-world.txt");
-    test_src_text(&tokens, text);
+    test_ln_text(&tokens, text);
 }
 
 #[test]
@@ -39,5 +39,5 @@ fn multi_line() {
     let text = include_str!("fixtures/multi-line.egg");
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
     test_snapshot!(tokens, "snapshots/token-scan/multi-line.txt");
-    test_src_text(&tokens, text);
+    test_ln_text(&tokens, text);
 }

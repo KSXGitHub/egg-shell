@@ -22,17 +22,17 @@ pub struct TokenLine<Content> {
 }
 
 impl<Content> TokenLine<Content> {
-    /// Iterate over [`TokenLine::ln_text`] and [`TokenLine::ending_body_src_text`].
-    pub fn all_src_text(&self) -> impl Iterator<Item = &'_ Content> + '_ {
-        once(&self.ln_text).chain(self.ending_body_src_text())
+    /// Iterate over [`TokenLine::ln_text`] and [`TokenLine::ending_body_ln_text`].
+    pub fn all_ln_text(&self) -> impl Iterator<Item = &'_ Content> + '_ {
+        once(&self.ln_text).chain(self.ending_body_ln_text())
     }
 
     /// Iterate over all lines that were parsed into the body part of the ending token
     /// (if there is an ending token).
-    pub fn ending_body_src_text(&self) -> impl Iterator<Item = &'_ Content> + '_ {
+    pub fn ending_body_ln_text(&self) -> impl Iterator<Item = &'_ Content> + '_ {
         self.ending
             .iter()
-            .flat_map(|item| item.body_src_text().iter())
+            .flat_map(|item| item.body_ln_text().iter())
     }
 }
 
@@ -49,7 +49,7 @@ pub struct TokenLineItem<SrcText, Token> {
 
 impl<Content> EndingTokenItem<Content> {
     /// The original text that was parsed into the body part of the token.
-    pub fn body_src_text(&self) -> &'_ Vec<Content> {
+    pub fn body_ln_text(&self) -> &'_ Vec<Content> {
         let (_, lines) = &self.src_text;
         lines
     }
