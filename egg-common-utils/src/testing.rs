@@ -41,8 +41,11 @@ where
         write_file("right", right.as_ref()).map_err(UniDiffExecError::Right)?;
 
         let output = Command::new("diff")
-            .with_args(["--color=always", "-u", "left", "right"])
             .with_current_dir(&workspace)
+            .with_arg("--color=always")
+            .with_arg("-u")
+            .with_arg("left")
+            .with_arg("right")
             .output()
             .map_err(UniDiffExecError::Exec)?;
         let Output {
