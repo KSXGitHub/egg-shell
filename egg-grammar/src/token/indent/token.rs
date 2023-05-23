@@ -32,7 +32,7 @@ impl IndentToken {
 
     /// Check if the indent is the shorter start of another indent.
     pub fn is_shorter_start_of(&self, other: &[IndentChar]) -> bool {
-        self.len() > other.len() && self.is_start_of(other)
+        self.len() < other.len() && self.is_start_of(other)
     }
 }
 
