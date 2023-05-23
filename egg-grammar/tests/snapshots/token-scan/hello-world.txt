@@ -145,7 +145,7 @@
         ending: None,
     },
     TokenLine {
-        ln_text: "    println!(\"Hello, World!\")",
+        ln_text: "    println(\"Hello, World!\")",
         indent: TokenLineItem {
             offset: 0,
             src_text: "    ",
@@ -165,17 +165,6 @@
             },
             TokenLineItem {
                 offset: 11,
-                src_text: "!",
-                token: Ok(
-                    Operator(
-                        OperatorToken(
-                            "!",
-                        ),
-                    ),
-                ),
-            },
-            TokenLineItem {
-                offset: 12,
                 src_text: "(",
                 token: Ok(
                     Bracket(
@@ -187,7 +176,7 @@
                 ),
             },
             TokenLineItem {
-                offset: 13,
+                offset: 12,
                 src_text: "\"Hello, World!\"",
                 token: Ok(
                     String(
@@ -202,7 +191,7 @@
                 ),
             },
             TokenLineItem {
-                offset: 28,
+                offset: 27,
                 src_text: ")",
                 token: Ok(
                     Bracket(
