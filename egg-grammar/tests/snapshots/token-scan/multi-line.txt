@@ -1,4 +1,4 @@
-[
+ [
     TokenLine {
         ln_text: "@@desc Simple hello world text.",
         indent: TokenLineItem {
@@ -10,7 +10,10 @@
         ending: Some(
             TokenLineItem {
                 offset: 0,
-                src_text: "@@desc Simple hello world text.",
+                src_text: (
+                    "@@desc Simple hello world text.",
+                    [],
+                ),
                 token: Doc(
                     EmbedToken {
                         header: (
@@ -164,7 +167,13 @@
         ending: Some(
             TokenLineItem {
                 offset: 29,
-                src_text: "'''",
+                src_text: (
+                    "'''",
+                    [
+                        "    Hello, World!",
+                        "",
+                    ],
+                ),
                 token: Text(
                     EmbedToken {
                         header: (
@@ -197,7 +206,10 @@
         ending: Some(
             TokenLineItem {
                 offset: 0,
-                src_text: "@@desc Example YAML text.",
+                src_text: (
+                    "@@desc Example YAML text.",
+                    [],
+                ),
                 token: Doc(
                     EmbedToken {
                         header: (
@@ -351,7 +363,23 @@
         ending: Some(
             TokenLineItem {
                 offset: 24,
-                src_text: "'''yaml",
+                src_text: (
+                    "'''yaml",
+                    [
+                        "    title: This is some YAML",
+                        "    publisher: The name of the publisher",
+                        "    pages: 335",
+                        "    chapters: 12",
+                        "    genres:",
+                        "        - drama",
+                        "        - tragedy",
+                        "        - comedy",
+                        "    contributors:",
+                        "        author: Some guy",
+                        "        editor: Some other guy",
+                        "",
+                    ],
+                ),
                 token: Text(
                     EmbedToken {
                         header: (
@@ -414,7 +442,10 @@
         ending: Some(
             TokenLineItem {
                 offset: 0,
-                src_text: "@@desc Example JavaScript text.",
+                src_text: (
+                    "@@desc Example JavaScript text.",
+                    [],
+                ),
                 token: Doc(
                     EmbedToken {
                         header: (
@@ -568,7 +599,14 @@
         ending: Some(
             TokenLineItem {
                 offset: 25,
-                src_text: "'''js",
+                src_text: (
+                    "'''js",
+                    [
+                        "    export function add(a, b) {",
+                        "        return a + b",
+                        "    }",
+                    ],
+                ),
                 token: Text(
                     EmbedToken {
                         header: (
