@@ -32,13 +32,13 @@ where
 {
     /// Execute the command `diff -u` on the two strings.
     pub fn exec(&self) -> Result<Option<String>, UniDiffExecError> {
-        let UniDiff(left_text, right_text) = self;
+        let UniDiff(left, right) = self;
 
         let workspace = tempdir().map_err(UniDiffExecError::Workspace)?;
 
         let write_file = |name: &str, text: &str| fs::write(workspace.path().join(name), text);
-        write_file("left", left_text.as_ref()).map_err(UniDiffExecError::Left)?;
-        write_file("right", right_text.as_ref()).map_err(UniDiffExecError::Right)?;
+        write_file("left", left.as_ref()).map_err(UniDiffExecError::Left)?;
+        write_file("right", right.as_ref()).map_err(UniDiffExecError::Right)?;
 
         let output = Command::new("diff")
             .with_current_dir(&workspace)
