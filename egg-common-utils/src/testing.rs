@@ -44,6 +44,8 @@ where
             .with_current_dir(&workspace)
             .with_arg("--color=always")
             .with_arg("-u")
+            .with_arg("--label=left")
+            .with_arg("--label=right")
             .with_arg("left")
             .with_arg("right")
             .output()
