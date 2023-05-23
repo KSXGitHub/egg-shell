@@ -4,6 +4,9 @@ use derive_more::Constructor;
 /// Either a [`MiddleToken`] or an [`InvalidToken`].
 type MiddleTokenResult<Content> = Result<MiddleToken<Content>, InvalidToken>;
 
+/// [`TokenLineItem`] of an [`EndingToken`].
+type EndingTokenItem<Content> = TokenLineItem<(Content, Vec<Content>), EndingToken<Content>>;
+
 /// List of tokens from a line.
 #[derive(Debug, Clone, PartialEq, Eq, Constructor)]
 pub struct TokenLine<Content> {
@@ -14,7 +17,7 @@ pub struct TokenLine<Content> {
     /// List of [`MiddleToken`] after indentation.
     pub middle: Vec<TokenLineItem<Content, MiddleTokenResult<Content>>>,
     /// Optional [`EndingToken`] at the end of the line.
-    pub ending: Option<TokenLineItem<Content, EndingToken<Content>>>,
+    pub ending: Option<EndingTokenItem<Content>>,
 }
 
 /// Item of [`TokenLine`].

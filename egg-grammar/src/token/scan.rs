@@ -45,13 +45,16 @@ impl<'a> Iterator for Scan<'a> {
         while !input.is_empty() {
             let mut lines_copy = lines.clone();
             let next_line = || lines_copy.next();
-            let after_parse = || {
+            let mut body_line_list = Vec::new();
+            let after_parse = |body_line: &'a str| {
                 lines.next();
+                body_line_list.push(body_line);
             };
 
             if let Some(token) = EndingToken::build(indent, input, next_line, after_parse) {
                 middle.shrink_to_fit();
-                let ending_item = TokenLineItem::new(offset, input, token);
+                let src_text = (input, body_line_list);
+                let ending_item = TokenLineItem::new(offset, src_text, token);
                 let token_line = TokenLine::new(ln_text, indent_item, middle, Some(ending_item));
                 return Some(token_line);
             }
