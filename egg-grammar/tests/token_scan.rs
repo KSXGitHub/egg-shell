@@ -1,4 +1,4 @@
-use egg_grammar::token::Scan;
+use egg_grammar::token::{Scan, TokenLine};
 use pretty_assertions::assert_eq;
 
 macro_rules! title {
@@ -20,14 +20,11 @@ macro_rules! test_snapshot {
 macro_rules! test_ln_text {
     ($tokens:expr, $text:expr) => {{
         title!("source of each TokenLine");
-        let mut received = Vec::new();
-        for item in $tokens.iter() {
-            received.push(item.ln_text);
-            if let Some(ending) = &item.ending {
-                let (_, tail) = &ending.src_text;
-                received.extend(tail);
-            }
-        }
+        let received: Vec<_> = $tokens
+            .iter()
+            .flat_map(TokenLine::all_src_text)
+            .copied()
+            .collect();
         let expected: Vec<_> = $text.lines().collect();
         assert_eq!(&received, &expected);
     }};
