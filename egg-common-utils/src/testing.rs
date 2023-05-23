@@ -23,6 +23,8 @@ pub enum UniDiffExecError {
     Right(io::Error),
     #[display(fmt = "Failed to execute 'diff': {_0}")]
     Exec(io::Error),
+    #[display(fmt = "The command 'diff' exits with code {code:?}")]
+    Status { code: Option<i32>, stderr: Vec<u8> },
 }
 
 impl<Left, Right> UniDiff<Left, Right>
@@ -68,11 +70,18 @@ where
             panic!("The diff command return success status but its stdout isn't empty");
         }
 
-        stdout
-            .pipe(String::from_utf8)
-            .expect("The stdout of the diff command should be valid UTF-8")
-            .pipe(Some)
-            .pipe(Ok)
+        if status.code() == Some(1) {
+            return stdout
+                .pipe(String::from_utf8)
+                .expect("The stdout of the diff command should be valid UTF-8")
+                .pipe(Some)
+                .pipe(Ok);
+        }
+
+        Err(UniDiffExecError::Status {
+            code: status.code(),
+            stderr,
+        })
     }
 
     /// Assert that two strings are equal.
