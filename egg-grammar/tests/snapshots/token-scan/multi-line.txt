@@ -1,15 +1,13 @@
- [
+[
     TokenLine {
         ln_text: "@@desc Simple hello world text.",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [],
         ending: Some(
             TokenLineItem {
-                offset: 0,
                 src_text: (
                     "@@desc Simple hello world text.",
                     [],
@@ -37,13 +35,11 @@
     TokenLine {
         ln_text: "pub const HELLO_WORLD: str = '''",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [
             TokenLineItem {
-                offset: 0,
                 src_text: "pub",
                 token: Ok(
                     Word(
@@ -54,7 +50,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 3,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -65,7 +60,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 4,
                 src_text: "const",
                 token: Ok(
                     Word(
@@ -76,7 +70,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 9,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -87,7 +80,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 10,
                 src_text: "HELLO_WORLD",
                 token: Ok(
                     Word(
@@ -98,7 +90,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 21,
                 src_text: ":",
                 token: Ok(
                     Operator(
@@ -109,7 +100,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 22,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -120,7 +110,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 23,
                 src_text: "str",
                 token: Ok(
                     Word(
@@ -131,7 +120,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 26,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -142,7 +130,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 27,
                 src_text: "=",
                 token: Ok(
                     Operator(
@@ -153,7 +140,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 28,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -166,7 +152,6 @@
         ],
         ending: Some(
             TokenLineItem {
-                offset: 29,
                 src_text: (
                     "'''",
                     [
@@ -198,14 +183,12 @@
     TokenLine {
         ln_text: "@@desc Example YAML text.",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [],
         ending: Some(
             TokenLineItem {
-                offset: 0,
                 src_text: (
                     "@@desc Example YAML text.",
                     [],
@@ -233,13 +216,11 @@
     TokenLine {
         ln_text: "pub const CONFIG: str = '''yaml",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [
             TokenLineItem {
-                offset: 0,
                 src_text: "pub",
                 token: Ok(
                     Word(
@@ -250,7 +231,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 3,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -261,7 +241,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 4,
                 src_text: "const",
                 token: Ok(
                     Word(
@@ -272,7 +251,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 9,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -283,7 +261,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 10,
                 src_text: "CONFIG",
                 token: Ok(
                     Word(
@@ -294,7 +271,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 16,
                 src_text: ":",
                 token: Ok(
                     Operator(
@@ -305,7 +281,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 17,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -316,7 +291,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 18,
                 src_text: "str",
                 token: Ok(
                     Word(
@@ -327,7 +301,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 21,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -338,7 +311,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 22,
                 src_text: "=",
                 token: Ok(
                     Operator(
@@ -349,7 +321,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 23,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -362,7 +333,6 @@
         ],
         ending: Some(
             TokenLineItem {
-                offset: 24,
                 src_text: (
                     "'''yaml",
                     [
@@ -434,14 +404,12 @@
     TokenLine {
         ln_text: "@@desc Example JavaScript text.",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [],
         ending: Some(
             TokenLineItem {
-                offset: 0,
                 src_text: (
                     "@@desc Example JavaScript text.",
                     [],
@@ -469,13 +437,11 @@
     TokenLine {
         ln_text: "pub const PROGRAM: str = '''js",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [
             TokenLineItem {
-                offset: 0,
                 src_text: "pub",
                 token: Ok(
                     Word(
@@ -486,7 +452,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 3,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -497,7 +462,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 4,
                 src_text: "const",
                 token: Ok(
                     Word(
@@ -508,7 +472,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 9,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -519,7 +482,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 10,
                 src_text: "PROGRAM",
                 token: Ok(
                     Word(
@@ -530,7 +492,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 17,
                 src_text: ":",
                 token: Ok(
                     Operator(
@@ -541,7 +502,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 18,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -552,7 +512,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 19,
                 src_text: "str",
                 token: Ok(
                     Word(
@@ -563,7 +522,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 22,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -574,7 +532,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 23,
                 src_text: "=",
                 token: Ok(
                     Operator(
@@ -585,7 +542,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 24,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -598,7 +554,6 @@
         ],
         ending: Some(
             TokenLineItem {
-                offset: 25,
                 src_text: (
                     "'''js",
                     [

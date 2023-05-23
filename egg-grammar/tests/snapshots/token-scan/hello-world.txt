@@ -2,13 +2,11 @@
     TokenLine {
         ln_text: "@cli::entry",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [
             TokenLineItem {
-                offset: 0,
                 src_text: "@",
                 token: Ok(
                     Operator(
@@ -19,7 +17,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 1,
                 src_text: "cli",
                 token: Ok(
                     Word(
@@ -30,7 +27,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 4,
                 src_text: "::",
                 token: Ok(
                     Operator(
@@ -41,7 +37,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 6,
                 src_text: "entry",
                 token: Ok(
                     Word(
@@ -57,13 +52,11 @@
     TokenLine {
         ln_text: "fn main() do",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "",
             token: IndentToken [],
         },
         middle: [
             TokenLineItem {
-                offset: 0,
                 src_text: "fn",
                 token: Ok(
                     Word(
@@ -74,7 +67,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 2,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -85,7 +77,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 3,
                 src_text: "main",
                 token: Ok(
                     Word(
@@ -96,7 +87,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 7,
                 src_text: "(",
                 token: Ok(
                     Bracket(
@@ -108,7 +98,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 8,
                 src_text: ")",
                 token: Ok(
                     Bracket(
@@ -120,7 +109,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 9,
                 src_text: " ",
                 token: Ok(
                     Whitespace(
@@ -131,7 +119,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 10,
                 src_text: "do",
                 token: Ok(
                     Word(
@@ -147,13 +134,11 @@
     TokenLine {
         ln_text: "    println(\"Hello, World!\")",
         indent: TokenLineItem {
-            offset: 0,
             src_text: "    ",
             token: IndentToken [<SPC✕4>],
         },
         middle: [
             TokenLineItem {
-                offset: 4,
                 src_text: "println",
                 token: Ok(
                     Word(
@@ -164,7 +149,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 11,
                 src_text: "(",
                 token: Ok(
                     Bracket(
@@ -176,7 +160,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 12,
                 src_text: "\"Hello, World!\"",
                 token: Ok(
                     String(
@@ -191,7 +174,6 @@
                 ),
             },
             TokenLineItem {
-                offset: 27,
                 src_text: ")",
                 token: Ok(
                     Bracket(

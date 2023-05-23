@@ -39,8 +39,6 @@ impl<Content> TokenLine<Content> {
 /// Item of [`TokenLine`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Constructor)]
 pub struct TokenLineItem<SrcText, Token> {
-    /// Offset of the text from the start of the line.
-    pub offset: usize,
     /// The original text that was parsed into the token.
     pub src_text: SrcText,
     /// The token that was parsed from the source text.

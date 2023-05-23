@@ -35,11 +35,10 @@ impl<'a> Iterator for Scan<'a> {
         let ln_text = lines.next()?;
         let (indent, rest) = IndentToken::parse(ln_text);
         let indent_src_text = &ln_text[..indent.len()];
-        let indent_item = TokenLineItem::new(0, indent_src_text, indent);
+        let indent_item = TokenLineItem::new(indent_src_text, indent);
         let indent = &indent_item.token; // re-borrow a moved value
 
         let mut input = rest;
-        let mut offset = indent.len();
         let mut middle = Vec::new();
 
         while !input.is_empty() {
@@ -54,7 +53,7 @@ impl<'a> Iterator for Scan<'a> {
             if let Some(token) = EndingToken::build(indent, input, next_line, after_parse) {
                 middle.shrink_to_fit();
                 let src_text = (input, body_line_list);
-                let ending_item = TokenLineItem::new(offset, src_text, token);
+                let ending_item = TokenLineItem::new(src_text, token);
                 let token_line = TokenLine::new(ln_text, indent_item, middle, Some(ending_item));
                 return Some(token_line);
             }
@@ -62,8 +61,7 @@ impl<'a> Iterator for Scan<'a> {
             if let Some((token, rest)) = MiddleToken::parse(input) {
                 let token_len = input.len() - rest.len();
                 let src_text = &input[..token_len];
-                middle.push(TokenLineItem::new(offset, src_text, Ok(token)));
-                offset += token_len;
+                middle.push(TokenLineItem::new(src_text, Ok(token)));
                 input = rest;
                 continue;
             }
@@ -72,8 +70,7 @@ impl<'a> Iterator for Scan<'a> {
                 let token = InvalidToken(char);
                 let char_len = char.len_utf8();
                 let src_text = &input[..char_len];
-                middle.push(TokenLineItem::new(offset, src_text, Err(token)));
-                offset += char_len;
+                middle.push(TokenLineItem::new(src_text, Err(token)));
                 input = rest;
                 continue;
             }
