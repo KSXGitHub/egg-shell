@@ -1,3 +1,4 @@
+use egg_common_utils::assert_eq_uni_diff;
 use egg_grammar::token::{Scan, TokenLine};
 use itertools::Itertools;
 use pretty_assertions::assert_eq;
@@ -12,7 +13,7 @@ macro_rules! test_snapshot {
         title("Snapshot of the Debug format the tokens");
         let received = format!("{:#?}", &$tokens);
         let expected = include_str!($path);
-        assert_eq!(received.trim(), expected.trim());
+        assert_eq_uni_diff(received.trim(), expected.trim());
     }};
 }
 
