@@ -124,8 +124,8 @@
                 src_text: "str",
                 token: Ok(
                     Word(
-                        Identifier(
-                            "str",
+                        Keyword(
+                            Str,
                         ),
                     ),
                 ),
@@ -320,8 +320,8 @@
                 src_text: "str",
                 token: Ok(
                     Word(
-                        Identifier(
-                            "str",
+                        Keyword(
+                            Str,
                         ),
                     ),
                 ),
@@ -556,8 +556,8 @@
                 src_text: "str",
                 token: Ok(
                     Word(
-                        Identifier(
-                            "str",
+                        Keyword(
+                            Str,
                         ),
                     ),
                 ),
