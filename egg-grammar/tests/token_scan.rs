@@ -9,7 +9,7 @@ fn title(title: &str) {
 
 macro_rules! test_snapshot {
     ($tokens:expr, $path:literal) => {{
-        title("debug format snapshot");
+        title("Debug format snapshot");
         let received = format!("{:#?}", &$tokens);
         let expected = include_str!($path);
         assert_eq!(received.trim(), expected.trim());
@@ -17,7 +17,7 @@ macro_rules! test_snapshot {
 }
 
 fn test_ln_text(tokens: &[TokenLine<&str>], text: &str) {
-    title("source of each TokenLine");
+    title("Source of each TokenLine");
     let received: Vec<_> = tokens
         .iter()
         .flat_map(TokenLine::all_ln_text)
@@ -28,7 +28,7 @@ fn test_ln_text(tokens: &[TokenLine<&str>], text: &str) {
 }
 
 fn test_src_text(tokens: &[TokenLine<&str>]) {
-    title("equality between ln_text and sum of src_text");
+    title("Equality between ln_text and sum of src_text");
     for item in tokens {
         let ln_text = dbg!(item.ln_text);
         let indent = dbg!(item.indent.src_text);
