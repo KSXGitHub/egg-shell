@@ -1,4 +1,5 @@
 use egg_grammar::token::{Scan, TokenLine};
+use itertools::Itertools;
 use pretty_assertions::assert_eq;
 
 fn title(title: &str) {
@@ -26,12 +27,25 @@ fn test_ln_text(tokens: &[TokenLine<&str>], text: &str) {
     assert_eq!(&received, &expected);
 }
 
+fn test_src_text(tokens: &[TokenLine<&str>]) {
+    title("equality between ln_text and sum of src_text");
+    for item in tokens {
+        let ln_text = dbg!(item.ln_text);
+        let indent = dbg!(item.indent.src_text);
+        let middle = dbg!(item.middle.iter().map(|item| item.src_text).join(""));
+        let ending = dbg!(item.ending.as_ref().map_or("", |item| item.src_text.0));
+        let sum = dbg!(format!("{indent}{middle}{ending}"));
+        assert_eq!(&sum, ln_text);
+    }
+}
+
 #[test]
 fn hello_world() {
     let text = include_str!("fixtures/hello-world.egg");
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
     test_snapshot!(tokens, "snapshots/token-scan/hello-world.txt");
     test_ln_text(&tokens, text);
+    test_src_text(&tokens);
 }
 
 #[test]
@@ -40,4 +54,5 @@ fn multi_line() {
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
     test_snapshot!(tokens, "snapshots/token-scan/multi-line.txt");
     test_ln_text(&tokens, text);
+    test_src_text(&tokens);
 }
