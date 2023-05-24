@@ -1,0 +1,14 @@
+[package]
+name = "global-tests"
+version = "0.0.0"
+edition = "2021"
+
+[lib]
+name = "global_tests"
+path = "lib.rs"
+
+[dev-dependencies]
+pipe-trait = "0.4.0"
+pretty_assertions = "1.3.0"
+cargo_metadata = "0.15.4"
+cargo_toml = "0.15.2"

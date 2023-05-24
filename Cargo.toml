@@ -3,4 +3,5 @@ members = [
     "egg-ast",
     "egg-common-utils",
     "egg-grammar",
+    "global-tests",
 ]
