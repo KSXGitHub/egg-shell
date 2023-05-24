@@ -5,8 +5,8 @@ use egg_common_utils::{char_matcher, parse_hb_ascii};
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OperatorToken<Content>(pub Content);
 
-char_matcher!(is_operator_head => '!' | '$'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~');
-char_matcher!(is_operator_body => '!' | '#'..='&' | '*'..='/' | ':'..='@' | '\\' | '^' | '|' | '~');
+char_matcher!(is_operator_head => '!' | '$'..='&' | '*'..='+' | '-'..='/' | ':' | '<'..='@' | '\\' | '^' | '|' | '~');
+char_matcher!(is_operator_body => '!' | '#'..='&' | '*'..='+' | '-'..='/' | ':' | '<'..='@' | '\\' | '^' | '|' | '~');
 
 impl<'a> ParseMiddleToken<&'a str> for OperatorToken<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
@@ -86,6 +86,8 @@ mod test {
         case!("+ =123" -> "+", " =123");
         case!("+#abc" -> "+#", "abc");
         case!("+ #abc" -> "+", " #abc");
+        case!("+,abc" -> "+", ",abc"); // a punctuation is not an operator
+        case!("+;abc" -> "+", ";abc"); // a punctuation is not an operator
         case!("++'abc'" -> "++", "'abc'");
         case!(r#"++"abc"# -> "++", r#""abc"#);
         case!("$interpolation" -> "$", "interpolation");
@@ -103,5 +105,7 @@ mod test {
 
         case!("");
         case!("# comment");
+        case!(","); // a punctuation is not an operator
+        case!(";"); // a punctuation is not an operator
     }
 }
