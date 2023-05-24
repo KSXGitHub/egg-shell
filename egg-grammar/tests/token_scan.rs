@@ -75,3 +75,11 @@ fn invalid_char_nul() {
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
+
+#[test]
+fn example_fibonacci() {
+    let text = include_str!("fixtures/examples/fibonacci.egg");
+    let tokens: Vec<_> = dbg!(Scan::new(text).collect());
+    test_ln_text(&tokens, text);
+    test_src_text(&tokens);
+}
