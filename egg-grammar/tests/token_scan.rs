@@ -1,5 +1,5 @@
-use egg_common_utils::assert_eq_uni_diff;
 use egg_grammar::token::{Scan, TokenLine};
+use exec_diff::assert_eq_uni_diff;
 use itertools::Itertools;
 use pretty_assertions::assert_eq;
 

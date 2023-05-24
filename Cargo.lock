@@ -86,6 +86,7 @@ dependencies = [
  "derive_more",
  "egg-ast",
  "egg-common-utils",
+ "exec-diff",
  "itertools",
  "pipe-trait",
  "pretty_assertions",
@@ -118,6 +119,19 @@ checksum = "aa68f1b12764fab894d2755d2518754e71b4fd80ecfb822714a1206c2aab39bf"
 dependencies = [
  "cc",
  "libc",
+]
+
+[[package]]
+name = "exec-diff"
+version = "0.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da8851b1ad79bf9cc63b61073ce2acf0f11e4fe0c5bbd8ecdc593e32bf48542c"
+dependencies = [
+ "command-extra",
+ "derive_more",
+ "pipe-trait",
+ "pretty_assertions",
+ "tempfile",
 ]
 
 [[package]]
