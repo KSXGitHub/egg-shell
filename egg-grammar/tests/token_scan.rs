@@ -57,3 +57,21 @@ fn multi_line() {
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
+
+#[test]
+fn invalid_char_heart() {
+    let text = "print 'hello world' with ❤️";
+    let tokens: Vec<_> = dbg!(Scan::new(text).collect());
+    test_snapshot!(tokens, "snapshots/token-scan/invalid-char-heart.txt");
+    test_ln_text(&tokens, text);
+    test_src_text(&tokens);
+}
+
+#[test]
+fn invalid_char_nul() {
+    let text = "print 'hello world'\0";
+    let tokens: Vec<_> = dbg!(Scan::new(text).collect());
+    test_snapshot!(tokens, "snapshots/token-scan/invalid-char-nul.txt");
+    test_ln_text(&tokens, text);
+    test_src_text(&tokens);
+}

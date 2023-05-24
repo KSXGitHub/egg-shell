@@ -1,0 +1,54 @@
+[
+    TokenLine {
+        ln_text: "print 'hello world'\0",
+        indent: TokenLineItem {
+            src_text: "",
+            token: IndentToken [],
+        },
+        middle: [
+            TokenLineItem {
+                src_text: "print",
+                token: Ok(
+                    Word(
+                        Identifier(
+                            "print",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                src_text: " ",
+                token: Ok(
+                    Whitespace(
+                        WhitespaceToken(
+                            " ",
+                        ),
+                    ),
+                ),
+            },
+            TokenLineItem {
+                src_text: "'hello world'",
+                token: Ok(
+                    String(
+                        StringToken {
+                            prefix: "",
+                            suffix: "",
+                            body: "hello world",
+                            quote: Single,
+                            error: None,
+                        },
+                    ),
+                ),
+            },
+            TokenLineItem {
+                src_text: "\0",
+                token: Err(
+                    InvalidToken(
+                        '\0',
+                    ),
+                ),
+            },
+        ],
+        ending: None,
+    },
+]
