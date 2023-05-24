@@ -7,6 +7,7 @@ rust-version = "1.69.0"
 [lib]
 name = "global_tests"
 path = "lib.rs"
+doc = false
 
 [dev-dependencies]
 pipe-trait = "0.4.0"
