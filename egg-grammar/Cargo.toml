@@ -2,7 +2,7 @@
 name = "egg-grammar"
 version = "0.0.0"
 edition = "2021"
-rust-version = "1.65"
+rust-version = "1.69.0"
 
 [dependencies]
 egg-ast = { version = "0.0.0", path = "../egg-ast" }
