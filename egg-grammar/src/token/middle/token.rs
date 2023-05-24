@@ -1,4 +1,7 @@
-use super::{BracketToken, NumberToken, OperatorToken, StringToken, WhitespaceToken, WordToken};
+use super::{
+    BracketToken, NumberToken, OperatorToken, PunctuationToken, StringToken, WhitespaceToken,
+    WordToken,
+};
 use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
 
@@ -42,6 +45,9 @@ pub enum MiddleToken<Content> {
     /// Round bracket, square bracket, curly bracket, open or closed.
     Bracket(BracketToken),
 
+    /// Single character of comma or semicolon.
+    Punctuation(PunctuationToken),
+
     /// A sequence of special characters.
     ///
     /// **Including**
@@ -69,6 +75,7 @@ impl<'a> ParseMiddleToken<&'a str> for MiddleToken<&'a str> {
         try_parse!(WordToken);
         try_parse!(NumberToken);
         try_parse!(BracketToken);
+        try_parse!(PunctuationToken);
         try_parse!(OperatorToken);
         None
     }
@@ -146,6 +153,19 @@ mod test {
         case!(")" -> "");
         case!("]" -> "");
         case!("}" -> "");
+    }
+
+    #[test]
+    fn punctuation() {
+        def_macro!(case -> Punctuation);
+        case!("," -> "");
+        case!(";" -> "");
+        case!(",," -> ",");
+        case!(";;" -> ";");
+        case!(",,," -> ",,");
+        case!(";;;" -> ";;");
+        case!(",a,b,c" -> "a,b,c");
+        case!(";a;b;c" -> "a;b;c");
     }
 
     #[test]
