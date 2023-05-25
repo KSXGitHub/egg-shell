@@ -1,8 +1,8 @@
-use crate::LnCol;
+use crate::Span;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
-    span: (LnCol, LnCol),
+    span: Span,
     body: Vec<ProgramItem>,
 }
 
