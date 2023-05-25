@@ -81,6 +81,6 @@ mod test {
         case!("abc");
         case!("i32");
         case!("f64");
-        case!("-123"); // negative numbers are handled in semantic level, not token level
+        case!("-123"); // negative numbers are handled in AST analyzer, not in the token scanner
     }
 }

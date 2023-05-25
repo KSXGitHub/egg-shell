@@ -11,7 +11,7 @@ pub const OCTAL_PREFIX: &str = "0o";
 ///
 /// **Note:** To avoid weird syntax quirks and confusing error messages,
 /// non-octal digits are allowed in this token, and it shall be the job
-/// of the semantic layer to detect them.
+/// of the AST analyzer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OctalToken<Content>(pub Content);
 

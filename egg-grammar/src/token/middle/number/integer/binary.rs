@@ -11,7 +11,7 @@ pub const BINARY_PREFIX: &str = "0b";
 ///
 /// **Note:** To avoid weird syntax quirks and confusing error messages,
 /// non-binary digits are allowed in this token, and it shall be the job
-/// of the semantic layer to detect them.
+/// of the AST analyzer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BinaryToken<Content>(pub Content);
 

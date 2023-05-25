@@ -1,7 +1,7 @@
 /// Check if a character can be in a decimal, binary, or octal token.
 ///
 /// **Why include 0-9 in binary and octal?**
-/// > This function is to be used in the token level, which isn't designed to
+/// > This function is to be used in the token scanner, which isn't designed to
 /// > emit errors. Therefore, the token will include invalid digits and let the
 /// > sematic layer handle them.
 pub const fn is_number_body(char: &char) -> bool {
