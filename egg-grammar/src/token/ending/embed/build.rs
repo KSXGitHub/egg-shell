@@ -8,13 +8,13 @@ use pipe_trait::Pipe;
 ///
 /// This builder takes indentation into account (unlike using `EmbedToken` directly).
 #[derive(Debug, Clone)]
-pub struct EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
+pub struct BuildEmbedToken<'header_indent, Tag, Attr, Body> {
     header_indent: &'header_indent IndentToken,
     first_body_indent: Option<String>,
     token: EmbedToken<Tag, Attr, Body>,
 }
 
-impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body> BuildEmbedToken<'header_indent, Tag, Attr, Body>
 where
     Tag: ParseEmbedTokenTag<&'input str>,
     Attr: ParseEmbedTokenAttr<&'input str>,
@@ -28,7 +28,7 @@ where
         mut next_line: impl FnMut() -> Option<&'input str>,
         mut after_parse: impl FnMut(&'input str),
     ) -> Option<EmbedToken<Tag, Attr, Body>> {
-        let mut builder = EmbedTokenBuilder::new(header_indent, header_text)?;
+        let mut builder = BuildEmbedToken::new(header_indent, header_text)?;
 
         while let Some(line) = next_line() {
             match builder.parse_body_item(line) {
@@ -41,14 +41,14 @@ where
     }
 }
 
-impl<'header_indent, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body> {
+impl<'header_indent, Tag, Attr, Body> BuildEmbedToken<'header_indent, Tag, Attr, Body> {
     /// Extract the [token](EmbedToken) that was built.
     pub fn finish(self) -> EmbedToken<Tag, Attr, Body> {
         self.token
     }
 }
 
-impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body> BuildEmbedToken<'header_indent, Tag, Attr, Body>
 where
     Tag: ParseEmbedTokenTag<&'input str>,
     Attr: ParseEmbedTokenAttr<&'input str>,
@@ -62,7 +62,7 @@ where
         body: Vec<Body>,
     ) -> Option<Self> {
         let token = EmbedToken::<Tag, Attr, Body>::start_parsing(input, body)?;
-        let builder = EmbedTokenBuilder {
+        let builder = BuildEmbedToken {
             header_indent,
             first_body_indent: None,
             token,
@@ -85,7 +85,7 @@ where
     }
 }
 
-impl<'header_indent, 'input, Tag, Attr, Body> EmbedTokenBuilder<'header_indent, Tag, Attr, Body>
+impl<'header_indent, 'input, Tag, Attr, Body> BuildEmbedToken<'header_indent, Tag, Attr, Body>
 where
     Body: ParseEmbedTokenBody<&'input str>,
     Vec<Body>: InsertWhitespaces<&'input str>,

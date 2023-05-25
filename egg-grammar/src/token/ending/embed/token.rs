@@ -1,4 +1,4 @@
-use super::EmbedTokenBuilder;
+use super::BuildEmbedToken;
 use crate::token::{
     IndentToken, InsertWhitespaces, ParseEmbedTokenAttr, ParseEmbedTokenBody, ParseEmbedTokenTag,
 };
@@ -24,7 +24,7 @@ where
         next_line: impl FnMut() -> Option<&'input str>,
         after_parse: impl FnMut(&'input str),
     ) -> Option<Self> {
-        EmbedTokenBuilder::build(header_indent, header_text, next_line, after_parse)
+        BuildEmbedToken::build(header_indent, header_text, next_line, after_parse)
     }
 }
 
