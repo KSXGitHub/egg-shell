@@ -76,6 +76,7 @@ pub enum Keyword {
     I128,
     F32,
     F64,
+    Char,
     Str,
 
     /* Operators */
