@@ -1,6 +1,8 @@
+mod annotation;
 mod module;
 mod program;
 
+pub use annotation::*;
 pub use module::*;
 pub use program::*;
 
