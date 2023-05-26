@@ -1,4 +1,4 @@
-use crate::Span;
+use crate::{ModuleItem, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Program {
@@ -7,4 +7,6 @@ pub struct Program {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ProgramItem {}
+pub enum ProgramItem {
+    Declaration(ModuleItem),
+}

@@ -1,5 +1,7 @@
+mod module;
 mod program;
 
+pub use module::*;
 pub use program::*;
 
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
