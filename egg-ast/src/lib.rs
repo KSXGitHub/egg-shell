@@ -1,7 +1,9 @@
 mod ln_col;
+mod name;
 mod span;
 mod syntax_tree;
 
 pub use ln_col::*;
+pub use name::*;
 pub use span::*;
 pub use syntax_tree::*;
