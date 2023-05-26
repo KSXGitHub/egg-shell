@@ -11,7 +11,7 @@ pub struct Module {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ModuleHeader {
     pub span: Span,
-    pub identifier: Identifier,
+    pub identifier: Option<Identifier>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
