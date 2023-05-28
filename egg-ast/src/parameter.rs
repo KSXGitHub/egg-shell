@@ -11,7 +11,7 @@ pub struct Parameter {
     pub span: Span,
     pub binding_form: ParameterBindingForm,
     pub binding_class: ParameterBindingClass,
-    pub binding_data_type: Option<()>, // TODO
+    pub binding_data_type: Option<()>, // TODO: Expression
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
