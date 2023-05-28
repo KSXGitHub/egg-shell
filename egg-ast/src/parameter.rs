@@ -20,7 +20,7 @@ pub enum ParameterBindingForm {
     Positional(Option<Identifier>), // TODO: Replace Identifier with destructure pattern
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ParameterBindingClass {
     Type,
     Const,
