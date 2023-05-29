@@ -16,7 +16,7 @@ pub struct Parameter {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParameterBindingForm {
-    Named(Identifier),
+    Named(Identifier),              // TODO: Add rename and destructure pattern
     Positional(Option<Identifier>), // TODO: Replace Identifier with destructure pattern
 }
 
