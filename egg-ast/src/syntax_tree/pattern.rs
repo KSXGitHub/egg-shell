@@ -1,4 +1,5 @@
-use crate::{Never, OptionalIdentifier, Span};
+use crate::{OptionalIdentifier, Span};
+use never::Never;
 
 pub type SinglePattern = Pattern<Never>;
 pub type SinglePatternBody = PatternBody<Never>;
