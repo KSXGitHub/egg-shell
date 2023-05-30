@@ -10,7 +10,6 @@ pub struct ParameterList {
 pub struct Parameter {
     pub span: Span,
     pub binding_form: ParameterBindingForm,
-    pub binding_class: ParameterBindingClass,
     pub binding_data_type: Option<()>, // TODO: Expression
 }
 
@@ -18,13 +17,4 @@ pub struct Parameter {
 pub enum ParameterBindingForm {
     Named(Identifier),              // TODO: Add rename and destructure pattern
     Positional(Option<Identifier>), // TODO: Replace Identifier with destructure pattern
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ParameterBindingClass {
-    Type,
-    Const,
-    Var,
-    Module,
-    Macro,
 }
