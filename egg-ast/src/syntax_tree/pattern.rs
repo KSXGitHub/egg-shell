@@ -1,4 +1,4 @@
-use crate::{Identifier, Span};
+use crate::{OptionalIdentifier, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SinglePattern {
@@ -8,5 +8,5 @@ pub struct SinglePattern {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SinglePatternBody {
-    Identifier(Option<Identifier>),
+    Identifier(OptionalIdentifier),
 }

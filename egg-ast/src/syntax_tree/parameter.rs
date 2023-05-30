@@ -1,4 +1,4 @@
-use crate::{Identifier, SinglePattern, Span};
+use crate::{Identifier, OptionalIdentifier, SinglePattern, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParameterList {
@@ -16,7 +16,7 @@ pub struct Parameter {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParameterBindingForm {
     Named(ParameterNamedBindingForm), // TODO: Add rename and destructure pattern
-    Positional(Option<Identifier>),   // TODO: Replace Identifier with destructure pattern
+    Positional(OptionalIdentifier),   // TODO: Replace Identifier with destructure pattern
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
