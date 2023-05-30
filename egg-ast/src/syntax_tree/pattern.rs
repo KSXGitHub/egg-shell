@@ -1,12 +1,16 @@
-use crate::{OptionalIdentifier, Span};
+use crate::{Never, OptionalIdentifier, Span};
+
+pub type SinglePattern = Pattern<Never>;
+pub type SinglePatternBody = PatternBody<Never>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SinglePattern {
+pub struct Pattern<Extra> {
     pub span: Span,
-    pub body: SinglePatternBody,
+    pub body: PatternBody<Extra>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum SinglePatternBody {
+pub enum PatternBody<Extra> {
     Identifier(OptionalIdentifier),
+    Extra(Extra),
 }
