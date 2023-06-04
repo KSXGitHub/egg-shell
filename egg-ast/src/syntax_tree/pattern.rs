@@ -13,5 +13,6 @@ pub struct Pattern<Extra> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PatternBody<Extra> {
     Identifier(OptionalIdentifier),
+    Tuple(Vec<Pattern<Extra>>),
     Extra(Extra),
 }
