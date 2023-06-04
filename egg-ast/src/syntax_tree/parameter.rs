@@ -1,4 +1,4 @@
-use crate::{OptionalIdentifier, SingleRenamePattern, Span};
+use crate::{SinglePattern, SingleRenamePattern, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParameterList {
@@ -16,5 +16,5 @@ pub struct Parameter {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ParameterBindingForm {
     Named(SingleRenamePattern),
-    Positional(OptionalIdentifier),
+    Positional(SinglePattern),
 }
