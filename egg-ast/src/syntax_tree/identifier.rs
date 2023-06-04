@@ -1,13 +1,9 @@
 use crate::{Name, OptionalName, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Identifier {
+pub struct Identifier<Body = Name<String, String>> {
     pub span: Span,
-    pub body: Name<String, String>,
+    pub body: Body,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct OptionalIdentifier {
-    pub span: Span,
-    pub body: OptionalName<String, String>,
-}
+pub type OptionalIdentifier = Identifier<OptionalName<String, String>>;
