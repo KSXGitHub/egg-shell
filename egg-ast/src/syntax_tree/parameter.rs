@@ -22,5 +22,5 @@ pub enum ParameterBindingForm {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParameterNamedBindingForm {
     pub name: Identifier,
-    pub rename: Option<SinglePattern>,
+    pub rename: SinglePattern,
 }

@@ -31,5 +31,5 @@ pub struct TuplePattern<Extra> {
 pub struct DictPattern<Extra> {
     pub span: Span,
     pub head: Option<OptionalIdentifier>,
-    pub body: Vec<(Identifier, Option<Pattern<Extra>>)>,
+    pub body: Vec<(Identifier, Pattern<Extra>)>,
 }
