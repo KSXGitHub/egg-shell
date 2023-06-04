@@ -24,14 +24,14 @@ pub enum PatternBody<Extra> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TuplePattern<Extra> {
     pub span: Span,
-    pub head: Option<OptionalIdentifier>,
+    pub head: Option<OptionalIdentifier>, // TODO: OptionalIdentifierPath
     pub body: Vec<Pattern<Extra>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DictPattern<Extra> {
     pub span: Span,
-    pub head: Option<OptionalIdentifier>,
+    pub head: Option<OptionalIdentifier>, // TODO: OptionalIdentifierPath
     pub body: Vec<RenamePattern<Extra>>,
 }
 
