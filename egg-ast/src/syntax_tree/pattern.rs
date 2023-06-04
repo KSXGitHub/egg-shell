@@ -3,6 +3,8 @@ use never::Never;
 
 pub type SinglePattern = Pattern<Never>;
 pub type SinglePatternBody = PatternBody<Never>;
+pub type SingleTuplePattern = TuplePattern<Never>;
+pub type SingleDictPattern = DictPattern<Never>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Pattern<Extra> {
