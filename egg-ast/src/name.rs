@@ -11,9 +11,9 @@ pub struct Name<Namespace, Value> {
 ///
 /// Sometimes, it is intentional to leave a binding name unused.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum OptionalName<Language, Value> {
+pub enum OptionalName<Namespace, Value> {
     /// The binding can be ignored.
-    Ignored(Option<Name<Language, Value>>),
+    Ignored(Option<Name<Namespace, Value>>),
     /// The binding should not be ignored.
-    Named(Name<Language, Value>),
+    Named(Name<Namespace, Value>),
 }
