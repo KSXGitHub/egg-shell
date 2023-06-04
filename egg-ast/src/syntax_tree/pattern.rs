@@ -13,6 +13,13 @@ pub struct Pattern<Extra> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PatternBody<Extra> {
     Identifier(OptionalIdentifier),
-    Tuple(Vec<Pattern<Extra>>),
+    Tuple(TuplePattern<Extra>),
     Extra(Extra),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TuplePattern<Extra> {
+    pub span: Span,
+    pub head: Option<OptionalIdentifier>,
+    pub body: Vec<Pattern<Extra>>,
 }
