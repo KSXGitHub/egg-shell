@@ -10,8 +10,8 @@ pub struct ParameterList {
 pub struct Parameter {
     pub span: Span,
     pub binding_form: ParameterBindingForm,
-    pub binding_data_type: Option<()>, // TODO: Expression
-    pub default_value: Option<()>,     // TODO: Expression
+    pub data_type: Option<()>,     // TODO: Expression
+    pub default_value: Option<()>, // TODO: Expression
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
