@@ -1,4 +1,5 @@
 mod annotation;
+mod argument;
 mod expression;
 mod identifier;
 mod module;
@@ -7,6 +8,7 @@ mod pattern;
 mod program;
 
 pub use annotation::*;
+pub use argument::*;
 pub use expression::*;
 pub use identifier::*;
 pub use module::*;

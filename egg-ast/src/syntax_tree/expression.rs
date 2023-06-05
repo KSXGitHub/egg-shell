@@ -1,4 +1,4 @@
-use crate::{OptionalIdentifier, Span};
+use crate::{ArgumentList, OptionalIdentifier, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Expression {
@@ -17,5 +17,5 @@ pub enum ExpressionBody {
 pub struct FunctionalCallExpression {
     pub span: Span,
     pub function: Box<Expression>,
-    pub arguments: (), // TODO: ArgumentList
+    pub arguments: ArgumentList,
 }
