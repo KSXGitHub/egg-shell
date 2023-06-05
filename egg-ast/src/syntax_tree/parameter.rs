@@ -1,4 +1,4 @@
-use crate::{SinglePattern, SingleRenamePattern, Span};
+use crate::{Expression, SinglePattern, SingleRenamePattern, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParameterList {
@@ -10,8 +10,8 @@ pub struct ParameterList {
 pub struct Parameter {
     pub span: Span,
     pub binding_pattern: ParameterBindingPattern,
-    pub data_type: Option<()>,     // TODO: Expression
-    pub default_value: Option<()>, // TODO: Expression
+    pub data_type: Option<Expression>,
+    pub default_value: Option<Expression>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

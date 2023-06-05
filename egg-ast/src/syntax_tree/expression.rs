@@ -1,0 +1,21 @@
+use crate::{OptionalIdentifier, Span};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Expression {
+    pub span: Span,
+    pub body: ExpressionBody,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ExpressionBody {
+    Literal,                        // TODO: Literal
+    Identifier(OptionalIdentifier), // TODO: OptionalIdentifierPath
+    FunctionCall(FunctionalCallExpression),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FunctionalCallExpression {
+    pub span: Span,
+    pub function: Box<Expression>,
+    pub arguments: (), // TODO: ArgumentList
+}
