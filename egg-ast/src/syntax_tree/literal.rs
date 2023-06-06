@@ -1,5 +1,5 @@
 use crate::Span;
-use num_bigint::{BigInt, BigUint};
+use num_bigint::{BigInt, BigUint, Sign};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Literal {
@@ -11,7 +11,7 @@ pub struct Literal {
 pub enum LiteralBody {
     Boolean(BooleanLiteral),
     Integer(IntegerLiteral),
-    Fraction,            // TODO: FractionLiteral
+    Fraction(FractionLiteral),
     SingleSegmentString, // TODO: SingleSegmentStringLiteral
     MultiSegmentString,  // TODO: MultiSegmentStringLiteral
 }
@@ -58,4 +58,14 @@ pub type ArbitraryIntegerLiteral = IntegerLiteral<ArbitraryIntegerLiteralValue>;
 pub enum ArbitraryIntegerLiteralValue {
     Signed(BigInt),
     Unsigned(BigUint),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FractionLiteral {
+    pub span: Span,
+    pub sign: Sign,
+    pub integer: BigUint,
+    pub fractional: BigUint,
+    pub exponent: BigInt,
+    pub precision: Option<()>, // TODO: FractionLiteralPrecision
 }
