@@ -67,5 +67,12 @@ pub struct FractionLiteral {
     pub integer: BigUint,
     pub fractional: BigUint,
     pub exponent: BigInt,
-    pub precision: Option<()>, // TODO: FractionLiteralPrecision
+    pub precision: Option<FractionLiteralPrecision>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FractionLiteralPrecision {
+    Float32,
+    Float64,
+    Arbitrary,
 }
