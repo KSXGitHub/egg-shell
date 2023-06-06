@@ -8,8 +8,8 @@ pub struct Expression {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ExpressionBody {
-    Literal,                        // TODO: Literal
-    Identifier(OptionalIdentifier), // TODO: OptionalIdentifierPath
+    Literal, // TODO: Literal
+    Identifier(OptionalIdentifier),
     FunctionCall(FunctionalCallExpression),
 }
 
