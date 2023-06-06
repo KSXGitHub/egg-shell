@@ -11,7 +11,7 @@ pub struct Literal {
 pub enum LiteralBody {
     Boolean(BooleanLiteral),
     Integer(IntegerLiteral),
-    Fractional,          // TODO: FractionalLiteral
+    Fraction,            // TODO: FractionLiteral
     SingleSegmentString, // TODO: SingleSegmentStringLiteral
     MultiSegmentString,  // TODO: MultiSegmentStringLiteral
 }
