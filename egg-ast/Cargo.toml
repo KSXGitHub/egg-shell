@@ -2,7 +2,7 @@
 name = "egg-ast"
 version = "0.0.0"
 edition = "2021"
-rust-version = "1.69.0"
+rust-version = "1.70.0"
 
 [dependencies]
 derive_more = "0.99.17"
