@@ -1,4 +1,4 @@
-use crate::{ArgumentList, OptionalIdentifier, Span};
+use crate::{ArgumentList, Literal, OptionalIdentifier, Span};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Expression {
@@ -8,7 +8,7 @@ pub struct Expression {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ExpressionBody {
-    Literal, // TODO: Literal
+    Literal(Literal),
     Identifier(OptionalIdentifier),
     FunctionCall(FunctionalCallExpression),
 }
