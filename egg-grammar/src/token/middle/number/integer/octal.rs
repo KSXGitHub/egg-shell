@@ -13,12 +13,12 @@ pub const OCTAL_PREFIX: &str = "0o";
 /// non-octal digits are allowed in this token, and it shall be the job
 /// of the AST analyzer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct OctalToken<Content>(pub Content);
+pub struct OctalInteger<Content>(pub Content);
 
-impl<'a> ParseMiddleToken<&'a str> for OctalToken<&'a str> {
+impl<'a> ParseMiddleToken<&'a str> for OctalInteger<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (body, rest) = parse_prefixed_number(input, OCTAL_PREFIX, is_number_body)?;
-        let token = OctalToken(body);
+        let token = OctalInteger(body);
         Some((token, rest))
     }
 }
@@ -33,7 +33,10 @@ mod test {
         macro_rules! case {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(OctalToken::parse($input), Some((OctalToken($token), $rest)));
+                assert_eq!(
+                    OctalInteger::parse($input),
+                    Some((OctalInteger($token), $rest)),
+                );
             }};
         }
 
@@ -55,7 +58,7 @@ mod test {
         macro_rules! case {
             ($input:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(OctalToken::parse($input), None);
+                assert_eq!(OctalInteger::parse($input), None);
             }};
         }
 

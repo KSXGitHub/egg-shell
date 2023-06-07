@@ -1,4 +1,4 @@
-use super::{FractionalToken, IntegerToken};
+use super::{IntegerNumber, RealNumber};
 use crate::token::ParseMiddleToken;
 use derive_more::{From, TryInto};
 use pipe_trait::Pipe;
@@ -6,8 +6,8 @@ use pipe_trait::Pipe;
 /// Body of a [number token](super::NumberToken).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, From, TryInto)]
 pub enum NumberTokenBody<Content> {
-    Integer(IntegerToken<Content>),
-    Fractional(FractionalToken<Content>),
+    Integer(IntegerNumber<Content>),
+    Fractional(RealNumber<Content>),
 }
 
 impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
@@ -19,8 +19,8 @@ impl<'a> ParseMiddleToken<&'a str> for NumberTokenBody<&'a str> {
                 }
             };
         }
-        try_parse!(FractionalToken);
-        try_parse!(IntegerToken);
+        try_parse!(RealNumber);
+        try_parse!(IntegerNumber);
         None
     }
 }
@@ -29,13 +29,13 @@ macro_rules! impl_from_int {
     ($token_type:ident) => {
         impl<Content> From<super::$token_type<Content>> for NumberTokenBody<Content> {
             fn from(token: super::$token_type<Content>) -> Self {
-                token.pipe(IntegerToken::from).into()
+                token.pipe(IntegerNumber::from).into()
             }
         }
     };
 }
 
-impl_from_int!(DecimalToken);
-impl_from_int!(BinaryToken);
-impl_from_int!(OctalToken);
-impl_from_int!(HexadecimalToken);
+impl_from_int!(DecimalInteger);
+impl_from_int!(BinaryInteger);
+impl_from_int!(OctalInteger);
+impl_from_int!(HexadecimalInteger);

@@ -9,16 +9,16 @@ pub const HEXADECIMAL_PREFIX: &str = "0x";
 /// **Structure:**
 /// `0x <content>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct HexadecimalToken<Content>(pub Content);
+pub struct HexadecimalInteger<Content>(pub Content);
 
 const fn is_hexadecimal_body(char: &char) -> bool {
     matches!(char, '0'..='9' | 'A'..='F' | 'a'..='f' | '_')
 }
 
-impl<'a> ParseMiddleToken<&'a str> for HexadecimalToken<&'a str> {
+impl<'a> ParseMiddleToken<&'a str> for HexadecimalInteger<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (body, rest) = parse_prefixed_number(input, HEXADECIMAL_PREFIX, is_hexadecimal_body)?;
-        let token = HexadecimalToken(body);
+        let token = HexadecimalInteger(body);
         Some((token, rest))
     }
 }
@@ -34,8 +34,8 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
-                    HexadecimalToken::parse($input),
-                    Some((HexadecimalToken($token), $rest)),
+                    HexadecimalInteger::parse($input),
+                    Some((HexadecimalInteger($token), $rest)),
                 )
             }};
         }
@@ -55,7 +55,7 @@ mod test {
         macro_rules! case {
             ($input:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(HexadecimalToken::parse($input), None);
+                assert_eq!(HexadecimalInteger::parse($input), None);
             }};
         }
 

@@ -13,12 +13,12 @@ pub const BINARY_PREFIX: &str = "0b";
 /// non-binary digits are allowed in this token, and it shall be the job
 /// of the AST analyzer to detect them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct BinaryToken<Content>(pub Content);
+pub struct BinaryInteger<Content>(pub Content);
 
-impl<'a> ParseMiddleToken<&'a str> for BinaryToken<&'a str> {
+impl<'a> ParseMiddleToken<&'a str> for BinaryInteger<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
         let (body, rest) = parse_prefixed_number(input, BINARY_PREFIX, is_number_body)?;
-        let token = BinaryToken(body);
+        let token = BinaryInteger(body);
         Some((token, rest))
     }
 }
@@ -34,8 +34,8 @@ mod test {
             ($input:literal -> $token:literal, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
                 assert_eq!(
-                    BinaryToken::parse($input),
-                    Some((BinaryToken($token), $rest)),
+                    BinaryInteger::parse($input),
+                    Some((BinaryInteger($token), $rest)),
                 );
             }};
         }
@@ -53,7 +53,7 @@ mod test {
         macro_rules! case {
             ($input:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(BinaryToken::parse($input), None);
+                assert_eq!(BinaryInteger::parse($input), None);
             }};
         }
 

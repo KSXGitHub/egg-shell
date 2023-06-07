@@ -1,34 +1,34 @@
-use super::DecimalToken;
+use super::DecimalInteger;
 use crate::token::ParseMiddleToken;
 use egg_common_utils::is_number_body;
 use split_first_char::split_first_char;
 
-/// Token for fractional number.
+/// Token for decimal number.
 ///
 /// **Structure:**
-/// * `<integer> . <fraction>`
+/// * `<integer> . <fractional>`
 /// * `<integer> e <exponent>`
-/// * `<integer> . <fraction> e <exponent>`
+/// * `<integer> . <fractional> e <exponent>`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct FractionalToken<Content> {
+pub struct RealNumber<Content> {
     /// The integer part of the token.
     pub integer: Content,
     /// The fraction part of the token, placed after a dot, not including the dot.
-    pub fraction: Option<Content>,
+    pub fractional: Option<Content>,
     /// The exponent part of the token, placed after `e`, not including `e`.
     pub exponent: Option<Content>,
 }
 
-impl<Content> FractionalToken<Content> {
-    /// Quickly and dirtily create a [`FractionalToken`] without specifying its field names.
+impl<Content> RealNumber<Content> {
+    /// Quickly and dirtily create a [`RealNumber`] without specifying its field names.
     pub const fn new(
         integer: Content,
-        fraction: Option<Content>,
+        fractional: Option<Content>,
         exponent: Option<Content>,
     ) -> Self {
-        FractionalToken {
+        RealNumber {
             integer,
-            fraction,
+            fractional,
             exponent,
         }
     }
@@ -38,7 +38,7 @@ fn parse_fraction(input: &str) -> Option<(&'_ str, &'_ str)> {
     let Some(('.', input)) = split_first_char(input) else {
         return None;
     };
-    let (DecimalToken(fraction), rest) = DecimalToken::parse(input)?;
+    let (DecimalInteger(fraction), rest) = DecimalInteger::parse(input)?;
     Some((fraction, rest))
 }
 
@@ -63,9 +63,9 @@ fn parse_exponent(input: &str) -> Option<(&'_ str, &'_ str)> {
     Some((exponent, rest))
 }
 
-impl<'a> ParseMiddleToken<&'a str> for FractionalToken<&'a str> {
+impl<'a> ParseMiddleToken<&'a str> for RealNumber<&'a str> {
     fn parse(input: &'a str) -> Option<(Self, &'a str)> {
-        let (DecimalToken(integer), input) = DecimalToken::parse(input)?;
+        let (DecimalInteger(integer), input) = DecimalInteger::parse(input)?;
         let (fraction, input) = match parse_fraction(input) {
             None => (None, input),
             Some((fraction, rest)) => (Some(fraction), rest),
@@ -77,9 +77,9 @@ impl<'a> ParseMiddleToken<&'a str> for FractionalToken<&'a str> {
         if fraction.is_none() && exponent.is_none() {
             return None;
         }
-        let token = FractionalToken {
+        let token = RealNumber {
             integer,
-            fraction,
+            fractional: fraction,
             exponent,
         };
         Some((token, rest))
@@ -96,8 +96,8 @@ mod test {
         macro_rules! case {
             ($input:literal -> $integer:literal, $fraction:expr, $exponent:expr, $rest:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                let token = FractionalToken::new($integer, $fraction, $exponent);
-                assert_eq!(FractionalToken::parse($input), Some((token, $rest)));
+                let token = RealNumber::new($integer, $fraction, $exponent);
+                assert_eq!(RealNumber::parse($input), Some((token, $rest)));
             }};
         }
 
@@ -119,7 +119,7 @@ mod test {
         macro_rules! case {
             ($input:literal) => {{
                 eprintln!("TEST: {:?}", $input);
-                assert_eq!(FractionalToken::parse($input), None);
+                assert_eq!(RealNumber::parse($input), None);
             }};
         }
 

@@ -1,10 +1,10 @@
 mod boolean;
-mod fraction;
 mod integer;
+mod real;
 
 pub use boolean::*;
-pub use fraction::*;
 pub use integer::*;
+pub use real::*;
 
 use crate::Span;
 
@@ -18,7 +18,7 @@ pub struct Literal {
 pub enum LiteralBody {
     Boolean(BooleanLiteral),
     Integer(IntegerLiteral),
-    Fraction(FractionLiteral),
+    Real(RealLiteral),
     SingleSegmentString, // TODO: SingleSegmentStringLiteral
     MultiSegmentString,  // TODO: MultiSegmentStringLiteral
 }
