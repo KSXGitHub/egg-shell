@@ -10,3 +10,4 @@ pub use syntax_tree::*;
 
 pub use never;
 pub use num_bigint;
+pub use num_rational;
