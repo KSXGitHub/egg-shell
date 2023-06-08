@@ -1,19 +1,14 @@
 use crate::Span;
-use num_bigint::{BigInt, BigUint, Sign};
+use hex_wrapper::{Hex32, Hex64};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RealLiteral {
     pub span: Span,
-    pub sign: Sign,
-    pub integer: BigUint,
-    pub fractional: BigUint,
-    pub exponent: BigInt,
-    pub precision: Option<RealLiteralPrecision>,
+    pub value: RealLiteralValue,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum RealLiteralPrecision {
-    Float32,
-    Float64,
-    Arbitrary,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RealLiteralValue {
+    Float32(Hex32),
+    Float64(Hex64),
 }

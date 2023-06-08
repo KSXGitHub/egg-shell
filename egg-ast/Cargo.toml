@@ -8,3 +8,4 @@ rust-version = "1.70.0"
 derive_more = "0.99.17"
 never = "0.1.0"
 num-bigint = "0.4.3"
+hex-wrapper = { version = "1.4.1", features = ["serde"] }

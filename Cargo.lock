@@ -114,6 +114,7 @@ name = "egg-ast"
 version = "0.0.0"
 dependencies = [
  "derive_more",
+ "hex-wrapper",
  "never",
  "num-bigint",
 ]
@@ -231,6 +232,15 @@ name = "hermit-abi"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fed44880c466736ef9a5c5b5facefb5ed0785676d0c02d612db14e54f0d84286"
+
+[[package]]
+name = "hex-wrapper"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9563811e6df7f28fe58b986ff026b67f201619e6dc94f87aef9cbd50a5100cf2"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "indexmap"
