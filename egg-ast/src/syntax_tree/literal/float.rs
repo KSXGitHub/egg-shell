@@ -12,5 +12,13 @@ pub struct FloatLiteral {
 pub enum FloatLiteralValue {
     Float32(Hex32),
     Float64(Hex64),
-    Ambiguous(BigRational), // NOTE: if use serde, convert this type to a more sensible type before serializing
+    Ambiguous(AmbiguousFloatLiteralValue),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AmbiguousFloatLiteralValue {
+    Nan,
+    NegativeInfinity,
+    PositiveInfinity,
+    Rational(BigRational), // NOTE: if use serde, convert this type to a more sensible type before serializing
 }
