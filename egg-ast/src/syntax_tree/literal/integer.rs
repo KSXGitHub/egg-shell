@@ -1,5 +1,5 @@
 use crate::Span;
-use num::{BigInt, BigUint};
+use egg_data::{AstInt, AstUint};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegerLiteral<Value = IntegerLiteralValue> {
@@ -11,7 +11,7 @@ pub struct IntegerLiteral<Value = IntegerLiteralValue> {
 pub enum IntegerLiteralValue {
     Limited(LimitedIntegerLiteralValue),
     Arbitrary(ArbitraryIntegerLiteralValue),
-    Ambiguous(BigInt),
+    Ambiguous(AstInt),
 }
 
 pub type LimitedIntegerLiteral = IntegerLiteral<LimitedIntegerLiteralValue>;
@@ -36,6 +36,6 @@ pub type ArbitraryIntegerLiteral = IntegerLiteral<ArbitraryIntegerLiteralValue>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ArbitraryIntegerLiteralValue {
-    Signed(BigInt),
-    Unsigned(BigUint),
+    Signed(AstInt),
+    Unsigned(AstUint),
 }

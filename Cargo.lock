@@ -114,9 +114,9 @@ name = "egg-ast"
 version = "0.0.0"
 dependencies = [
  "derive_more",
+ "egg-data",
  "hex-wrapper",
  "never",
- "num",
 ]
 
 [[package]]
@@ -128,6 +128,16 @@ dependencies = [
  "pipe-trait",
  "pretty_assertions",
  "tempfile",
+]
+
+[[package]]
+name = "egg-data"
+version = "0.0.0"
+dependencies = [
+ "derive_more",
+ "num",
+ "pipe-trait",
+ "serde",
 ]
 
 [[package]]

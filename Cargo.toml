@@ -2,6 +2,7 @@
 members = [
     "egg-ast",
     "egg-common-utils",
+    "egg-data",
     "egg-grammar",
     "global-tests",
 ]

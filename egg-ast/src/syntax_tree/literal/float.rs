@@ -1,6 +1,6 @@
 use crate::Span;
+use egg_data::AstFraction;
 use hex_wrapper::{Hex32, Hex64};
-use num::BigRational;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FloatLiteral {
@@ -20,5 +20,5 @@ pub enum AmbiguousFloatLiteralValue {
     Nan,
     NegativeInfinity,
     PositiveInfinity,
-    Rational(BigRational), // NOTE: if use serde, convert this type to a more sensible type before serializing
+    Rational(AstFraction),
 }
