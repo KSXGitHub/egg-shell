@@ -11,4 +11,5 @@ pub struct FloatLiteral {
 pub enum FloatLiteralValue {
     Float32(Hex32),
     Float64(Hex64),
+    Ambiguous(String),
 }
