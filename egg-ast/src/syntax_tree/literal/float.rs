@@ -1,6 +1,6 @@
 use crate::Span;
 use hex_wrapper::{Hex32, Hex64};
-use num_rational::BigRational;
+use num::BigRational;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FloatLiteral {

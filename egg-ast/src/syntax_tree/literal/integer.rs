@@ -1,5 +1,5 @@
 use crate::Span;
-use num_bigint::{BigInt, BigUint};
+use num::{BigInt, BigUint};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegerLiteral<Value = IntegerLiteralValue> {
