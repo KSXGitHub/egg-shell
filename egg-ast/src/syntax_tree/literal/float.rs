@@ -12,5 +12,5 @@ pub struct FloatLiteral {
 pub enum FloatLiteralValue {
     Float32(Hex32),
     Float64(Hex64),
-    Ambiguous(BigRational),
+    Ambiguous(BigRational), // NOTE: if use serde, convert this type to a more sensible type before serializing
 }
