@@ -75,6 +75,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1b4fe32ea3f2a8d975b6c5cdd3f02ac358f471ca24dbb18d7a4ca58b3193d2d"
 
 [[package]]
+name = "compute-float"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8fd8d85e9ff41055e94c113806ab66acb656f1a855277caccaed829a0ccebd79"
+
+[[package]]
 name = "convert_case"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -134,9 +140,11 @@ dependencies = [
 name = "egg-data"
 version = "0.0.0"
 dependencies = [
+ "compute-float",
  "derive_more",
  "num",
  "pipe-trait",
+ "pretty_assertions",
  "serde",
 ]
 

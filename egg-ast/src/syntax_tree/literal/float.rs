@@ -1,5 +1,5 @@
 use crate::Span;
-use egg_data::AstFraction;
+use egg_data::AstDecimalNotation;
 use hex_wrapper::{Hex32, Hex64};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20,5 +20,5 @@ pub enum AmbiguousFloatLiteralValue {
     Nan,
     NegativeInfinity,
     PositiveInfinity,
-    Any(AstFraction),
+    Any(AstDecimalNotation),
 }
