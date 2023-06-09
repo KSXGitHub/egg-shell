@@ -16,6 +16,7 @@ pub struct AstDecimalNotation {
 }
 
 impl AstDecimalNotation {
+    /// Create a decimal notation from strings of integer and fractional.
     pub fn from_str<Integer, Fractional>(
         negative: bool,
         integer: Integer,
