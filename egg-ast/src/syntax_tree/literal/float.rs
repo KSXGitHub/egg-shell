@@ -12,7 +12,7 @@ pub struct FloatLiteral {
 pub enum FloatLiteralValue {
     Float32(Hex32),
     Float64(Hex64),
-    Ambiguous(AmbiguousFloatLiteralValue),
+    Any(AmbiguousFloatLiteralValue),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20,5 +20,5 @@ pub enum AmbiguousFloatLiteralValue {
     Nan,
     NegativeInfinity,
     PositiveInfinity,
-    Any(AstDecimalNotation),
+    Real(AstDecimalNotation),
 }
