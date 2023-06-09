@@ -20,5 +20,5 @@ pub enum AmbiguousFloatLiteralValue {
     Nan,
     NegativeInfinity,
     PositiveInfinity,
-    Rational(AstFraction),
+    Any(AstFraction),
 }

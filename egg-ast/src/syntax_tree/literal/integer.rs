@@ -11,7 +11,7 @@ pub struct IntegerLiteral<Value = IntegerLiteralValue> {
 pub enum IntegerLiteralValue {
     Limited(LimitedIntegerLiteralValue),
     Arbitrary(ArbitraryIntegerLiteralValue),
-    Ambiguous(AstInt),
+    Any(AstInt),
 }
 
 pub type LimitedIntegerLiteral = IntegerLiteral<LimitedIntegerLiteralValue>;
