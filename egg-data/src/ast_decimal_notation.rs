@@ -1,6 +1,6 @@
 use crate::AstDecimalDigitList;
-use compute_float::compute_float;
 use serde::{Deserialize, Serialize};
+use std::{fmt::Write, str::FromStr};
 
 /// Syntactical representation of a decimal number.
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
@@ -38,24 +38,41 @@ impl AstDecimalNotation {
     }
 
     /// Compute a floating-point number.
-    fn to_float<Output: compute_float::Float>(&self) -> Option<Output> {
+    fn to_float<Output: FromStr>(&self) -> Option<Output> {
+        // No time to properly implement float parsing algorithm.
+        // Let the Rust std library handle it.
         let AstDecimalNotation {
             negative,
             integer,
             fractional,
             exponent,
         } = self;
-
-        let exponent = *exponent - (fractional.len() as i32);
-
-        let mut mantissa: u64 = 0;
-        for digit in integer.iter().chain(fractional.iter()) {
-            mantissa = mantissa
-                .checked_mul(10)?
-                .checked_add(digit.value() as u64)?;
+        let exp_len = 5;
+        let mut string = String::with_capacity(
+            '-'.len_utf8()
+                + integer.len()
+                + '.'.len_utf8()
+                + fractional.len()
+                + 'e'.len_utf8()
+                + exp_len,
+        );
+        if *negative {
+            string.push('-');
+        };
+        if integer.is_empty() {
+            string.push_str("0.");
+        } else {
+            write!(string, "{integer}.").expect("Write integer to string");
         }
-
-        compute_float(*negative, mantissa, exponent)
+        if fractional.is_empty() {
+            string.push('0');
+        } else {
+            write!(string, "{fractional}").expect("Write fractional to string");
+        }
+        if *exponent != 0 {
+            write!(string, "e{exponent}").expect("Write exponent to string");
+        }
+        string.parse().ok()
     }
 
     /// Compute a 32-bit floating-point number.
