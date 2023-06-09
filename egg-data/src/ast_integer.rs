@@ -26,7 +26,6 @@ pub struct AstInt(pub BigInt);
 
 /// Intermediate type to serialize/deserialize [`AstInt`].
 #[derive(Deserialize, Serialize)]
-#[serde(tag = "sign", content = "absolute-value", rename_all = "kebab-case")]
 enum AstIntSerde {
     Zero,
     Negative(AstUint),
