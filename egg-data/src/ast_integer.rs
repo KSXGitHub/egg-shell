@@ -90,3 +90,38 @@ impl From<AstUintSerde> for AstUint {
         value.pipe_deref(BigUint::from_bytes_le).pipe(AstUint)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use pipe_trait::Pipe;
+    use pretty_assertions::assert_eq;
+    use serde_json::{from_str as parse_json, to_string_pretty as json_str};
+    use serde_yaml::{from_str as parse_yaml, to_string as yaml_str};
+
+    #[test]
+    fn uint_serde() {
+        let number: AstUint = vec![0, 1, 2, 3].pipe(BigUint::new).into();
+        eprintln!("number = {number}");
+
+        let expected_components = [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3];
+
+        let received_json = json_str(&number).expect("Dump JSON");
+        eprintln!("JSON:\n{received_json}\n");
+        let expected_json = json_str(&expected_components).expect("Expected JSON");
+        assert_eq!(received_json, expected_json);
+
+        let received_yaml = yaml_str(&number).expect("Dump YAML");
+        eprintln!("YAML:\n{received_yaml}\n");
+        let expected_yaml = yaml_str(&expected_components).expect("Expected YAML");
+        assert_eq!(received_yaml, expected_yaml);
+
+        let from_json: AstUint = parse_json(&received_json).expect("Parse JSON");
+        dbg!(&from_json);
+        assert_eq!(from_json, number);
+
+        let from_yaml: AstUint = parse_yaml(&received_yaml).expect("Parse YAML");
+        dbg!(&from_yaml);
+        assert_eq!(from_yaml, number);
+    }
+}
