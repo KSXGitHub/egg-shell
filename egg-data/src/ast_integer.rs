@@ -96,8 +96,87 @@ mod test {
     use super::*;
     use pipe_trait::Pipe;
     use pretty_assertions::assert_eq;
-    use serde_json::{from_str as parse_json, to_string_pretty as json_str};
+    use serde_json::{from_str as parse_json, json, to_string_pretty as json_str};
     use serde_yaml::{from_str as parse_yaml, to_string as yaml_str};
+    use text_block_macros::text_block;
+
+    #[test]
+    fn int_serde() {
+        macro_rules! case {
+            (number = $number:expr, json = $expected_json:expr, yaml = $expected_yaml:expr $(,)?) => {{
+                let number: AstInt = $number.into();
+                eprintln!("number = {number}");
+
+                let received_json = json_str(&number).expect("Dump JSON");
+                eprintln!("JSON:\n{received_json}\n");
+                assert_eq!(received_json.trim(), $expected_json);
+
+                let received_yaml = yaml_str(&number).expect("Dump YAML");
+                eprintln!("YAML:\n{received_yaml}\n");
+                assert_eq!(received_yaml.trim(), $expected_yaml);
+
+                let from_json: AstInt = parse_json(&received_json).expect("Parse JSON");
+                dbg!(&from_json);
+                assert_eq!(from_json, number);
+
+                let from_yaml: AstInt = parse_yaml(&received_yaml).expect("Parse YAML");
+                dbg!(&from_yaml);
+                assert_eq!(from_yaml, number);
+            }};
+        }
+
+        case! {
+            number = AstInt(BigInt::new(Sign::Plus, vec![0, 1, 2, 3])),
+            json = json!({ "Positive": [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3] })
+                .pipe_ref(json_str)
+                .expect("Expected JSON"),
+            yaml = text_block! {
+                "!Positive"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 1"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 2"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 3"
+            },
+        };
+
+        case! {
+            number = AstInt(BigInt::new(Sign::Minus, vec![0, 1, 2, 3])),
+            json = json!({ "Negative": [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3] })
+                .pipe_ref(json_str)
+                .expect("Expected JSON"),
+            yaml = text_block! {
+                "!Negative"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 1"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 2"
+                "- 0"
+                "- 0"
+                "- 0"
+                "- 3"
+            },
+        };
+
+        case! {
+            number = AstInt(BigInt::zero()),
+            json = "\"Zero\"",
+            yaml = "Zero",
+        };
+    }
 
     #[test]
     fn uint_serde() {
