@@ -101,7 +101,7 @@ mod test {
     use text_block_macros::text_block;
 
     #[test]
-    fn int_serde() {
+    fn ast_int_serde() {
         macro_rules! case {
             (number = $number:expr, json = $expected_json:expr, yaml = $expected_yaml:expr $(,)?) => {{
                 let number: AstInt = $number.into();
@@ -179,7 +179,7 @@ mod test {
     }
 
     #[test]
-    fn uint_serde() {
+    fn ast_uint_serde() {
         let number: AstUint = vec![0, 1, 2, 3].pipe(BigUint::new).into();
         eprintln!("number = {number}");
 
