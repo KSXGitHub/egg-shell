@@ -72,22 +72,28 @@ impl From<AstIntSerde> for AstInt {
     Serialize,
     Deserialize,
 )]
-#[serde(from = "AstUintSerde", into = "AstUintSerde")]
+#[serde(try_from = "AstUintSerde", into = "AstUintSerde")]
 pub struct AstUint(pub BigUint);
 
 /// Intermediate type to serialize/deserialize [`AstUint`].
 #[derive(Serialize, Deserialize)]
-struct AstUintSerde(Vec<u8>);
+struct AstUintSerde(String);
 
 impl From<AstUint> for AstUintSerde {
     fn from(AstUint(value): AstUint) -> Self {
-        value.to_bytes_le().pipe(AstUintSerde)
+        value.to_bytes_le().pipe(hex::encode).pipe(AstUintSerde)
     }
 }
 
-impl From<AstUintSerde> for AstUint {
-    fn from(AstUintSerde(value): AstUintSerde) -> Self {
-        value.pipe_deref(BigUint::from_bytes_le).pipe(AstUint)
+impl TryFrom<AstUintSerde> for AstUint {
+    type Error = hex::FromHexError;
+
+    fn try_from(AstUintSerde(value): AstUintSerde) -> Result<Self, Self::Error> {
+        value
+            .pipe(hex::decode)?
+            .pipe_deref(BigUint::from_bytes_le)
+            .pipe(AstUint)
+            .pipe(Ok)
     }
 }
 
@@ -98,7 +104,6 @@ mod test {
     use pretty_assertions::assert_eq;
     use serde_json::{from_str as parse_json, json, to_string_pretty as json_str};
     use serde_yaml::{from_str as parse_yaml, to_string as yaml_str};
-    use text_block_macros::text_block;
 
     #[test]
     fn ast_int_serde() {
@@ -127,48 +132,18 @@ mod test {
 
         case! {
             number = AstInt(BigInt::new(Sign::Plus, vec![0, 1, 2, 3])),
-            json = json!({ "Positive": [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3] })
+            json = json!({ "Positive": "00000000010000000200000003" })
                 .pipe_ref(json_str)
                 .expect("Expected JSON"),
-            yaml = text_block! {
-                "!Positive"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 1"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 2"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 3"
-            },
+            yaml = "!Positive 00000000010000000200000003",
         };
 
         case! {
             number = AstInt(BigInt::new(Sign::Minus, vec![0, 1, 2, 3])),
-            json = json!({ "Negative": [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3] })
+            json = json!({ "Negative": "00000000010000000200000003" })
                 .pipe_ref(json_str)
                 .expect("Expected JSON"),
-            yaml = text_block! {
-                "!Negative"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 1"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 2"
-                "- 0"
-                "- 0"
-                "- 0"
-                "- 3"
-            },
+            yaml = "!Negative 00000000010000000200000003",
         };
 
         case! {
@@ -183,7 +158,7 @@ mod test {
         let number: AstUint = vec![0, 1, 2, 3].pipe(BigUint::new).into();
         eprintln!("number = {number}");
 
-        let expected_components = [0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3];
+        let expected_components = "00000000010000000200000003";
 
         let received_json = json_str(&number).expect("Dump JSON");
         eprintln!("JSON:\n{received_json}\n");
