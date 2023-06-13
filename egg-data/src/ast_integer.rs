@@ -131,19 +131,19 @@ mod test {
         }
 
         case! {
-            number = AstInt(BigInt::new(Sign::Plus, vec![0, 1, 2, 3])),
-            json = json!({ "Positive": "00000000010000000200000003" })
+            number = AstInt(BigInt::new(Sign::Plus, vec![0x5209BEA7, 0x1474952E, 0x7C6DFEA, 0x79A5B118])),
+            json = json!({ "Positive": "a7be09522e957414eadfc60718b1a579" })
                 .pipe_ref(json_str)
                 .expect("Expected JSON"),
-            yaml = "!Positive 00000000010000000200000003",
+            yaml = "!Positive a7be09522e957414eadfc60718b1a579",
         };
 
         case! {
-            number = AstInt(BigInt::new(Sign::Minus, vec![0, 1, 2, 3])),
-            json = json!({ "Negative": "00000000010000000200000003" })
+            number = AstInt(BigInt::new(Sign::Minus, vec![0x5209BEA7, 0x1474952E, 0x7C6DFEA, 0x79A5B118])),
+            json = json!({ "Negative": "a7be09522e957414eadfc60718b1a579" })
                 .pipe_ref(json_str)
                 .expect("Expected JSON"),
-            yaml = "!Negative 00000000010000000200000003",
+            yaml = "!Negative a7be09522e957414eadfc60718b1a579",
         };
 
         case! {
@@ -155,10 +155,12 @@ mod test {
 
     #[test]
     fn ast_uint_serde() {
-        let number: AstUint = vec![0, 1, 2, 3].pipe(BigUint::new).into();
+        let number: AstUint = vec![0x5209BEA7, 0x1474952E, 0x7C6DFEA, 0x79A5B118]
+            .pipe(BigUint::new)
+            .into();
         eprintln!("number = {number}");
 
-        let expected_components = "00000000010000000200000003";
+        let expected_components = "a7be09522e957414eadfc60718b1a579";
 
         let received_json = json_str(&number).expect("Dump JSON");
         eprintln!("JSON:\n{received_json}\n");
