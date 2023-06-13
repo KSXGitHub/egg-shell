@@ -105,6 +105,12 @@ mod test {
     use serde_json::{from_str as parse_json, json, to_string_pretty as json_str};
     use serde_yaml::{from_str as parse_yaml, to_string as yaml_str};
 
+    macro_rules! json_str {
+        ($($json:tt)+) => {
+            json_str(&json!($($json)+)).unwrap()
+        };
+    }
+
     #[test]
     fn ast_int_serde() {
         macro_rules! case {
@@ -132,17 +138,13 @@ mod test {
 
         case! {
             number = AstInt(BigInt::new(Sign::Plus, vec![0x5209BEA7, 0x1474952E, 0x7C6DFEA, 0x79A5B118])),
-            json = json!({ "Positive": "a7be09522e957414eadfc60718b1a579" })
-                .pipe_ref(json_str)
-                .expect("Expected JSON"),
+            json = json_str!({ "Positive": "a7be09522e957414eadfc60718b1a579" }),
             yaml = "!Positive a7be09522e957414eadfc60718b1a579",
         };
 
         case! {
             number = AstInt(BigInt::new(Sign::Minus, vec![0x5209BEA7, 0x1474952E, 0x7C6DFEA, 0x79A5B118])),
-            json = json!({ "Negative": "a7be09522e957414eadfc60718b1a579" })
-                .pipe_ref(json_str)
-                .expect("Expected JSON"),
+            json = json_str!({ "Negative": "a7be09522e957414eadfc60718b1a579" }),
             yaml = "!Negative a7be09522e957414eadfc60718b1a579",
         };
 
