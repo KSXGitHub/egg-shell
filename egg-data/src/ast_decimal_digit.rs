@@ -60,7 +60,7 @@ impl AstDecimalDigit {
 pub struct AstDecimalDigitList(Box<[AstDecimalDigit]>);
 
 impl AstDecimalDigitList {
-    /// Access internal data.
+    /// Extract internal data.
     pub fn into_inner(self) -> Box<[AstDecimalDigit]> {
         self.into()
     }
