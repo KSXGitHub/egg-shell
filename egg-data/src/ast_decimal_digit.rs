@@ -1,4 +1,4 @@
-use derive_more::{AsMut, AsRef, Deref, DerefMut, Display, Error, Into, IntoIterator};
+use derive_more::{AsMut, AsRef, Deref, DerefMut, Display, Error, Into};
 use pipe_trait::Pipe;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -53,12 +53,26 @@ impl AstDecimalDigit {
     Deref,
     DerefMut,
     Into,
-    IntoIterator,
     Serialize,
     Deserialize,
 )]
 #[serde(try_from = "String", into = "String")]
-pub struct AstDecimalDigitList(Vec<AstDecimalDigit>);
+pub struct AstDecimalDigitList(Box<[AstDecimalDigit]>);
+
+impl AstDecimalDigitList {
+    /// Access internal data.
+    pub fn into_inner(self) -> Box<[AstDecimalDigit]> {
+        self.into()
+    }
+}
+
+impl IntoIterator for AstDecimalDigitList {
+    type IntoIter = std::vec::IntoIter<AstDecimalDigit>;
+    type Item = AstDecimalDigit;
+    fn into_iter(self) -> Self::IntoIter {
+        self.into_inner().into_vec().into_iter()
+    }
+}
 
 /// Error for converting a string to a [digit list](AstDecimalDigitList).
 #[derive(Debug, Display, Clone, PartialEq, Eq, Error)]
@@ -69,7 +83,7 @@ pub struct AstDecimalDigitListFromStrError {
     /// Character that cause the error.
     pub char: char,
     /// Previous digits.
-    pub prev: Vec<AstDecimalDigit>,
+    pub prev: Box<[AstDecimalDigit]>,
 }
 
 impl FromStr for AstDecimalDigitList {
@@ -83,12 +97,14 @@ impl FromStr for AstDecimalDigitList {
                     return Err(AstDecimalDigitListFromStrError {
                         index,
                         char,
-                        prev: list,
+                        prev: list.into(),
                     })
                 }
             }
         }
-        list.pipe(AstDecimalDigitList).pipe(Ok)
+        list.pipe(Box::<[AstDecimalDigit]>::from)
+            .pipe(AstDecimalDigitList)
+            .pipe(Ok)
     }
 }
 
