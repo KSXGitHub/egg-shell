@@ -25,14 +25,14 @@ pub enum PatternBody<Extra> {
 pub struct TuplePattern<Extra> {
     pub span: Span,
     pub head: Option<Expression>,
-    pub body: Vec<Pattern<Extra>>,
+    pub body: Box<[Pattern<Extra>]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DictPattern<Extra> {
     pub span: Span,
     pub head: Option<Expression>,
-    pub body: Vec<RenamePattern<Extra>>,
+    pub body: Box<[RenamePattern<Extra>]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -3,7 +3,7 @@ use crate::{Expression, Identifier, Span};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ArgumentList {
     pub span: Span,
-    pub body: Vec<Argument>,
+    pub body: Box<[Argument]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

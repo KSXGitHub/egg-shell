@@ -3,7 +3,7 @@ use crate::{Expression, SinglePattern, SingleRenamePattern, Span};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParameterList {
     pub span: Span,
-    pub body: Vec<Parameter>,
+    pub body: Box<[Parameter]>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
