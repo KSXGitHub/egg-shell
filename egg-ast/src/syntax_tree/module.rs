@@ -1,6 +1,6 @@
 use crate::{Annotation, Identifier, ParameterList, Span};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Module {
     pub span: Span,
     pub annotations: Box<[Annotation]>,
@@ -8,12 +8,12 @@ pub struct Module {
     pub body: Box<[ModuleItem]>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct ModuleHeader {
     pub span: Span,
     pub identifier: Option<Identifier>,
     pub parameters: Option<ParameterList>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub enum ModuleItem {}
