@@ -6,7 +6,7 @@ use std::iter::once;
 type MiddleTokenResult<Content> = Result<MiddleToken<Content>, InvalidToken>;
 
 /// [`TokenLineItem`] of an [`EndingToken`].
-type EndingTokenItem<Content> = TokenLineItem<(Content, Vec<Content>), EndingToken<Content>>;
+type EndingTokenItem<Content> = TokenLineItem<(Content, Box<[Content]>), EndingToken<Content>>;
 
 /// List of tokens from a line.
 #[derive(Debug, Clone, PartialEq, Eq, Constructor)]
@@ -16,7 +16,7 @@ pub struct TokenLine<Content> {
     /// Token of the indentation at the start of the line.
     pub indent: TokenLineItem<Content, IndentToken>,
     /// List of [`MiddleToken`] after indentation.
-    pub middle: Vec<TokenLineItem<Content, MiddleTokenResult<Content>>>,
+    pub middle: Box<[TokenLineItem<Content, MiddleTokenResult<Content>>]>,
     /// Optional [`EndingToken`] at the end of the line.
     pub ending: Option<EndingTokenItem<Content>>,
 }
@@ -47,7 +47,8 @@ pub struct TokenLineItem<SrcText, Token> {
 
 impl<Content> EndingTokenItem<Content> {
     /// The original text that was parsed into the body part of the token.
-    pub fn body_ln_text(&self) -> &'_ Vec<Content> {
+    #[allow(clippy::borrowed_box)] // it's in the return type
+    pub fn body_ln_text(&self) -> &'_ Box<[Content]> {
         let (_, lines) = &self.src_text;
         lines
     }

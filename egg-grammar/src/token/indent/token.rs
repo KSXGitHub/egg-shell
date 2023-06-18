@@ -1,14 +1,20 @@
 use super::IndentChar;
-use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator};
+use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
 use itertools::Itertools;
 use split_first_char::split_first_char;
 use std::fmt::{self, Debug, Display, Formatter};
 
 /// Token of indentation.
-#[derive(Clone, PartialEq, Eq, AsMut, AsRef, Deref, DerefMut, From, Into, IntoIterator)]
-pub struct IndentToken(Vec<IndentChar>);
+#[derive(Clone, PartialEq, Eq, AsMut, AsRef, Deref, DerefMut, From, Into)]
+pub struct IndentToken(Box<[IndentChar]>);
 
 impl IndentToken {
+    /// Extract internal data.
+    #[inline]
+    pub fn into_inner(self) -> Box<[IndentChar]> {
+        self.into()
+    }
+
     /// Parse a line of text into a pair of indentation and remaining string.
     ///
     /// **Note:** `line` is assumed to not contain any EOL characters.
@@ -21,8 +27,7 @@ impl IndentToken {
             indent_char_list.push(indent);
             line = rest;
         }
-        indent_char_list.shrink_to_fit();
-        (IndentToken(indent_char_list), line)
+        (IndentToken(indent_char_list.into()), line)
     }
 
     /// Check if the indent is the start of another indent.
@@ -33,6 +38,14 @@ impl IndentToken {
     /// Check if the indent is the shorter start of another indent.
     pub fn is_shorter_start_of(&self, other: &[IndentChar]) -> bool {
         self.len() < other.len() && self.is_start_of(other)
+    }
+}
+
+impl IntoIterator for IndentToken {
+    type IntoIter = std::vec::IntoIter<IndentChar>;
+    type Item = IndentChar;
+    fn into_iter(self) -> Self::IntoIter {
+        self.into_inner().into_vec().into_iter()
     }
 }
 
@@ -80,7 +93,7 @@ mod test {
 
     macro_rules! token {
         ($($indent:ident),* $(,)?) => {
-            IndentToken(vec![$(IndentChar::$indent),*])
+            IndentToken(vec![$(IndentChar::$indent),*].into())
         };
     }
 

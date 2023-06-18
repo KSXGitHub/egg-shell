@@ -51,8 +51,8 @@ impl<'a> Iterator for Scan<'a> {
             };
 
             if let Some(token) = EndingToken::build(indent, input, next_line, after_parse) {
-                middle.shrink_to_fit();
-                let src_text = (input, body_line_list);
+                let middle = middle.into();
+                let src_text = (input, body_line_list.into());
                 let ending_item = TokenLineItem::new(src_text, token);
                 let token_line = TokenLine::new(ln_text, indent_item, middle, Some(ending_item));
                 return Some(token_line);
@@ -78,7 +78,7 @@ impl<'a> Iterator for Scan<'a> {
             break;
         }
 
-        middle.shrink_to_fit();
+        let middle = middle.into();
         let token_line = TokenLine::new(ln_text, indent_item, middle, None);
         Some(token_line)
     }
