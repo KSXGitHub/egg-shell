@@ -47,8 +47,7 @@ pub struct TokenLineItem<SrcText, Token> {
 
 impl<Content> EndingTokenItem<Content> {
     /// The original text that was parsed into the body part of the token.
-    #[allow(clippy::borrowed_box)] // it's in the return type
-    pub fn body_ln_text(&self) -> &'_ Box<[Content]> {
+    pub fn body_ln_text(&self) -> &'_ [Content] {
         let (_, lines) = &self.src_text;
         lines
     }
