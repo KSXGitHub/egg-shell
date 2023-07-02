@@ -1,10 +1,12 @@
 mod boolean;
 mod float;
 mod integer;
+mod single_segment_string;
 
 pub use boolean::*;
 pub use float::*;
 pub use integer::*;
+pub use single_segment_string::*;
 
 use crate::Span;
 
@@ -19,6 +21,6 @@ pub enum LiteralBody {
     Boolean(BooleanLiteral),
     Integer(IntegerLiteral),
     Float(FloatLiteral),
-    SingleSegmentString, // TODO: SingleSegmentStringLiteral
-    MultiSegmentString,  // TODO: MultiSegmentStringLiteral
+    SingleSegmentString(SingleSegmentStringLiteral),
+    MultiSegmentString, // TODO: MultiSegmentStringLiteral
 }
