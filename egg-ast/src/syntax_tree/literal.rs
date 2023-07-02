@@ -8,13 +8,13 @@ pub use integer::*;
 
 use crate::Span;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Literal {
     pub span: Span,
     pub body: LiteralBody,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub enum LiteralBody {
     Boolean(BooleanLiteral),
     Integer(IntegerLiteral),
