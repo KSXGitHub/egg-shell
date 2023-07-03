@@ -12,7 +12,7 @@ use std::str::FromStr;
 pub struct AstRegex(pub Regex);
 
 #[derive(Deserialize, Serialize)]
-struct AstRegexSerde(pub String);
+struct AstRegexSerde(String);
 
 impl From<AstRegex> for AstRegexSerde {
     fn from(value: AstRegex) -> Self {
