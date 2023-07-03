@@ -26,6 +26,6 @@ pub enum LiteralBody {
     Integer(IntegerLiteral),
     Float(FloatLiteral),
     SingleSegmentString(SingleSegmentStringLiteral),
-    MultiSegmentString(SingleSegmentStringLiteral),
+    MultiSegmentString(MultiSegmentStringLiteral),
     Regex(RegexLiteral),
 }
