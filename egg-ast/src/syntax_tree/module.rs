@@ -16,4 +16,6 @@ pub struct ModuleHeader {
 }
 
 #[derive(Debug)]
-pub enum ModuleItem {}
+pub enum ModuleItem {
+    Module(Module),
+}
