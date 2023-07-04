@@ -1,4 +1,4 @@
-use crate::{Annotation, OptionalIdentifier, ParameterList, Span};
+use crate::{Annotation, OptionalIdentifier, ParameterList, Span, Variable};
 
 #[derive(Debug)]
 pub struct Module {
@@ -18,4 +18,5 @@ pub struct ModuleHeader {
 #[derive(Debug)]
 pub enum ModuleItem {
     Module(Module),
+    Variable(Variable),
 }

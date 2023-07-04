@@ -7,6 +7,7 @@ mod module;
 mod parameter;
 mod pattern;
 mod program;
+mod variable;
 
 pub use annotation::*;
 pub use argument::*;
@@ -17,6 +18,7 @@ pub use module::*;
 pub use parameter::*;
 pub use pattern::*;
 pub use program::*;
+pub use variable::*;
 
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
 
