@@ -9,6 +9,7 @@ mod parameter;
 mod pattern;
 mod program;
 mod variable;
+mod visibility;
 
 pub use annotation::*;
 pub use argument::*;
@@ -21,6 +22,7 @@ pub use parameter::*;
 pub use pattern::*;
 pub use program::*;
 pub use variable::*;
+pub use visibility::*;
 
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
 

@@ -1,4 +1,4 @@
-use crate::{Annotation, OptionalIdentifier, ParameterList, Span, Variable};
+use crate::{Annotation, OptionalIdentifier, ParameterList, Span, Variable, Visibility};
 
 #[derive(Debug)]
 pub struct Module {
@@ -11,6 +11,7 @@ pub struct Module {
 #[derive(Debug)]
 pub struct ModuleHeader {
     pub span: Span,
+    pub visibility: Option<Visibility>,
     pub identifier: OptionalIdentifier,
     pub parameters: Option<ParameterList>,
 }
