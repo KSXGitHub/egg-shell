@@ -1,4 +1,4 @@
-use crate::{Expression, SinglePattern, SingleRenamePattern, Span};
+use crate::{Annotation, Expression, SinglePattern, SingleRenamePattern, Span};
 
 #[derive(Debug)]
 pub struct ParameterList {
@@ -9,6 +9,7 @@ pub struct ParameterList {
 #[derive(Debug)]
 pub struct Parameter {
     pub span: Span,
+    pub annotations: Box<[Annotation]>,
     pub binding_pattern: ParameterBindingPattern,
     pub data_type: Option<Expression>,
     pub default_value: Option<Expression>,
