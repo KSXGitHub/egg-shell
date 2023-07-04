@@ -1,4 +1,4 @@
-use crate::{Expression, Identifier, OptionalIdentifier, Span};
+use crate::{Expression, Identifier, Mutability, OptionalIdentifier, Span};
 use never::Never;
 
 pub type SinglePattern = Pattern<Never>;
@@ -15,10 +15,16 @@ pub struct Pattern<Extra> {
 
 #[derive(Debug)]
 pub enum PatternBody<Extra> {
-    Identifier(OptionalIdentifier),
+    Identifier(IdentifierPattern),
     Tuple(TuplePattern<Extra>),
     Dict(DictPattern<Extra>),
     Extra(Extra),
+}
+
+#[derive(Debug)]
+pub struct IdentifierPattern {
+    pub mutability: Option<Mutability>,
+    pub identifier: OptionalIdentifier,
 }
 
 #[derive(Debug)]
