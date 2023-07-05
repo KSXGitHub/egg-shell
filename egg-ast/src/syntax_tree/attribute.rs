@@ -1,6 +1,6 @@
 use crate::Span;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Attribute {
     pub span: Span,
 }
