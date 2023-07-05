@@ -12,6 +12,5 @@ pub struct SimplePath {
 pub enum SimplePathRoot {
     Module,
     File,
-    Package,
     External(Cow<'static, str>),
 }
