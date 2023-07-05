@@ -10,7 +10,7 @@ pub struct Visibility {
 #[derive(Debug)]
 pub struct VisibilityScope {
     pub base: VisibilityScopeBase,
-    pub ancestor: u64,
+    pub delta: u64,
 }
 
 #[derive(Debug)]
