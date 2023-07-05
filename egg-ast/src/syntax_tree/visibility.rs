@@ -3,8 +3,7 @@ use crate::Span;
 #[derive(Debug)]
 pub struct Visibility {
     pub span: Span,
-    pub reader: VisibilityScope,
-    pub writer: VisibilityScope,
+    pub scope: VisibilityScope,
 }
 
 #[derive(Debug)]
