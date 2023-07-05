@@ -1,4 +1,8 @@
-use crate::{ArgumentList, Literal, OptionalIdentifier, Span};
+mod function_call;
+
+pub use function_call::*;
+
+use crate::{Literal, OptionalIdentifier, Span};
 
 #[derive(Debug)]
 pub struct Expression {
@@ -11,11 +15,4 @@ pub enum ExpressionBody {
     Literal(Literal),
     Identifier(OptionalIdentifier),
     FunctionCall(FunctionalCallExpression),
-}
-
-#[derive(Debug)]
-pub struct FunctionalCallExpression {
-    pub span: Span,
-    pub function: Box<Expression>,
-    pub arguments: ArgumentList,
 }
