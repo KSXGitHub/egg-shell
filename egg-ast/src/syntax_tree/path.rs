@@ -4,7 +4,7 @@ use crate::{Identifier, Span};
 pub struct SimplePath {
     pub span: Span,
     pub root: Option<SimplePathRoot>,
-    pub body: Box<[Identifier]>,
+    pub rest: Box<[Identifier]>,
 }
 
 #[derive(Debug)]
