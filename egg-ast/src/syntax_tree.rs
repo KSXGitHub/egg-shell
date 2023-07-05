@@ -1,30 +1,24 @@
-mod argument;
 mod attribute;
+mod declaration;
 mod expression;
 mod identifier;
 mod literal;
-mod module;
-mod mutability;
-mod parameter;
+mod miscellaneous;
+mod modifier;
 mod path;
 mod pattern;
 mod program;
-mod variable;
-mod visibility;
 
-pub use argument::*;
 pub use attribute::*;
+pub use declaration::*;
 pub use expression::*;
 pub use identifier::*;
 pub use literal::*;
-pub use module::*;
-pub use mutability::*;
-pub use parameter::*;
+pub use miscellaneous::*;
+pub use modifier::*;
 pub use path::*;
 pub use pattern::*;
 pub use program::*;
-pub use variable::*;
-pub use visibility::*;
 
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
 
