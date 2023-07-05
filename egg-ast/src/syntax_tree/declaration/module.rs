@@ -1,23 +1,25 @@
-use crate::{Attribute, OptionalIdentifier, ParameterList, Span, Variable, Visibility};
+use crate::{
+    Attribute, OptionalIdentifier, ParameterList, Span, VariableDeclaration, VisibilityModifier,
+};
 
 #[derive(Debug)]
-pub struct Module {
+pub struct ModuleDeclaration {
     pub span: Span,
     pub attributes: Box<[Attribute]>,
-    pub header: ModuleHeader,
+    pub header: ModuleDeclarationHeader,
     pub body: Box<[ModuleItem]>,
 }
 
 #[derive(Debug)]
-pub struct ModuleHeader {
+pub struct ModuleDeclarationHeader {
     pub span: Span,
-    pub visibility: Option<Visibility>,
+    pub visibility: Option<VisibilityModifier>,
     pub identifier: OptionalIdentifier,
     pub parameters: Option<ParameterList>,
 }
 
 #[derive(Debug)]
 pub enum ModuleItem {
-    Module(Module),
-    Variable(Variable),
+    Module(ModuleDeclaration),
+    Variable(VariableDeclaration),
 }

@@ -1,13 +1,13 @@
 use crate::Span;
 
 #[derive(Debug)]
-pub struct Visibility {
+pub struct VisibilityModifier {
     pub span: Span,
-    pub scope: VisibilityScope,
+    pub scope: VisibilityModifierScope,
 }
 
 #[derive(Debug)]
-pub enum VisibilityScope {
+pub enum VisibilityModifierScope {
     Module,
     File,
     Package,
