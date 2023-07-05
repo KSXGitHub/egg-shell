@@ -14,5 +14,5 @@ pub struct Expression {
 pub enum ExpressionBody {
     Literal(Literal),
     Identifier(OptionalIdentifier),
-    FunctionCall(CallExpression),
+    Call(CallExpression),
 }
