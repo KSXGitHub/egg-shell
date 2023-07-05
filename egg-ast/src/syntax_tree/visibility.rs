@@ -8,13 +8,7 @@ pub struct Visibility {
 }
 
 #[derive(Debug)]
-pub struct VisibilityScope {
-    pub base: VisibilityScopeBase,
-    pub delta: u64,
-}
-
-#[derive(Debug)]
-pub enum VisibilityScopeBase {
+pub enum VisibilityScope {
     Module,
     File,
     Package,
