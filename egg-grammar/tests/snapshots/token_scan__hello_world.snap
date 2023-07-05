@@ -1,3 +1,7 @@
+---
+source: egg-grammar/tests/token_scan.rs
+expression: tokens
+---
 [
     TokenLine {
         ln_text: "@cli::entry",

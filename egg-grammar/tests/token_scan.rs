@@ -1,20 +1,11 @@
 use egg_grammar::token::{Scan, TokenLine};
-use exec_diff::assert_eq_uni_diff;
+use insta::assert_debug_snapshot;
 use itertools::Itertools;
 use pretty_assertions::assert_eq;
 
 fn title(title: &str) {
     eprintln!();
     eprintln!("TEST: {}", title);
-}
-
-macro_rules! test_snapshot {
-    ($tokens:expr, $path:literal) => {{
-        title("Snapshot of the Debug format the tokens");
-        let received = format!("{:#?}", &$tokens);
-        let expected = include_str!($path);
-        assert_eq_uni_diff(received.trim(), expected.trim());
-    }};
 }
 
 fn test_ln_text(tokens: &[TokenLine<&str>], text: &str) {
@@ -44,7 +35,7 @@ fn test_src_text(tokens: &[TokenLine<&str>]) {
 fn hello_world() {
     let text = include_str!("fixtures/hello-world.egg");
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
-    test_snapshot!(tokens, "snapshots/token-scan/hello-world.txt");
+    assert_debug_snapshot!(tokens);
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
@@ -53,7 +44,7 @@ fn hello_world() {
 fn multi_line() {
     let text = include_str!("fixtures/multi-line.egg");
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
-    test_snapshot!(tokens, "snapshots/token-scan/multi-line.txt");
+    assert_debug_snapshot!(tokens);
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
@@ -62,7 +53,7 @@ fn multi_line() {
 fn invalid_char_heart() {
     let text = "print 'hello world' with ❤️";
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
-    test_snapshot!(tokens, "snapshots/token-scan/invalid-char-heart.txt");
+    assert_debug_snapshot!(tokens);
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
@@ -71,7 +62,7 @@ fn invalid_char_heart() {
 fn invalid_char_nul() {
     let text = "print 'hello world'\0";
     let tokens: Vec<_> = dbg!(Scan::new(text).collect());
-    test_snapshot!(tokens, "snapshots/token-scan/invalid-char-nul.txt");
+    assert_debug_snapshot!(tokens);
     test_ln_text(&tokens, text);
     test_src_text(&tokens);
 }
