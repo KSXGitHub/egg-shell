@@ -1,5 +1,5 @@
-mod annotation;
 mod argument;
+mod attribute;
 mod expression;
 mod identifier;
 mod literal;
@@ -11,8 +11,8 @@ mod program;
 mod variable;
 mod visibility;
 
-pub use annotation::*;
 pub use argument::*;
+pub use attribute::*;
 pub use expression::*;
 pub use identifier::*;
 pub use literal::*;

@@ -1,9 +1,9 @@
-use crate::{Annotation, OptionalIdentifier, ParameterList, Span, Variable, Visibility};
+use crate::{Attribute, OptionalIdentifier, ParameterList, Span, Variable, Visibility};
 
 #[derive(Debug)]
 pub struct Module {
     pub span: Span,
-    pub annotations: Box<[Annotation]>,
+    pub attributes: Box<[Attribute]>,
     pub header: ModuleHeader,
     pub body: Box<[ModuleItem]>,
 }

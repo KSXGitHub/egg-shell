@@ -1,9 +1,9 @@
-use crate::{Annotation, ModuleItem, Span};
+use crate::{Attribute, ModuleItem, Span};
 
 #[derive(Debug)]
 pub struct Program {
     pub span: Span,
-    pub annotations: Box<[Annotation]>,
+    pub attributes: Box<[Attribute]>,
     pub body: Box<[ProgramItem]>,
 }
 
