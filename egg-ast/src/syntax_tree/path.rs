@@ -11,7 +11,7 @@ pub struct SimplePath {
 #[derive(Debug)]
 pub enum SimplePathRoot {
     External(Cow<'static, str>),
-    CurrentPackage,
-    CurrentFile,
-    CurrentModule,
+    Package,
+    File,
+    Module,
 }
