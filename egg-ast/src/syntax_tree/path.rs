@@ -1,4 +1,5 @@
 use crate::{Identifier, Span};
+use std::borrow::Cow;
 
 #[derive(Debug)]
 pub struct SimplePath {
@@ -9,7 +10,7 @@ pub struct SimplePath {
 
 #[derive(Debug)]
 pub enum SimplePathRoot {
-    External(Box<str>),
+    External(Cow<'static, str>),
     CurrentPackage,
     CurrentModule,
 }
