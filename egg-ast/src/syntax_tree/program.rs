@@ -1,4 +1,4 @@
-use crate::{Attribute, ModuleItem, Span};
+use crate::{Attribute, Declaration, Span};
 
 #[derive(Debug)]
 pub struct Program {
@@ -9,5 +9,5 @@ pub struct Program {
 
 #[derive(Debug)]
 pub enum ProgramItem {
-    Declaration(ModuleItem),
+    Declaration(Declaration),
 }
