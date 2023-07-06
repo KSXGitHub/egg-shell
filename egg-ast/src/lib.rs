@@ -9,4 +9,3 @@ pub use span::*;
 pub use syntax_tree::*;
 
 pub use egg_data as data;
-pub use never;

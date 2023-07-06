@@ -1,24 +1,16 @@
 use crate::{Expression, Identifier, MutabilityModifier, OptionalIdentifier, Span};
-use never::Never;
-
-pub type SinglePattern = Pattern<Never>;
-pub type SinglePatternBody = PatternBody<Never>;
-pub type SingleTuplePattern = TuplePattern<Never>;
-pub type SingleDictPattern = DictPattern<Never>;
-pub type SingleRenamePattern = RenamePattern<Never>;
 
 #[derive(Debug)]
-pub struct Pattern<Extra> {
+pub struct Pattern {
     pub span: Span,
-    pub body: PatternBody<Extra>,
+    pub body: PatternBody,
 }
 
 #[derive(Debug)]
-pub enum PatternBody<Extra> {
+pub enum PatternBody {
     Identifier(IdentifierPattern),
-    Tuple(TuplePattern<Extra>),
-    Dict(DictPattern<Extra>),
-    Extra(Extra),
+    Tuple(TuplePattern),
+    Dict(DictPattern),
 }
 
 #[derive(Debug)]
@@ -28,21 +20,21 @@ pub struct IdentifierPattern {
 }
 
 #[derive(Debug)]
-pub struct TuplePattern<Extra> {
+pub struct TuplePattern {
     pub span: Span,
     pub head: Option<Expression>,
-    pub body: Box<[Pattern<Extra>]>,
+    pub body: Box<[Pattern]>,
 }
 
 #[derive(Debug)]
-pub struct DictPattern<Extra> {
+pub struct DictPattern {
     pub span: Span,
     pub head: Option<Expression>,
-    pub body: Box<[RenamePattern<Extra>]>,
+    pub body: Box<[RenamePattern]>,
 }
 
 #[derive(Debug)]
-pub struct RenamePattern<Extra> {
+pub struct RenamePattern {
     pub key: Identifier,
-    pub value: Pattern<Extra>,
+    pub value: Pattern,
 }

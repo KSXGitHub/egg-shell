@@ -1,4 +1,4 @@
-use crate::{Attribute, Expression, SinglePattern, SingleRenamePattern, Span};
+use crate::{Attribute, Expression, Pattern, RenamePattern, Span};
 
 #[derive(Debug)]
 pub struct ParameterList {
@@ -17,6 +17,6 @@ pub struct Parameter {
 
 #[derive(Debug)]
 pub enum ParameterBindingPattern {
-    Named(SingleRenamePattern),
-    Positional(SinglePattern),
+    Named(Pattern),
+    Positional(RenamePattern),
 }
