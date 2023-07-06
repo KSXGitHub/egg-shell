@@ -1,8 +1,8 @@
-use crate::{Expression, Span};
+use crate::{Expression, MetaArgumentList, Span};
 
 #[derive(Debug)]
 pub struct MacroCallExpression {
     pub span: Span,
     pub callee: Box<Expression>,
-    pub arguments: (), // TODO: MetaArgumentList
+    pub arguments: MetaArgumentList,
 }
