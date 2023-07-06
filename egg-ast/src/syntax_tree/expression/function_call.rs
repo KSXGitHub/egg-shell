@@ -1,8 +1,8 @@
-use crate::{ArgumentList, Expression, Span};
+use crate::{Expression, FunctionArgumentList, Span};
 
 #[derive(Debug)]
 pub struct FunctionCallExpression {
     pub span: Span,
     pub callee: Box<Expression>,
-    pub arguments: ArgumentList,
+    pub arguments: FunctionArgumentList,
 }
