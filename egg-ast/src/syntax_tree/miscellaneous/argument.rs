@@ -1,4 +1,4 @@
-use crate::{Expression, Identifier, Pattern, Span};
+use crate::{Declaration, Expression, Identifier, Pattern, Span};
 
 pub type FunctionArgumentList = ArgumentList<Expression>;
 pub type FunctionArgument = Argument<Expression>;
@@ -39,4 +39,5 @@ pub struct NamedArgument<Value> {
 pub enum MetaArgumentValue {
     Expression(Expression),
     Pattern(Pattern),
+    Declaration(Declaration),
 }
