@@ -1,6 +1,6 @@
-mod call;
+mod function_call;
 
-pub use call::*;
+pub use function_call::*;
 
 use crate::{Literal, OptionalIdentifier, Span};
 
@@ -14,5 +14,5 @@ pub struct Expression {
 pub enum ExpressionBody {
     Literal(Literal),
     Identifier(OptionalIdentifier),
-    Call(CallExpression),
+    FunctionCall(FunctionCallExpression),
 }
