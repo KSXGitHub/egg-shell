@@ -1,6 +1,8 @@
+mod field_access;
 mod function_call;
 mod macro_call;
 
+pub use field_access::*;
 pub use function_call::*;
 pub use macro_call::*;
 
@@ -18,4 +20,5 @@ pub enum ExpressionBody {
     Identifier(OptionalIdentifier),
     FunctionCall(FunctionCallExpression),
     MacroCall(MacroCallExpression),
+    FieldAccess(FieldAccess),
 }
