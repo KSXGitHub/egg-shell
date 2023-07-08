@@ -8,7 +8,7 @@ pub struct FunctionDeclaration {
     pub span: Span,
     pub attributes: Box<[Attribute]>,
     pub header: FunctionDeclarationHeader,
-    pub body: Box<[Statement]>,
+    pub body: Option<FunctionDeclarationBody>,
 }
 
 #[derive(Debug)]
@@ -19,4 +19,10 @@ pub struct FunctionDeclarationHeader {
     pub parameters: ParameterList,
     pub return_type: Option<Expression>,
     pub constraint: Constraint,
+}
+
+#[derive(Debug)]
+pub enum FunctionDeclarationBody {
+    SingleExpression(Expression),
+    MultipleStatements(Box<[Statement]>),
 }
