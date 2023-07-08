@@ -3,8 +3,8 @@ use crate::{Attribute, Expression, Pattern, RenamePattern, Span};
 #[derive(Debug)]
 pub struct ParameterList {
     pub span: Span,
-    pub generic: Option<Box<ParameterList>>,
-    pub body: Box<[Parameter]>,
+    pub init: Option<Box<ParameterList>>,
+    pub main: Box<[Parameter]>,
 }
 
 #[derive(Debug)]
