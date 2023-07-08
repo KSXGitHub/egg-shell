@@ -1,4 +1,6 @@
-use crate::{Attribute, Expression, OptionalIdentifier, ParameterList, Span, VisibilityModifier};
+use crate::{
+    Attribute, Constraint, Expression, OptionalIdentifier, ParameterList, Span, VisibilityModifier,
+};
 
 #[derive(Debug)]
 pub struct FunctionDeclaration {
@@ -15,4 +17,5 @@ pub struct FunctionDeclarationHeader {
     pub identifier: Option<OptionalIdentifier>,
     pub parameters: ParameterList,
     pub return_type: Option<Expression>,
+    pub constraint: Constraint,
 }

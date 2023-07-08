@@ -1,4 +1,6 @@
-use crate::{Attribute, Declaration, OptionalIdentifier, ParameterList, Span, VisibilityModifier};
+use crate::{
+    Attribute, Constraint, Declaration, OptionalIdentifier, ParameterList, Span, VisibilityModifier,
+};
 
 #[derive(Debug)]
 pub struct ModuleDeclaration {
@@ -14,4 +16,5 @@ pub struct ModuleDeclarationHeader {
     pub visibility: Option<VisibilityModifier>,
     pub identifier: OptionalIdentifier,
     pub parameters: Option<ParameterList>,
+    pub constraint: Option<Constraint>,
 }
