@@ -1,6 +1,5 @@
 use crate::{
-    Attribute, Constraint, Expression, OptionalIdentifier, ParameterList, Span, Statement,
-    VisibilityModifier,
+    Attribute, Constraint, Expression, OptionalIdentifier, ParameterList, Span, VisibilityModifier,
 };
 
 #[derive(Debug)]
@@ -8,7 +7,7 @@ pub struct FunctionDeclaration {
     pub span: Span,
     pub attributes: Box<[Attribute]>,
     pub header: FunctionDeclarationHeader,
-    pub body: Option<FunctionDeclarationBody>,
+    pub body: Option<Expression>,
 }
 
 #[derive(Debug)]
@@ -19,10 +18,4 @@ pub struct FunctionDeclarationHeader {
     pub parameters: ParameterList,
     pub return_type: Option<Expression>,
     pub constraint: Constraint,
-}
-
-#[derive(Debug)]
-pub enum FunctionDeclarationBody {
-    SingleExpression(Expression),
-    MultipleStatements(Box<[Statement]>),
 }
