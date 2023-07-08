@@ -1,6 +1,8 @@
+mod function;
 mod module;
 mod variable;
 
+pub use function::*;
 pub use module::*;
 pub use variable::*;
 
@@ -8,4 +10,5 @@ pub use variable::*;
 pub enum Declaration {
     Module(ModuleDeclaration),
     Variable(VariableDeclaration),
+    Function(FunctionDeclaration),
 }
