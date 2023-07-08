@@ -8,6 +8,7 @@ mod modifier;
 mod path;
 mod pattern;
 mod program;
+mod statement;
 
 pub use attribute::*;
 pub use declaration::*;
@@ -19,6 +20,7 @@ pub use modifier::*;
 pub use path::*;
 pub use pattern::*;
 pub use program::*;
+pub use statement::*;
 
 use derive_more::{AsMut, AsRef, Deref, DerefMut, From, Into};
 

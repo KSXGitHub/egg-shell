@@ -1,5 +1,6 @@
 use crate::{
-    Attribute, Constraint, Expression, OptionalIdentifier, ParameterList, Span, VisibilityModifier,
+    Attribute, Constraint, Expression, OptionalIdentifier, ParameterList, Span, Statement,
+    VisibilityModifier,
 };
 
 #[derive(Debug)]
@@ -7,7 +8,7 @@ pub struct FunctionDeclaration {
     pub span: Span,
     pub attributes: Box<[Attribute]>,
     pub header: FunctionDeclarationHeader,
-    pub body: Box<[()]>, // TODO: Statement
+    pub body: Box<[Statement]>,
 }
 
 #[derive(Debug)]
