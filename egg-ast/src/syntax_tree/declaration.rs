@@ -10,8 +10,8 @@ pub use variable::*;
 
 #[derive(Debug)]
 pub enum Declaration {
-    Module(ModuleDeclaration),
-    Variable(VariableDeclaration),
     Constant(ConstantDeclaration),
     Function(FunctionDeclaration),
+    Module(ModuleDeclaration),
+    Variable(VariableDeclaration),
 }
