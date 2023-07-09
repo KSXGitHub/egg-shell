@@ -1,3 +1,7 @@
+mod escape;
+
+pub use escape::*;
+
 use crate::{Declaration, Expression, Span};
 
 #[derive(Debug)]
