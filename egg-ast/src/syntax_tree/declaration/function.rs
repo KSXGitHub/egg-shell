@@ -17,5 +17,5 @@ pub struct FunctionDeclarationHeader {
     pub identifier: Option<OptionalIdentifier>,
     pub parameters: ParameterList,
     pub return_type: Option<Expression>,
-    pub constraint: Constraint,
+    pub constraint: Option<Constraint>,
 }
