@@ -18,6 +18,6 @@ pub struct Parameter {
 
 #[derive(Debug)]
 pub enum ParameterBindingPattern {
-    Named(Pattern),
-    Positional(RenamePattern),
+    Positional(Pattern),
+    Named(RenamePattern),
 }
