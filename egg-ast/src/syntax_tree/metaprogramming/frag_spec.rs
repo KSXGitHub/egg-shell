@@ -9,6 +9,15 @@ pub struct MetaFragSpec {
 #[derive(Debug)]
 pub enum MetaFragSpecValue {
     Identifier,
-    Literal,
+    Literal(Option<MetaFragSpecLiteral>),
     Expression,
+}
+
+#[derive(Debug)]
+pub enum MetaFragSpecLiteral {
+    Boolean,
+    Float,
+    Integer,
+    Regex,
+    String,
 }
