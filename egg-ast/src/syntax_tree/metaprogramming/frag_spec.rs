@@ -1,13 +1,13 @@
 use crate::Span;
 
 #[derive(Debug)]
-pub struct SyntaxTypeAnnotation {
+pub struct MetaFragSpec {
     pub span: Span,
-    pub value: SyntaxType,
+    pub value: MetaFragSpecValue,
 }
 
 #[derive(Debug)]
-pub enum SyntaxType {
+pub enum MetaFragSpecValue {
     Identifier,
     Literal,
     Expression,

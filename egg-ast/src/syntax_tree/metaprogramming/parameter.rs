@@ -1,4 +1,4 @@
-use crate::{Identifier, OptionalIdentifier, Span, SyntaxTypeAnnotation};
+use crate::{Identifier, MetaFragSpec, OptionalIdentifier, Span};
 
 #[derive(Debug)]
 pub struct MetaParameterList {
@@ -10,7 +10,7 @@ pub struct MetaParameterList {
 pub struct MetaParameter {
     pub span: Span,
     pub binding: MetaParameterBinding,
-    pub syntax_type: SyntaxTypeAnnotation,
+    pub syntax_type: MetaFragSpec,
     // TODO
 }
 
