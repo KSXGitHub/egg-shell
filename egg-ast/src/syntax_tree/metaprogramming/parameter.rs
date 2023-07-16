@@ -10,7 +10,7 @@ pub struct MetaParameterList {
 pub struct MetaParameter {
     pub span: Span,
     pub binding: MetaParameterBinding,
-    pub syntax_type: MetaFragSpec,
+    pub frag_spec: MetaFragSpec,
     // TODO
 }
 
