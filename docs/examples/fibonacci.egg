@@ -15,9 +15,9 @@
     n: The position of the queried number.
     ->: The nth number in the fibonacci sequence.
 pub const fn fibonacci(n: u16) -> u32
-    return match n
-        case 0 or 1 then n
-        case _ then fibonacci(n - 2) + fibonacci(n - 1)
+return match n
+    case 0 or 1 then n
+    case _ then fibonacci(n - 2) + fibonacci(n - 1)
 
 @test::run
 const fn 'First 10 fibonacci numbers'() do

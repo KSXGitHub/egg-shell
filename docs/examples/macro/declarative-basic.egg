@@ -1,8 +1,8 @@
 pub macro repeat-expr(expression: expr, times: const u64 = 2) -> expr
-    return match times
-        case 0 then compile-error! 'Cannot repeat for 0 times'
-        case 1 then expression
-        case _ then %%%
-            do
-                $expression
-                repeat_expr!($expression, $(times - 1))
+return match times
+    case 0 then compile-error! 'Cannot repeat for 0 times'
+    case 1 then expression
+    case _ then %%%
+        do
+            $expression
+            repeat_expr!($expression, $(times - 1))
