@@ -1,4 +1,4 @@
-pub macro repeat-expr(expression: expr, times: const u64 = 2) -> expr do
+pub macro repeat-expr(expression: expr, times: const u64 = 2) -> expr
     return match times
         case 0 then compile-error! 'Cannot repeat for 0 times'
         case 1 then expression
