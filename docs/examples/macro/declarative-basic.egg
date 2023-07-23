@@ -5,4 +5,4 @@ return match times
     case _ then %%%
         do
             $expression
-            repeat_expr!($expression, $(times - 1))
+            repeat-expr!($expression, $(times - 1))
