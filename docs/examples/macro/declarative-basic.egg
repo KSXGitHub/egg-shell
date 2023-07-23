@@ -1,8 +1,12 @@
-pub macro repeat-expr(expression: expr, times: const u64 = 2) -> expr
-return match times
-    case 0 then panic 'Cannot repeat for 0 times'
-    case 1 then expression
-    case _ then %%%
-        do
-            $expression
-            repeat-expr!($expression, $(times - 1))
+pub macro decl-vec-type(coord-names: ![ident], coord-type: type)
+return %%%
+    pub struct Vec
+        $$$
+            %($name: $coord-type) for name in coord-names
+
+    type RawVec = [type; $(length coord-names)]
+
+    impl Convert(Vec, RawVec)
+    with
+        const fn convert(vec: Vec) -> RawVec
+            [$(%(vec.$name) for name in coord-names)]
