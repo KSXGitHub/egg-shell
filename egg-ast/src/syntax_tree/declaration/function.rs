@@ -15,6 +15,7 @@ pub struct FunctionDeclarationHeader {
     pub span: Span,
     pub visibility: Option<VisibilityModifier>,
     pub identifier: Option<OptionalIdentifier>,
+    pub templates: Box<[ParameterList]>,
     pub parameters: ParameterList,
     pub return_type: Option<Expression>,
     pub constraint: Option<Constraint>,

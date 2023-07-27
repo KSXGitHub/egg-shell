@@ -15,6 +15,7 @@ pub struct ModuleDeclarationHeader {
     pub span: Span,
     pub visibility: Option<VisibilityModifier>,
     pub identifier: OptionalIdentifier,
+    pub templates: Box<[ParameterList]>,
     pub parameters: Option<ParameterList>,
     pub constraint: Option<Constraint>,
 }
