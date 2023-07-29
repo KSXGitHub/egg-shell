@@ -13,6 +13,7 @@ pub enum MetaFragSpecValue {
     Expression,
     Type,
     List(Box<MetaFragSpec>),
+    Ast,
 }
 
 #[derive(Debug)]
