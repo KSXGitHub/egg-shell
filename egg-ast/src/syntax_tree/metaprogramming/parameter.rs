@@ -11,7 +11,6 @@ pub struct MetaParameter {
     pub span: Span,
     pub binding: MetaParameterBinding,
     pub frag_spec: MetaFragSpec,
-    // TODO
 }
 
 #[derive(Debug)]
