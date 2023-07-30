@@ -11,9 +11,9 @@ pub enum MetaFragSpecValue {
     Identifier,
     Literal(Option<MetaFragSpecLiteral>),
     Expression,
+    Declaration,
     Type,
     List(Box<MetaFragSpec>),
-    Ast,
 }
 
 #[derive(Debug)]
