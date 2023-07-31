@@ -10,8 +10,8 @@ pub struct MetaFragSpec {
 pub enum MetaFragSpecValue {
     Identifier,
     Literal(Option<MetaFragSpecLiteral>),
-    Expression,
-    Declaration,
+    Expression,  // NOTE: may change as the interface get fleshed out
+    Declaration, // NOTE: may change as the interface get fleshed out
     Type,
     List(Box<MetaFragSpec>),
 }
