@@ -2,13 +2,16 @@ pub trait Area(Shape) with
     pub type Output
     pub fn area(shape: Shape) -> Output
 
-pub struct Rectangle(--Length, --Height)
+tmpl
+    Length: type
+    Height: type
+pub struct Rectangle
 where Mul(Length, Height)
 with
     pub length: Length
     pub height: Height
 
-impl(Length, Height) Area(Rectangle(--Length, --Height))
+impl[Length, Height] Area(Rectangle[--Length, --Height])
 where Mul(Length, Height)
 with
     pub type Output = Mul(Length, Height)::Output
