@@ -1,4 +1,4 @@
-pub macro decl-vec-type(coord-names: ![ident], coord-type: type)
+pub macro decl-vec-type(coord-names: ![ident], coord-type: type) -> mod
 return %%%
     pub struct Vec
         $$$
