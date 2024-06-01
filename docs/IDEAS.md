@@ -23,11 +23,13 @@ A subtype `B` of `A` is just `A` but with potentially fewer variants.
 
 A value of type `A` is incompatible with `B` but a value of type `B` is compatible with `A`.
 
-Only a chosen few functions can construct or verify `B`.
+If the inner of `B` does not have any special requirements than that of `A` (such as subtyped struct fields or narrower sum type), we can choose a few functions to construct or verify `B`.
 
 A subtype can inherit from multiple subtypes of the same origin type. For example, if `B1` and `B2` are both subtypes of `A`, then it is possible to declare a `C` that subtypes both `B1` and `B2`.
 
 A subtype must have the same size as the base type. Thus, the subtyping mechanism does not permit OOP-style inheritance.
+
+If the base type is a struct, the subtype can be a struct with stricter fields (i.e. fields whose types are subtypes of the fields in the base type). If the base type is a sum type, the subtype can include fewer variants than and from the base type, and/or can have stricter variant value types.
 
 ## Embedded text verifier
 
