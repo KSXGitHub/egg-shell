@@ -1,3 +1,5 @@
+# Ideas
+
 ## Type-level Certifications
 
 ### Domains
