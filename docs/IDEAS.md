@@ -16,14 +16,11 @@ Verifier functions may assign certificates to their return values. For example, 
 
 ## Subtypes
 
-> [!NOTE]
-> There are similarities between Type-level Certifications and this. More experiments are required to determine their difference, usefulness, complexity, and implementation viability.
-
 A subtype `B` of `A` is just `A` but with potentially fewer variants.
 
 A value of type `A` is incompatible with `B` but a value of type `B` is compatible with `A`.
 
-If the inner of `B` does not have any special requirements than that of `A` (such as subtyped struct fields or narrower sum type), we can choose a few functions to construct or verify `B`.
+If the inner of `B` does not have any special requirements than that of `A` (such as subtyped struct fields, narrower sum type, or type-level certifications), a value of type `A` can be explicitly cast into type `B`.
 
 A subtype can inherit from multiple subtypes of the same origin type. For example, if `B1` and `B2` are both subtypes of `A`, then it is possible to declare a `C` that subtypes both `B1` and `B2`.
 
@@ -102,7 +99,9 @@ Macro applications with well-typed return type may be checked for type correctne
 
 ## Implied Trait Implementation
 
-Some trait may imply another trait (for example: `Convert(A, B)` implies `TryConvert(A, B, never)`), but a blanket implementation would take away the ability to customize them. Therefore, trait implementation writer should still explicitly specify the implied trait implementation. For convenience, a `derive` macro on top of trait implementation should be used.
+Some trait may imply another trait (for example: `Convert(A, B)` implies `TryConvert(A, B, never)`), but a blanket implementation would take away the ability to customize them. Therefore, trait implementation writer should still explicitly specify the implied trait implementation.
+For convenience, a `derive` macro on top of trait implementation should be used,
+and a hint attribute may be added next to the implied trait bound in the trait declaration to provide helpful hints (regarding the `derive` macro) should the implied trait be unsatisfied.
 
 ## WASM-based plugins
 
