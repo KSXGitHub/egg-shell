@@ -35,3 +35,15 @@ Combine value wrappers instead of field names. The meaning of the "field names" 
 Combine resolved type directly. If some types are found to be duplicated or too generic (such as plain numbers and strings), define a wrapper type.
 
 Generic type cannot be combined this way.
+
+## Hidden trait bound doesn't mix well with first-class trait bound as expression
+
+### Problems
+
+Hidden trait bounds are trait bounds that are automatically assumed by default. Their existence necessitate a syntax to remove it (i.e. `?Trait(Types)`). This syntax however does not make sense in a normal expression.
+
+### Potential solutions
+
+#### Syntax to disable hidden trait bounds is only valid in trait declarations and trait implementations
+
+Expressions do not contain hidden trait bounds. The result of such expressions do not assume hidden trait bounds. Instead, they will be assumed once these expressions are invoked in trait declarations and trait implementations by appending hidden trait bounds to the result of the invoked expressions.
