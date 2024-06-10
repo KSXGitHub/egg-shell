@@ -30,6 +30,8 @@ A subtype must have the same size as the base type. Thus, the subtyping mechanis
 
 If the base type is a struct, the subtype can be a struct with stricter fields (i.e. fields whose types are subtypes of the fields in the base type). If the base type is a sum type, the subtype can include fewer variants than and from the base type, and/or can have stricter variant value types.
 
+Orphan rule: If at least one of the direct or indirect base types is foreign, a foreign trait cannot be implemented on the subtype.
+
 ## Embedded text verifier
 
 Verify embedded string literal at type-checker level. For example, verifying embedded JavaScript code to have correct syntax.
