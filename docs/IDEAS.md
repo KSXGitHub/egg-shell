@@ -109,6 +109,9 @@ and a hint attribute may be added next to the implied trait bound in the trait d
 
 ## WASM-based plugins
 
+> [!WARNING]
+> Beware of [non-determinism](https://github.com/WebAssembly/design/blob/main/Nondeterminism.md). The non-deterministic behavior are to be disabled by default for plugins that may affect reproducibility. Plugins that require non-deterministic capabilities must request permission and should guarantee that the end result is unaffected by non-determinism. The end-user will assume that all plugins are deterministic regardless of whether they make use of non-deterministic capabiltities. Failure of a plugin to guarantee determinism of its result is considered a bug of the plugin.
+
 ### WASM-based type constructors
 
 Type constructors may be a WASM module.
