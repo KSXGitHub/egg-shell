@@ -96,16 +96,37 @@ Macro applications with well-typed return type may be checked for type correctne
 * A concrete module is a value.
 * A parameterized module is a function that return a concrete module.
 
-## Trait Implementation Targets
+## Trait Instance Targets
 
 * Concrete types.
 * Type constructors.
 
-## Implied Trait Implementation
+## Trait bounds
 
-Some trait may imply another trait (for example: `Convert(A, B)` implies `TryConvert(A, B, never)`), but a blanket implementation would take away the ability to customize them. Therefore, trait implementation writer should still explicitly specify the implied trait implementation.
-For convenience, a `derive` macro on top of trait implementation should be used,
-and a hint attribute may be added next to the implied trait bound in the trait declaration to provide helpful hints (regarding the `derive` macro) should the implied trait be unsatisfied.
+### Implied trait bounds
+
+If trait bound `Foo(...)` implies trait bound `Bar(...)`,
+1. Expression `Foo(...)` is equivalent to expression `Foo(...) and Bar(...)`.
+2. Constraint `Foo(...)` is a subset of constraint `Bar(...)`.
+3. When one writes the expression `Foo(...) and Bar(...)`, the linter may warn of unnecessary trait bound in `Bar(...)`.
+
+Some traits may imply another trait (for example: `Convert(A, B)` implies `TryConvert(A, B, never)`), but a blanket instance would take away the ability to customize them. Therefore, trait instance writer should still explicitly specify the implied trait instance.
+
+Some types may also imply a trait (for example: `HashMap(K, V)` implies `Hash(K)` and `Eq(K)`).
+
+~~Implied trait bounds may be syntactically omitted when writing trait instances for generic types.~~
+
+Both adding and removing implied trait bounds are backward incompatible change (semver major).
+
+### Trait bounds by necessity
+
+Unlike implied trait bounds where one trait bound is a subset of another, trait bounds by necessity are only required because of implementation requirements. For example, a generic struct may require a trait bound because one of its internal field has a type that has trait bounds.
+
+Even if trait bound `Foo(...)` requires trait bound `Bar(...)` by necessity, `Foo(...)` does not imply `Bar(...)`. Therefore, in a generic declaration, adding `Foo(...)` does not provide the capabilities of `Bar(...)`.
+
+The linter may warn of unused trait bounds by necessity if their presence are found to be unnecessary.
+
+Adding trait bounds by necessity is a backward incompatible change (semver major), but removing them is backward compatible (semver minor).
 
 ## WASM-based plugins
 

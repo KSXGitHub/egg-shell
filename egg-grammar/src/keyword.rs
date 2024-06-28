@@ -14,6 +14,8 @@ pub enum Keyword {
     Final,
     Fn,
     Gen,
+    Given,
+    Implying,
     Inst,
     Let,
     Meta,
