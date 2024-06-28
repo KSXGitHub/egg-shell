@@ -44,6 +44,6 @@ Hidden trait bounds are trait bounds that are automatically assumed by default. 
 
 ### Potential solutions
 
-#### Syntax to disable hidden trait bounds is only valid in trait declarations and trait implementations
+#### Syntax to disable hidden trait bounds is only valid in trait declarations and trait instances
 
-Expressions do not contain hidden trait bounds. The result of such expressions do not assume hidden trait bounds. Instead, they will be assumed once these expressions are invoked in trait declarations and trait implementations by appending hidden trait bounds to the result of the invoked expressions.
+Expressions do not contain hidden trait bounds. The result of such expressions do not assume hidden trait bounds. Instead, they will be assumed once these expressions are invoked in trait declarations and trait instances by appending hidden trait bounds to the result of the invoked expressions.
