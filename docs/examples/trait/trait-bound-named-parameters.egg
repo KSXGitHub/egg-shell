@@ -8,7 +8,7 @@ with
     pub length: Length
     pub height: Height
 
-impl(Length, Height) Area(Rectangle(--Length, --Height))
+inst(Length, Height) Area(Rectangle(--Length, --Height))
 where Mul(Length, Height)
 with
     pub type Output = Mul(Length, Height)::Output

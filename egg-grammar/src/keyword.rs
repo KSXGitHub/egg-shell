@@ -14,7 +14,7 @@ pub enum Keyword {
     Final,
     Fn,
     Gen,
-    Impl,
+    Inst,
     Let,
     Meta,
     Mod,

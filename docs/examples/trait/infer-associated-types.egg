@@ -2,7 +2,7 @@ trait MyTypeDictClass(TypeDict, infer Type1, infer Type2)
 
 struct MyTypeDict
 
-impl MyTypeDictClass(MyTypeDict, u8, u16)
+inst MyTypeDictClass(MyTypeDict, u8, u16)
 
 pub mod 'long syntax' with
     pub type MyType1 = infer X where MyTypeDictClass(MyTypeDict, X, _)                          # MyType1 is u8

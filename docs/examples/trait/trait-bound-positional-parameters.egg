@@ -7,7 +7,7 @@ with
     pub length: Length
     pub height: Height
 
-impl(Length, Height) Area(
+inst(Length, Height) Area(
     Rectangle(Length, Height),
     Mul(Length, Height)::Output,
 )
