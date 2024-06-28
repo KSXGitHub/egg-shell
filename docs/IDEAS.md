@@ -4,6 +4,24 @@
 
 The same set of source code (including the lockfile), compiler parameters, toolchain version, and target platform should always result in the exact same set of output files.
 
+## Compile-time Parameters for Whole Project or Library
+
+Some projects and libraries would like to produce different outputs (e.g. different programs) based on different parametric configurations or compiler environments. However, allowing them to access the system directly from the source code would violate both the security sandbox and [reproducibility guarantee](#reproducible-build). Therefore, they may be accessed indirectly via either the compiler's CLI arguments or configuration files.
+
+If a dependency requires compile-time parameters, they must be passed down from its dependant via the manifest file. The compile-time parameters shall be part of the identity of the dependency, similar to how generic works.
+
+Compile-time parameters in the source tree may accept variables and expressions. The variables are the compile-time parameters. This would allow one to pass parameters from the CLI all the way down to indirect dependency should the configuration of the dependency chain allows it.
+
+To allow the language server to work correctly without having to specify compile-time parameters, the types of compile-time parameters must always be declared at part of the source tree such as configuration files, source files, etc. If the compile-time parameters are set in the source tree, their types may be omitted.
+
+Compile-time parameters set in the source tree are only default values. For a project, they can be overridden by compiler's CLI arguments. For a dependency, they can be overridden by having the dependant passing different values than the default.
+
+Initially, the types of the compile-time parameters must be built-in primitives. More thought and design is required for the use of ecosystem types (custom types defined by users via library code).
+
+### Compile-time Environment Variables
+
+Compile-time Environment Variables are just string typed compile-time parameters. Nothing is special about them.
+
 ## Type-level Certifications
 
 ### Domains
