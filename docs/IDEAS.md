@@ -1,5 +1,9 @@
 # Ideas
 
+## Reproducible Build
+
+The same set of source code (including the lockfile), compiler parameters, toolchain version, and target platform should always result in the exact same set of output files.
+
 ## Type-level Certifications
 
 ### Domains
