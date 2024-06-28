@@ -88,7 +88,7 @@ Macro applications with well-typed return type may be checked for type correctne
 
 ### First-Class Traits
 
-* A trait is a const function that returns a "constraint".
+* A trait is a const function that returns a "trait bound" (also known as "constraint").
 * The parameters of a trait can be any const value, including: primitives, types, kinds, traits, etc.
 
 ### First-Class Modules
