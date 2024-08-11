@@ -47,3 +47,17 @@ Hidden trait bounds are trait bounds that are automatically assumed by default. 
 #### Syntax to disable hidden trait bounds is only valid in trait declarations and trait instances
 
 Expressions do not contain hidden trait bounds. The result of such expressions do not assume hidden trait bounds. Instead, they will be assumed once these expressions are invoked in trait declarations and trait instances by appending hidden trait bounds to the result of the invoked expressions.
+
+## "Forall" trait bounds
+
+### Problems
+
+Some trait bound expressions may require the ability to specify "forall" of generic parameters (e.g. lifetime parameters for function parameters of a function trait bounds, similar to `for<>` in Rust).
+
+### Potential solutions
+
+#### Template syntax
+
+Template syntax can function as a "forall" expression.
+
+It requires an additional ability to seamlessly type-cast between template types of similar set of template parameters but in different order in order to mitigate/eliminate the needs of "wrapper" template closure.
