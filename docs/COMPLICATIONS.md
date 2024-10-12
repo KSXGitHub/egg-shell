@@ -61,3 +61,15 @@ Some trait bound expressions may require the ability to specify "forall" of gene
 Template syntax can function as a "forall" expression.
 
 It requires an additional ability to seamlessly type-cast between template types of similar set of template parameters but in different order in order to mitigate/eliminate the needs of "wrapper" template closure.
+
+## Location agnostic compilation cache
+
+### Problems
+
+We would like to store cache based on the content hash of the files. The problem is, a module file may have dependencies, and the relative positions between the importer and the imported also change the way the program work.
+
+### Potential solutions
+
+#### Make relative path a part of a dependency identity
+
+Cache the relative path as part of a file's dependencies tree. Together with a content hash, make up a pair that is the identity of a dependency.
