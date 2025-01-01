@@ -150,6 +150,12 @@ The linter may warn of unused trait bounds by necessity if their presence are fo
 
 Adding trait bounds by necessity is a backward incompatible change (semver major), but removing them is backward compatible (semver minor).
 
+## Variances of generic type parameters 
+
+Generic types are _invariant_ by default.
+
+_Covariance_ and _contravariance_ can be expressed by higher order generic type parameters (types of types) with trait bounds related to subtyping.
+
 ## WASM-based plugins
 
 > [!WARNING]
