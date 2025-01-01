@@ -152,7 +152,7 @@ Adding trait bounds by necessity is a backward incompatible change (semver major
 
 ## Variances of generic type parameters 
 
-~~Generic types are _invariant_ by default.~~
+Generic types are _invariant_ by default.
 
 ~~_Covariance_ and _contravariance_ can be expressed by higher order generic type parameters (types of types) with trait bounds related to subtyping.~~
 
