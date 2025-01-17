@@ -1,0 +1,41 @@
+@@!desc Demonstrating instantiating a higher-kinded trait on a type alias
+
+@@desc Represent either a success or a failure.
+@@params
+    X: The type of the success value.
+    E: The type of the failure value (a.k.a. an error).
+pub enum Result(X, E) with
+    pub case Ok(X) @@desc Contain the success value.
+    pub case Err(E) @@desc Contain the failure value.
+
+@@desc Map the inner type of a container.
+@@params
+    Box: The container's type constructor or alias of the container's type constructor.
+pub trait Functor(Box)
+given
+    type Box(type) # shorthand alias for `TypeAlias(Box, [type])`
+with
+    @@desc Map the inner type of the container.
+    @@params
+        X: The type of the inner value of the input.
+        Y: The type of the inner value of the output.
+        F: The type of the map function.
+        x: The inner value of the input.
+        f: The map function.
+    tmpl(X, Y, F)
+    pub fn map(x: Box(X), f: F) -> Box(Y)
+    where
+        F(X) -> Y # shorthand alias for `Fn(F, [X], Y)`
+
+# making this possible means that trait instantiations must be permitted on type aliases,
+# which means that the orphan rules must forbid conflicting aliases.
+pub inst(E: type) Functor(Result(?, E))
+with
+    tmpl(X, Y, F)
+    pub fn map(x: Result(X, E), f: F) -> Result(Y, E)
+    where
+        F(X) -> Y
+    do
+        match x
+            case Result::Ok(x) then Result::Ok(f(x))
+            case Result::Err(e) then Result::Err(e)

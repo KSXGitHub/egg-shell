@@ -62,6 +62,26 @@ Template syntax can function as a "forall" expression.
 
 It requires an additional ability to seamlessly type-cast between template types of similar set of template parameters but in different order in order to mitigate/eliminate the needs of "wrapper" template closure.
 
+## Trait instantiations on higher-kinded types with varying number of parameters
+
+### Problems
+
+Higher-kinded types may have varying number of parameters (e.g. `Option(X)` requires 1 whilst `Result(X, E)` requires 2). This makes fitting them into a common trait (such as `Functor` which is required for both `Option` and `Result`) difficult.
+
+### Potential solutions
+
+#### Allow trait instantiations to be on a subset of type aliases
+
+Trait instantiations on some classes of type aliases must be allowed.
+
+These type aliases can either be named (`type F(X) = G(A, X, C)`) or not named. The legal not-named type aliases are so-called "type closures" (shorthand: `G(A, ?, C)`, long-form hasn't been thought out).
+
+These type aliases must have a single identifiable container type (such as `Result` for `type FsResult(X) = Result(X, FsError)`). Therefore, type aliases with branching (such as `type Choose(choice: bool, T, F) = if choice then T else F`) are forbidden.
+
+The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same container type. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(E, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the container type.
+
+Trait instantiations on functions that return types are still forbidden.
+
 ## Location agnostic compilation cache
 
 ### Problems
