@@ -78,7 +78,7 @@ These type aliases can either be named (`type F(X) = G(A, X, C)`) or not named. 
 
 These type aliases must have a single identifiable container type (such as `Result` for `type FsResult(X) = Result(X, FsError)`). Therefore, type aliases with branching (such as `type Choose(choice: bool, T, F) = if choice then T else F`) are forbidden.
 
-The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same container type. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(E, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the container type.
+The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same container type. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(X, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the container type.
 
 Trait instantiations on functions that return types are still forbidden.
 
