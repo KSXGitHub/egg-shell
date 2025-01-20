@@ -70,7 +70,7 @@ Higher-kinded types may have varying number of parameters (e.g. `Option(X)` requ
 
 ### Potential solutions
 
-#### Allow trait instantiations to be on a subset of type aliases
+#### Allow trait instantiations to be on partially applied type aliases
 
 Trait instantiations on some classes of type aliases must be allowed.
 
