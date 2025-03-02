@@ -24,7 +24,7 @@ Field names are sorted differently across different namespaces and thus cannot h
 
 #### Word set
 
-Word set is a special type that can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated word set.
+Word set is a special type whose statically-known values (e.g. compile-time constants) can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated word set.
 
 #### Wrapper type with combination properties
 
