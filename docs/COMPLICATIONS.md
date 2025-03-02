@@ -93,3 +93,25 @@ We would like to store cache based on the content hash of the files. The problem
 #### Make relative path a part of a dependency identity
 
 Cache the relative path as part of a file's dependencies tree. Together with a content hash, make up a pair that is the identity of a dependency.
+
+## Subtypes and traits
+
+### Problems
+
+Trait methods may (and often does) have return type being the same as the type parameters in of the trait. This makes it possible to return a value belongs to the type but not a subtype, leading to wrong subtype guarantees should the subtype inherit traits from the its supertypes.
+
+For example, the number type `i32` has trait instance `Add(i32, i32)` and a subtype `1i32 | 2i32` (the syntax of subtyping is not final). Logically, `Add(i32, i32)` should be possible on `1i32 | 2i32`. However, `2i32 + 2i32` evaluates to `4i32` which is outside the subtype.
+
+### Potential solutions
+
+#### Subtypes are not considered the same as their supertypes
+
+Subtypes should not be considered the same as their supertypes, and they do not inherit their trait instances. Instead, their values would be casted to the closet supertype that satisfy the trait instance.
+
+For example, calling `Add(i32, i32)::add` on 2 values of subtype `1i32 | 2i32` would cast the values to `i32`, compute the addition, then return an `i32`.
+
+## Subtypes and blanket traits
+
+### Unresolved questions
+
+Is it possible to make unsound method with blanket traits?
