@@ -1,12 +1,12 @@
 # Complications
 
-## Namespaces or locales for field names for unordered anonymous tuples
+## Vocabularies for field names for unordered anonymous tuples
 
 ### Problems
 
 #### Translation
 
-Field names for different anonymous tuples can have entirely different meaning (homographs) and thus cannot be translated consistently across different locales.
+Field names for different anonymous tuples can have entirely different meaning (homographs) and thus cannot be translated consistently across different vocabularies.
 
 #### Type representation
 
@@ -22,9 +22,9 @@ Field names are sorted differently across different namespaces and thus cannot h
 
 ### Potential solutions
 
-#### Vocabulary
+#### Vocabulary anchor
 
-Vocabulary is a special type that can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated vocabulary.
+Vocabulary anchor is a special type that can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated vocabulary anchor.
 
 #### Wrapper type with combination properties
 
