@@ -18,7 +18,7 @@ Related to _Type representation_ above. Merging homographs would lead to surpris
 
 #### ABI consistency
 
-Field names are sorted differently across different namespaces and thus cannot have a consistent stable ABI if implemented naively.
+Field names are sorted differently across different vocabularies and thus cannot have a consistent stable ABI if implemented naively.
 
 ### Potential solutions
 
