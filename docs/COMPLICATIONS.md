@@ -22,9 +22,9 @@ Field names are sorted differently across different namespaces and thus cannot h
 
 ### Potential solutions
 
-#### Vocabulary anchor
+#### Word set
 
-Vocabulary anchor is a special type that can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated vocabulary anchor.
+Word set is a special type that can be inserted in struct and anonymous tuples as field names. A named struct would also have an associated word set.
 
 #### Wrapper type with combination properties
 
