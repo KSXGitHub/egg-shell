@@ -1,7 +1,7 @@
-pub trait TryConvert([--]Input, [--]Output, infer [--]Error) with
+pub trait TryConvert([.]Input, [.]Output, infer [.]Error) with
     pub fn try_convert(input: Input) -> Result(Output, Error)
 
-pub trait Convert([--]Input, [--]Output)
+pub trait Convert([.]Input, [.]Output)
 implying TryConvert(Input, Output, never)
 with
     pub fn convert(input: Input) -> Output
