@@ -1,5 +1,5 @@
 pub trait TryConvert([.]Input, [.]Output, infer [.]Error) with
-    pub fn try_convert(input: Input) -> Result(Output, Error)
+    pub fn try-convert(input: Input) -> Result(Output, Error)
 
 pub trait Convert([.]Input, [.]Output)
 implying TryConvert(Input, Output, never)
