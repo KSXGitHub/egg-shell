@@ -5,3 +5,10 @@ pub trait Convert([.]Input, [.]Output)
 implying TryConvert(Input, Output, never)
 with
     pub fn convert(input: Input) -> Output
+
+tmpl(Input, Output)
+inst TryConvert(Input, Output, never)
+given Convert(Input, Output)
+with
+    pub fn try-convert(input: Input) -> Result(Output, never)
+        return input | Convert::convert | Ok
