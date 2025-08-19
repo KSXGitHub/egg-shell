@@ -174,3 +174,17 @@ Const functions may be a WASM module.
 ### WASM-based macros
 
 Macros may be a WASM module.
+
+## LEAN-like proofs (optional)
+
+**Potential applications:**
+* Statically-checked pre- and post-assertions.
+* Subtyping.
+* Branch narrowing.
+
+**Observed properties:**
+* Propositions are just types. Proven propositions resolve to "true". Disproven propositions resolve to "false". Unproven propositions are unresolved.
+* "For All" and "Exists" look like closures/templates. They could be implemented as wrapper of closures or templates. For example (non-final): `ForAll((x: nat) => GreaterThanOrEqual(x, 0))`, `Exists((a: nat, b: nat) => Equal(a * b, 12))`.
+
+> [!NOTE]
+> Inspired by [Beyond Booleans](https://overreacted.io/beyond-booleans/).
