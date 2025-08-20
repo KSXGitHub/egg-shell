@@ -73,7 +73,9 @@ Verify embedded string literal at type-checker level. For example, verifying emb
 
 Multi-line string shares the same syntax as embedded text verifier, but with text verifier being no-op.
 
-User may optionally specifies newline type (LF or CRLF). By default, the newline would be whatever the file uses.
+User may optionally specifies newline type (LF or CRLF). The default newline type is LF (even if the source code uses CRLF).
+
+All raw newlines, be it LF or CRLF, would be converted to the specified newline type. This is to ensure consistency between coding platforms.
 
 ## Macros
 
