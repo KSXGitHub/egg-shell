@@ -207,5 +207,5 @@ Example:
 * Propositions are just types. Proven propositions resolve to "true". Disproven propositions resolve to "false". Unproven propositions are unresolved.
 * "For All" and "Exists" look like closures/templates. They could be implemented as wrapper of closures or templates. For example (non-final): `ForAll((x: nat) => GreaterThanOrEqual(x, 0))`, `Exists((a: nat, b: nat) => Equal(a * b, 12))`.
 
-> [!NOTE]
+> [!TIP]
 > Inspired by [Beyond Booleans](https://overreacted.io/beyond-booleans/).
