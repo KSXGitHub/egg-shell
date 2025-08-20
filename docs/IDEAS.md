@@ -175,6 +175,23 @@ Const functions may be a WASM module.
 
 Macros may be a WASM module.
 
+## Notebook-like inline snapshots
+
+* After `>>>` is an inquiry.
+* After `<<<` is an answer.
+* Before both `>>>` and `<<<` is the start of a line.
+* An inquiry must be a constant expression.
+* The answer is normalized.
+* Under every inquiry must be an answer.
+* The toolchain provides tools to auto-generate answers.
+
+Example:
+
+```
+>>> 1 * 2 * 3 * 4 * 5
+<<< 120
+```
+
 ## LEAN-like proofs (optional)
 
 **Potential applications:**
