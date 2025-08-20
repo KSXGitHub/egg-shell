@@ -28,6 +28,11 @@ Compile-time Environment Variables are just string typed compile-time parameters
 
 ## Type-level Certifications
 
+> [!TIP]
+> Perhaps LEAN-like proofs may prove useful here?
+
+<details><summary>(without LEAN-like proofs)</summary>
+
 ### Domains
 
 Verifier functions may assign bounds to their return values. For example, a non-zero verifier will assign a `(!= 0)` certificate to its returning number.
@@ -41,6 +46,8 @@ Combining two domains with no intersection should result in a `never` type. For 
 ### Nominal certifications
 
 Verifier functions may assign certificates to their return values. For example, UTF-8 verifier will assign a `utf8` certificate to its returning byte stream.
+
+</details>
 
 ## Subtypes
 
