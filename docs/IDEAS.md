@@ -23,7 +23,7 @@ Initially, the types of the compile-time parameters must be built-in primitives.
 Compile-time Environment Variables are just string typed compile-time parameters. Nothing is special about them.
 
 > [!NOTE]
-> To prevent chaos, improve predictability, and ensure determinism, the compiler **must not** inherit environment variables **automatically**.
+> To ensure determinism and reproducibility, the compiler **must not** inherit environment variables **automatically**.
 > The user must explicitly specify the variable names (and optionally values) via CLI or configuration files.
 
 ## Type-level Certifications
