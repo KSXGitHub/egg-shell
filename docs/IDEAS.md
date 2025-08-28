@@ -12,7 +12,7 @@ If a dependency requires compile-time parameters, they must be passed down from 
 
 Compile-time parameters in the source tree may accept variables and expressions. The variables are the compile-time parameters. This would allow one to pass parameters from the CLI all the way down to indirect dependency should the configuration of the dependency chain allows it.
 
-To allow the language server to work correctly without having to specify compile-time parameters, the types of compile-time parameters must always be declared at part of the source tree such as configuration files, source files, etc. If the compile-time parameters are set in the source tree, their types may be omitted.
+To allow the language server to work correctly without having to specify compile-time parameters, the types of compile-time parameters must always be declared as part of the source tree such as configuration files, source files, etc. If the compile-time parameters are set in the source tree, their types may be omitted.
 
 Compile-time parameters set in the source tree are only default values. For a project, they can be overridden by compiler's CLI arguments. For a dependency, they can be overridden by having the dependant passing different values than the default.
 
