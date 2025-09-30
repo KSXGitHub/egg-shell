@@ -110,26 +110,31 @@ Macro applications with well-typed return type may be checked for type correctne
 ### First-Class Functions
 
 * A function is also a value.
+* Every function has a unique type, except function pointers.
 
 ### First-Class Types
 
 * A concrete type is a value.
 * A generic type is a type constructor.
 * A type constructor is a const function that return a concrete type.
+* Every type has a unique type, which in turn has its own unique type, and so on.
 
 ### First-Class Kinds
 
 * A kind of a type or a kind is also a type.
+* Every kind has a unique type.
 
 ### First-Class Traits
 
 * A trait is a const function that returns a "trait bound" (also known as "constraint").
 * The parameters of a trait can be any const value, including: primitives, types, kinds, traits, etc.
+* Every trait has a unique type.
 
 ### First-Class Modules
 
 * A concrete module is a value.
 * A parameterized module is a function that return a concrete module.
+* Every module has a unique type.
 
 ## Trait Instance Targets
 
