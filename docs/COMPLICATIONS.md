@@ -62,6 +62,8 @@ Template syntax can function as a "forall" expression.
 
 It requires an additional ability to seamlessly type-cast between template types of similar set of template parameters but in different order in order to mitigate/eliminate the needs of "wrapper" template closure.
 
+The template parameters must be bound the lowest-level signature (to either an argument or the return type) either directly or indirectly (via other template parameters) to enable type-cast. Unbounded template parameters (essentially arguments in disguise) cannot be type-casted.
+
 ## Trait instantiations on higher-kinded types with varying number of parameters
 
 ### Problems
