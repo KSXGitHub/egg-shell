@@ -24,7 +24,7 @@ with
         f: The map function.
     tmpl(X, Y, F)
     pub fn map(x: Box(X), f: F) -> Box(Y)
-    where
+    given
         F(X) -> Y # shorthand alias for `Fn(F, [X], Y)`
 
 # making this possible means that trait instantiations must be permitted on type aliases,
@@ -33,7 +33,7 @@ pub inst(E: type) Functor(Result(?, E))
 with
     tmpl(X, Y, F)
     pub fn map(x: Result(X, E), f: F) -> Result(Y, E)
-    where
+    given
         F(X) -> Y
     return
         match x
