@@ -35,7 +35,7 @@ with
     pub fn map(x: Result(X, E), f: F) -> Result(Y, E)
     where
         F(X) -> Y
-    do
+    return
         match x
             case Result::Ok(x) then Result::Ok(f(x))
             case Result::Err(e) then Result::Err(e)
