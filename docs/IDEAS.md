@@ -29,9 +29,9 @@ Compile-time Environment Variables are just string typed compile-time parameters
 ## Type-level Certifications
 
 > [!TIP]
-> Perhaps LEAN-like proofs may prove useful here?
+> Perhaps type-theoretical proofs may prove useful here?
 
-<details><summary>(without LEAN-like proofs)</summary>
+<details><summary>(without type-theoretical proofs)</summary>
 
 ### Domains
 
@@ -210,7 +210,7 @@ Example:
 <<< 120
 ```
 
-## LEAN-like proofs (optional)
+## Type-theoretical proofs (optional)
 
 **Potential applications:**
 * Statically-checked pre- and post-assertions.
