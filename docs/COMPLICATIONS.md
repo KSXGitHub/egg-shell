@@ -78,9 +78,9 @@ Trait instantiations on some classes of type aliases must be allowed.
 
 These type aliases can either be named (`type F(X) = G(A, X, C)`) or not named. The legal not-named type aliases are so-called "type closures" (shorthand: `G(A, ?, C)`, long-form hasn't been thought out).
 
-These type aliases must have a single identifiable type template (such as `Result` for `type FsResult(X) = Result(X, FsError)`). Therefore, type aliases with branching (such as `type Choose(choice: bool, T, F) = if choice then T else F`) are forbidden.
+These type aliases must have a single identifiable type root (such as `Result` is the root of `type FsResult(X) = Result(X, FsError)`). Therefore, type aliases with branching (such as `type Choose(choice: bool, T, F) = if choice then T else F`) are forbidden.
 
-The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same type template. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(X, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the type template.
+The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same type root. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(X, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the type root.
 
 Trait instantiations on functions that return types are still forbidden.
 
