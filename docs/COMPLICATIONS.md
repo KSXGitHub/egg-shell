@@ -78,11 +78,50 @@ Trait instantiations on some classes of type aliases must be allowed.
 
 These type aliases can either be named (`type F(X) = G(A, X, C)`) or not named. The legal not-named type aliases are so-called "type closures" (shorthand: `G(A, ?, C)`, long-form hasn't been thought out).
 
-These type aliases must have a single identifiable type root (such as `Result` is the root of `type FsResult(X) = Result(X, FsError)`). Therefore, type aliases with branching (such as `type Choose(choice: bool, T, F) = if choice then T else F`) are forbidden.
+These type aliases must have a single identifiable [type root](#type-root). Therefore, [type aliases with branching](#type-aliases-with-branching) are forbidden.
 
 The orphan rules must forbid trait instantiations of one trait on multiple type aliases which share the same type root. For example: `inst(E) Functor(Result(?, E))` must conflict with `inst(X) Functor(Result(X, ?))` because `Result(?, E)` and `Result(X, ?)` share `Result` as the type root.
 
-Trait instantiations on functions that return types are still forbidden.
+Trait instantiations on [functions that return types](#functions-that-return-types) are forbidden.
+
+Trait instantiations on [opaque type expressions](#opaque-type-expressions) are forbidden.
+
+##### Type Root
+
+The type root is the canonical, originally-defined type constructor that serves as the foundational element in a non-branching type expression or type alias.
+It represents the ultimate source type from which all aliases derive their identity for trait resolution purposes.
+
+A type root must be:
+* The original type name as defined in its declaration.
+* Not itself an alias of another type.
+* Unambiguously determinable through syntactic inspection.
+
+For example:
+* The type root of `enum Result` is `Result`.
+* The type root of `type FsResult(X) = Result(X, FsError)` is `Result`.
+* The type root of `type FallibleString(E) = Result(String, E)` is `Result`.
+* The type root of `type ReversedResult(E, X) = Result(X, E)` is `Result`.
+* The type root of `type ComplexForNoReason(X) = Either(Option(X), Result(X, DynError))` is `Either`.
+* The type root of `struct Foo` (no generic parameter) is `Foo`.
+
+##### Type aliases with branching
+
+A type alias with branching is a type-level expression that conditionally selects between two or more different type expressions based on compile-time conditions, preventing the identification of a single type root.
+
+For example: `type Choose(choice: bool, T, F) = if choice then T else F`.
+
+##### Functions that return types
+
+All type aliases are type functions, but not all type functions qualified as type aliases.
+
+##### Opaque type expressions
+
+An opaque type expression is a type-level computation where the relationship between input types and output type is not transparently visible to the trait resolution system, preventing identification of a type root
+
+For example:
+* `type Computed = some_const_function_that_return_type()`
+* `type Mapped(types: List(type), f: fn(type) -> type) = map(types, f)`
+* `type Reduced(Init, types: List(types), f: fn(type, type) -> type) = fold(Init, types, f)`
 
 ## Location agnostic compilation cache
 
