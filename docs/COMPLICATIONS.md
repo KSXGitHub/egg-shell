@@ -92,7 +92,7 @@ The type root is the canonical, originally-defined type constructor that serves 
 It represents the ultimate source type from which all aliases derive their identity for trait resolution purposes.
 
 A type root must be:
-* The original type name as defined in its declaration.
+* The original type name (for named types) or structure (for structural types) as defined in its declaration.
 * Not itself an alias of another type.
 * Unambiguously determinable through syntactic inspection.
 
@@ -103,6 +103,10 @@ For example:
 * The type root of `type ReversedResult(E, X) = Result(X, E)` is `Result`.
 * The type root of `type ComplexForNoReason(X) = Either(Option(X), Result(X, DynError))` is `Either`.
 * The type root of `struct Foo` (no generic parameter) is `Foo`.
+* The type root of `(u32, String, char)` would be either `Tuple` or `Tuple3` once the design is finalized.
+* The type root of `[u32; 5]` and `[Foo; 1]` is `Array`.
+* The type root of `[u32]` and `[Foo]` is `Slice`.
+* The type root of `&str`, `&Foo`, and `&&Foo` is `Reference`.
 
 ##### Type aliases with branching
 
