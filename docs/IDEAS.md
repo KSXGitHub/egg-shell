@@ -184,9 +184,21 @@ Generic types are _invariant_ by default.
 > [!WARNING]
 > Beware of [non-determinism](https://github.com/WebAssembly/design/blob/main/Nondeterminism.md). The non-deterministic behavior are to be disabled by default for plugins that may affect reproducibility. Plugins that require non-deterministic capabilities must request permission and should guarantee that the end result is unaffected by non-determinism. The end-user will assume that all plugins are deterministic regardless of whether they make use of non-deterministic capabilities. Failure of a plugin to guarantee determinism of its result is considered a bug of the plugin.
 
-### WASM-based type constructors
+### WASM-based type aliases
 
-Type constructors may be a WASM module.
+Type aliases may be a WASM module.
+
+> [!NOTE]
+> **Why not WASM-based type constructors?**
+>
+> The compiler would need consistent and inferable information regarding memory layout and sizes, so there is no point in using opaque plugins to define them.
+
+> [!NOTE]
+> **What about Decidability?**
+>
+> The only reason this programming language would care about Decidability and Guaranteed Termination is to guarantee correctness, soundness, and consistency in proof uses (if the proof idea is ever implemented).
+>
+> Type aliases are purely computational entities for they would be resolved into canonical forms that use type constructors which are decidable. As a result, type aliases would be invisible to proofs.
 
 ### WASM-based const functions
 
