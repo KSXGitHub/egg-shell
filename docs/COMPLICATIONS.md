@@ -163,3 +163,61 @@ For example, calling `Add(i32, i32)::add` on 2 values of subtype `1i32 | 2i32` w
 ### Unresolved questions
 
 Is it possible to make unsound method with blanket traits?
+
+## Turing-complete const expressions and proof-system
+
+> [!NOTE]
+> This problem is only relevant when the Type-theoretical Proofs is implemented.
+
+### Problems
+
+Const expressions are allowed to be used in type expressions.
+
+Type expressions are the mechanism of type-theoretical proofs.
+
+In Type-theoretical Proofs, proofs and types cannot be cleanly separated.
+
+Turing-completeness introduces undecidability and non-termination, which could enable writing false proofs such as `eq(0, 1)`. Such false proofs could be used to subtly or accidentally introduce unsoundness, undefined behavior, and logic bugs to the program without the presence of a single escape hatch (such as `unsafe`).
+
+### Potential solutions
+
+#### Introduce an effect that specifies totality
+
+Const expressions without termination guarantee cannot be invoked from within termination-guaranteed contexts.
+
+The const expressions used in a type context must guarantee to terminate.
+
+The problems with this solution:
+1. It restricts all legitimate uses of Turing-complete type expressions in non-proof type signatures.
+
+#### Introduce a tier purer than `const` called `type`
+
+All type-level expressions can be invoked from within const expressions.
+
+The reverse isn't true.
+
+The problems with this solution:
+1. Too restrictive.
+2. It either overloads the meaning of an existing keyword (`type`) or adds a new one, making the language more complex.
+
+#### Identify what kinds of proof operations that actually need totality
+
+Surely the paradoxes only arise when certain operations are enabled! Only such operations would require the `total` effect to be used in type context.
+
+The problems with this solution:
+1. It costs time to research.
+2. A bottom-up approach may leave holes.
+
+Alternatively, all new operations required by advanced proofs (when Type-theoretical Proofs is implemented) should require `total`. If future research finds out that the requirement was unnecessary, lifting the `total` requirement would not be a breaking change.
+
+#### Introduce a special proof-irrelevant universe of propositions
+
+Introduce a special type universe called `Prop` (like Lean). This universe is lower than that of the data types.
+
+Inhabitants of the types in this universe (called "propositions") cannot be used in most computational contexts. Most of standard library functions aren't polymorphic over this universe. This renders the problem of Turing-completeness irrelevant.
+
+The problems with this solution:
+1. It contradicts uniformity and symmetry, defeating the entire point.
+2. It creates a separate world of proofs, which speaks a language different from the computational world.
+3. It creates a need for a separate standard library and a separate package ecosystem only for proofs.
+4. It sucks.
