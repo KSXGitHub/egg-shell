@@ -227,6 +227,13 @@ Example:
 
 ## Type-theoretical proofs (optional)
 
+**Goals:**
+* Enhance correctness of programs, reduce logic bugs.
+* Enable compiler optimization to be more aggressive, improving performance.
+
+**Non-goals:**
+* Proving Mathematical theorems.
+
 **Potential applications:**
 * Statically-checked pre- and post-assertions.
 * Subtyping.
