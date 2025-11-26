@@ -221,3 +221,27 @@ The problems with this solution:
 2. It creates a separate world of proofs, which speaks a language different from the computational world.
 3. It creates a need for a separate standard library and a separate package ecosystem only for proofs.
 4. It sucks.
+
+#### Make totality a mandatory requirement for all dependent-type expressions
+
+Higher-Order Types by itself is a consistent and sound system. Even if some type constructors don't terminate, the worst consequence is making the compiler hangs indefinitely.
+
+Paradoxes only appear when dependent-type enters the picture. Therefore, if all dependent-type expressions require termination guarantee, the problem of Turing-completeness would be rendered irrelevant.
+
+For example:
+
+    # MyTypeAlias has kind `* -> *`
+    import { MyTypeAlias } from 'run-wasi:./my-compiled-lib.wasm'
+
+    # This is legal
+    tmpl(X: type)
+    pub const fn foo(x: MyTypeAlias(X)) -> X do
+        ...
+
+    # This is illegal
+    tmpl(X: type)
+    pub const fn bar(
+        x: MyTypeAlias(X),
+        p: x != 0, # illegal because x is not total in this context and therefore cannot be used to construct `x != 0` proposition
+    ) -> X do
+        ...
