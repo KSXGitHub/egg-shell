@@ -225,6 +225,34 @@ Example:
 <<< 120
 ```
 
+## Effect System
+
+Compile-time check for possible effects on a function.
+
+Examples of effects include, but are not limited to:
+* `const`-ness: Whether the function can be called at compile-time.
+* `static`-ness: Whether the function can be called in `static` context.
+* Memory safety: Whether the function is memory-safe.
+* Total/partial, divergent/convergent, and whether a function would crash.
+* The various types of side-effects and capabilities.
+
+> [!TIP]
+> One may consider `unsafe` as a synonym for "all capabilities". This is critical from the point of view of [capability-based security](#capability-based-security).
+
+### Generic effects
+
+Passing effects as generic parameters.
+
+### Capability-based security
+
+The ability to annotate side-effects and capabilities is a sound base for capability-base security.
+
+The programmer wants to use the various third-party libraries in the ecosystem. However, carelessly adding them to the project creates risks of supply-chain attacks or malware injections.
+
+Letting the programmer specify capabilities for each third-party library certainly cannot completely replace manual code auditing, but it does make the job easier.
+
+The programmer would specify what capabilities each library is allowed to have, both at runtime (to prevent malware injections) and at compile-time (to prevent supply-chain attacks). If the library code requires more capabilities than were given, the compiler would fail.
+
 ## Type-theoretical proofs (optional)
 
 **Goals:**
