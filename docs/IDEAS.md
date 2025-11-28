@@ -253,6 +253,94 @@ Letting the programmer specify capabilities for each third-party library certain
 
 The programmer would specify what capabilities each library is allowed to have, both at runtime (to prevent malware injections) and at compile-time (to prevent supply-chain attacks). If the library code requires more capabilities than were given, the compiler would fail.
 
+## Costs tracking (optional)
+
+There are 4 types of costs: (space, time) ✕ (optimistic, pessimistic)
+* "Time" means how many operations a function would perform.
+* "Space" means how much memory a function would require.
+* "Optimistic" means the best-case scenario: Shortest possible codepath for "time", or least memory allocated for "space".
+* "Pessimistic" means the worst-case scenario. Longest possible codepath for "time", or most memory allocated for "space".
+
+Time and Space may be independent of each other, but Optimistic should be cheaper than Pessimistic.
+
+If the Pessimistic Time and/or Pessimistic Space aren't specified, the compiler should assume them to be Unbounded.
+
+If the Optimistic Time and/or the Optimistic Space aren't specified, the compiler should assume them to be the same as their Pessimistic counterparts.
+
+The cheaper cost is a subtype of the more expensive cost.
+
+> [!IMPORTANT]
+> The subtyping rule applies to the Optimistic class the exact same way as to the Pessimistic class, in the exact same direction, not opposite.
+>
+> This is because, contrary to human intuition, optimistic cost doesn't work like the lower-bound of a range type.
+
+A cost is a kind of [effect](#effect-system).
+
+### Level 0: Existence of Side-Effects
+
+This is just a subset of [the Effect System](#effect-system).
+
+This level should be trivially inferred by the compiler.
+
+### Level 1: Absolute bounds
+
+Only track the absolute maximum cost a function requires.
+
+There are generally 3 classes of absolute bounds:
+* Constant of Zero: The function does absolutely nothing, i.e. a no-op.
+* Constant of Non-Zero: The function has a finite maximum cost.
+* Unbounded: The cost of the function is not bounded.
+
+This level should be trivially inferred by the compiler.
+
+### Level 2: Bounds of Polynomial Expressions
+
+> [!TIP]
+> This type of bound depends on input, and as such, requires dependent-type.
+
+This is a bound described by [polynomial expressions](https://en.wikipedia.org/wiki/Polynomial), not to be confused with [polynomial bounds](#level-3-polynomial-bounds).
+
+In a non-generic or resolved function signature:
+* The inputs and their sizes serve as indeterminates.
+* The multiplier constants (a.k.a. factors) serve as coefficients.
+* The operations or side-effects serve as units (a.k.a. dimensions).
+
+This bound is described by polynomial expressions only. Sub-polynomial expressions (such as `log`, `sqrt`, etc) are not legal and must be over-approximated as a polynomial that contains it. As a consequence, this level would equate a binary-search and a linear-search as having almost the same cost.
+
+Super-polynomials (such as `2**n`) are not legal and must be over-approximated into Unbounded.
+
+The terms are independent of each other, despite how entangled they may have been in the actual code.
+
+This level should be trivially inferred by the compiler.
+
+### Level 3: Polynomial Bounds
+
+> [!TIP]
+> This type of bound depends on input, and as such, requires dependent-type.
+
+This is a bound described by a mix of [polynomials](#level-2-bounds-of-polynomial-expressions) and sub-polynomials.
+
+Super-polynomials (such as `2**n`) are not legal and must be "upgraded" into Unbounded.
+
+Unlike [Level 2](#level-2-bounds-of-polynomial-expressions), this bound accept sub-polynomials.
+
+The terms remain independent of each other, just like [Level 2](#level-2-bounds-of-polynomial-expressions).
+
+This level cannot be trivially inferred by the compiler and thus require manually written proofs.
+
+### Level 4: Exact bound expressions
+
+> [!TIP]
+> This type of bound depends on input, and as such, requires dependent-type.
+
+This is a bound described by the granular cost expressions in exact details. This includes the entangled relationships between operations, super-polynomials, etc.
+
+Such expressions are not necessarily linear. They may include structures such as branching (`if`, `match`) and loops.
+
+This level cannot be trivially inferred by the compiler and thus requires manually written proofs.
+
+This level cannot be trivially subtyped and thus requires manually written proofs.
+
 ## Type-theoretical proofs (optional)
 
 **Goals:**
