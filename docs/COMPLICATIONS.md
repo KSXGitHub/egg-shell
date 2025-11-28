@@ -164,6 +164,35 @@ For example, calling `Add(i32, i32)::add` on 2 values of subtype `1i32 | 2i32` w
 
 Is it possible to make unsound method with blanket traits?
 
+## Costs tracking of mutually circular dependencies
+
+### Problems
+
+Regular type-checking is straightforward and local, just assume the other parts of the code tell the truth whilst checking one part. If the other parts lie, an error would occur when the type-checker eventually reaches them.
+
+But cost-checking is not that simple.
+
+Consider the following scenario:
+1. Define a no-op function `f`, which does nothing except calling `g`.
+2. Define a no-op function `g`, which does nothing except calling `h`.
+3. Define a no-op function `h`, which does nothing except calling `f`.
+
+If the naive local method (which assumes the other functions tell the truth) was used, all three functions would have been wrongly passed as no-op despite them being infinite loop in the actual runtime.
+
+Therefore, it is necessary to recursively verify the function and the called functions.
+
+Even with caching, the price of performance is still heavy for big enough codebase.
+
+### Potential solutions
+
+#### Non-cyclic modular compilation units
+
+The local approach only fails because of circular dependencies. Such problem can be avoided if the type-checker is sure there are no circular dependencies.
+
+By default, a file is a compilation unit. Circular dependencies between compilation units are forbidden. This design allows programmers to still use recursion in a single file while preserving local performance overall.
+
+In addition, the linter may warn against a file that is too big.
+
 ## Turing-complete const expressions and proof-system
 
 > [!NOTE]
