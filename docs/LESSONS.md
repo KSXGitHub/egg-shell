@@ -152,11 +152,11 @@ pub struct Foo
 ```
 
 Intra links can use an alias declared by the containing item.
-* Intra links of an item can use an alias declared by the namespace containing that item, directly or indirectly.
-* Intra links of a struct field can use an alias declared by the struct or the namespace containing the struct.
-* Intra links of an enum variant can use an alias declared by the enum or the namespace containing the enum.
-* Intra links of a trait item can use an alias declared by the trait or the namespace containing the trait.
-* Intra links of a trait instance can use an alias declared by the instantiation  or the namespace containing the instantiation, not the trait itself though.
+* Intra links of an item can use an alias declared by the `mod` containing that item, directly or indirectly.
+* Intra links of a struct field can use an alias declared by the struct or the `mod` containing the struct.
+* Intra links of an enum variant can use an alias declared by the enum or the `mod` containing the enum.
+* Intra links of a trait item can use an alias declared by the trait or the `mod` containing the trait.
+* Intra links of a trait instance can use an alias declared by the instantiation  or the `mod` containing the instantiation, not the trait itself though.
 * and so on...
 
 ```
