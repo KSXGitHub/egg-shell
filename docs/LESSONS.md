@@ -109,7 +109,7 @@ Unlike Rust which has different compilation contexts to deal with, TypeScript ha
 
 #### Rough Edge: Inconsistent tooling
 
-Different tools have subtle differences in handling intra-doc links. TypeScript TSServer allows documentation of a `public` item to link to a private item. But a documentation generation tool cannot do that or it would create broken links.
+Different tools have subtle differences in handling intra-doc links. TypeScript TSServer allows documentation of an exported or public item to link to a non-exported or private item. But a documentation generation tool cannot do that or it would create broken links.
 
 #### Rough Edge: No doc-only import aliases for a long time
 
