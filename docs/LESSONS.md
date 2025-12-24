@@ -169,6 +169,12 @@ mod outer with
         pub foo: u64
 ```
 
+Doc-only import aliases should be forbidden from occupying the same names as declared items within the same scope, be they public or private.
+
+To the documentation intra links, doc-only import aliases and items declared in the smaller scope overshadow doc-only import aliases and items declared in the greater scope.
+
+To the code, doc-only import aliases are entirely invisible.
+
 #### Type-checked documentation's intra links
 
 The compiler should check the validity of the intra links according to the rules laid out in regular compilation context. No special compilation flag or context should be necessary.
