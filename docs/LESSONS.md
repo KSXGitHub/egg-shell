@@ -137,44 +137,14 @@ Documentation intra links should have the following forms:
 * Relative path: The address of an item, relative to the current file.
 * Name: A special case of relative path, referring to an item of the same scope.
 
-#### Doc-only import aliases
-
-Doc-only import aliases allow the user to write good documentation with less effort, less text, less clutter.
-
-Doc-only import aliases should be meta-attributes of the same item or containing item.
-
-Intra links can use an alias declared by the same item.
-
-```
-@@import { Bar } from './bar.egg'
-@@desc Link to [`Bar`].
-pub struct Foo
-```
-
-Intra links can use an alias declared by the containing item.
-* Intra links of an item can use an alias declared by the `mod` containing that item, directly or indirectly.
-* Intra links of a struct field can use an alias declared by the struct or the `mod` containing the struct.
-* Intra links of an enum variant can use an alias declared by the enum or the `mod` containing the enum.
-* Intra links of a trait item can use an alias declared by the trait or the `mod` containing the trait.
-* Intra links of a trait instance can use an alias declared by the instantiation  or the `mod` containing the instantiation, not the trait itself though.
-* and so on...
-
-```
-mod outer with
-    @@!import { Bar } from './bar.egg'
-
-    @@desc Link to [`Bar`].
-    pub struct Foo with
-        @@desc Another link to [`Bar`].
-        pub foo: u64
-```
-
-Doc-only import aliases should be forbidden from occupying the same names as declared items within the same scope, be they public or private.
-
-To the documentation intra links, doc-only import aliases and items declared in the smaller scope overshadow doc-only import aliases and items declared in the greater scope.
-
-To the code, doc-only import aliases are entirely invisible.
-
 #### Type-checked documentation's intra links
 
 The compiler should check the validity of the intra links according to the rules laid out in regular compilation context. No special compilation flag or context should be necessary.
+
+#### Being referred to by an intra link is considered "used"
+
+The reason Rust has `#[cfg(doc)]` is because documentation attributes are not considered relevant to the code, thus to import items to use it exclusively in documentation would trigger "unused imports" warnings when type-checking regular code.
+
+Similarly, TSDoc has `@import` is because the type checker and the linter usually ignore documentation. To import items to use it exclusively in documentation would also trigger "unused imports" warnings.
+
+If the compiler treats documentation intra links as first-class, the above issues would be resolved, and the needs for documentation-only import syntax would also cease to be.
