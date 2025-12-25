@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/refs/heads/main/schema/markdownlint-config-schema.json",
+  "blanks-around-lists": {
+    "enabled": false
+  },
+  "fenced-code-language": {
+    "enabled": false
+  },
+  "line-length": {
+    "enabled": false
+  },
+  "no-blanks-blockquote": {
+    "enabled": false
+  },
+  "no-duplicate-heading": {
+    "siblings_only": true
+  },
+  "no-inline-html": {
+    "allowed_elements": [
+      "details",
+      "summary"
+    ]
+  }
+}
