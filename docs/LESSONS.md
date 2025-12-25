@@ -125,21 +125,21 @@ After a while, TSDoc finally introduced `@import` attribute, and the various too
 
 #### Valid intra link targets
 
-Documentation intra links should refer only to items whose visibility is the same or greater.
+Documentation intra links can only refer to items whose visibility is the same or greater.
 * Intra links from a private item can refer to any private item of the same scope, internal items, or public items.
 * Intra links from an internal item can refer to any other internal or public items.
 * Intra links from a public item can only refer to other public items.
 
 #### Intra link forms
 
-Documentation intra links should have the following forms:
+Documentation intra links have the following forms:
 * Absolute path: The absolute address of an item.
 * Relative path: The address of an item, relative to the current file.
 * Name: A special case of relative path, referring to an item of the same scope.
 
 #### Type-checked documentation's intra links
 
-The compiler should check the validity of the intra links according to the rules laid out in regular compilation context. No special compilation flag or context should be necessary.
+The compiler checks the validity of the intra links according to the rules laid out in regular compilation context. No special compilation flag or context is necessary.
 
 #### Being referred to by an intra link is considered "used"
 
