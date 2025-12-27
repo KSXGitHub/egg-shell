@@ -120,12 +120,13 @@ Macro applications with well-typed return type may be checked for type correctne
 * A concrete type is a value.
 * A generic type is a type constructor.
 * A type constructor is a const function that return a concrete type.
-* Every type has a unique type, which in turn has its own unique type, and so on.
+* There is a type of all types.
+* The type of all types also includes itself ([no type universes](#no-type-universes)).
 
 ### First-Class Kinds
 
 * A kind of a type or a kind is also a type.
-* Every kind has a unique type.
+* The type of all types also includes all kinds.
 
 ### First-Class Traits
 
@@ -138,6 +139,14 @@ Macro applications with well-typed return type may be checked for type correctne
 * A concrete module is a value.
 * A parameterized module is a function that return a concrete module.
 * Every module has a unique type.
+
+## No Type Universes
+
+We are making a programming language, not a proof assistant.
+
+The type system of a programming language only needs to make sure that the type represents the data. A paradox that cannot terminate can cause neither type unsafety, undefined behavior, nor memory corruption.
+
+Maybe one day, we would add dependent proof to enable the users to make more static assertions and the optimizer to be more aggressive, but such proof would have been required to be total, eagerly evaluated, strongly normalized, and maybe other properties to be used as a proof. There should still be no needs type universes.
 
 ## Trait Instance Targets
 
