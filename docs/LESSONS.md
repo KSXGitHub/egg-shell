@@ -3,7 +3,7 @@
 > [!NOTE]
 > None of the syntax shown below are finalized. Treat them as pseudo-language.
 
-## Hygiene of documentation's intra links
+## Documentation's intra links
 
 ### Prior Art: Rust
 
