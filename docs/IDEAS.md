@@ -130,9 +130,14 @@ Macro applications with well-typed return type may be checked for type correctne
 
 ### First-Class Traits
 
-* A trait is a const function that returns a "trait bound" (also known as "constraint").
+* A trait is a type constructor.
+* Most traits are record type constructors.
+* Traits that conflicted with each other are sum type constructors.
+* The parameters of a trait is the parameters of the type constructor.
 * The parameters of a trait can be any const value, including: primitives, types, kinds, traits, etc.
-* Every trait has a unique type.
+* Every set of trait and parameters can only have at most 1 "canonical" instance.
+* Since a trait is a type constructor, it is also a const function.
+* Since a trait is a const function, it has a unique type.
 
 ### First-Class Modules
 
